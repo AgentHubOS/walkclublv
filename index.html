@@ -1,19 +1,610 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Walk Club LV</title>
-<meta http-equiv="refresh" content="0; url=./WalkClubLV.dc.html" />
-<link rel="canonical" href="./WalkClubLV.dc.html" />
-<style>
-  html, body { margin: 0; height: 100%; background: #FFFFFF; }
-  .wrap { height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', system-ui, sans-serif; text-transform: uppercase; letter-spacing: .2em; font-size: 13px; color: #000; }
-  a { color: #00BF63; text-decoration: none; }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
 <body>
-<div class="wrap"><a href="./WalkClubLV.dc.html">Entering Walk Club LV…</a></div>
-<script>window.location.replace('./WalkClubLV.dc.html');</script>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://sweatpals.com/static/embed/community/calendar/events/script.js?communityUsername=WALKCLUBLV&primaryColorHex=00BF63&popupBackgroundColorHex=FFFFFF&headerFontColorHex=000000&fontFamily=Oswald"></script>
+<script async src="https://www.instagram.com/embed.js"></script>
+<script async src="https://www.tiktok.com/embed.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #FFFFFF; font-family: 'DM Sans', system-ui, sans-serif; color: #000; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  a { color: #00BF63; text-decoration: none; }
+  a:hover { color: #FF914D; }
+  ::selection { background: #FF914D; color: #fff; }
+  @keyframes wc-slide { from { opacity: 0; transform: translateY(130%) rotate(10deg); } to { opacity: 1; transform: none; } }
+  @keyframes wc-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+  @keyframes wc-floatB { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @keyframes wc-pop { from { opacity: 0; transform: scale(0.2) rotate(-40deg); } to { opacity: 1; transform: rotate(-9deg); } }
+  @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-30px) scale(1.08); } 66% { transform: translate(-25px,25px) scale(0.95); } }
+  @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1) rotate(0deg); } 50% { transform: translate(-45px,35px) scale(1.1) rotate(20deg); } }
+  @keyframes drift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(30px,40px); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes marqueeR { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes walkbob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+  @keyframes dashmove { to { stroke-dashoffset: -100; } }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  @media (max-height: 760px) { [data-scrollhint] { display: none !important; } }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position: relative; width: 100%; overflow: hidden;">
+
+  <sc-if value="{{ showRoute }}" hint-placeholder-val="{{ true }}">
+  <svg data-route ref="{{ routeRef }}" viewBox="0 0 100 1200" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none;">
+    <path d="M 8,20 C 40,60 5,120 30,180 C 55,240 92,260 88,330 C 84,400 12,420 14,500 C 16,580 90,600 86,690 C 82,780 10,800 16,890 C 22,980 92,1000 82,1090 C 76,1150 40,1170 30,1200" fill="none" stroke="#ffffff" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="2.4 3" opacity="0.55" vector-effect="non-scaling-stroke"></path>
+    <path ref="{{ routeDrawRef }}" d="M 8,20 C 40,60 5,120 30,180 C 55,240 92,260 88,330 C 84,400 12,420 14,500 C 16,580 90,600 86,690 C 82,780 10,800 16,890 C 22,980 92,1000 82,1090 C 76,1150 40,1170 30,1200" fill="none" stroke="#FF914D" stroke-width="1.4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" vector-effect="non-scaling-stroke"></path>
+  </svg>
+  </sc-if>
+
+  <!-- NAV -->
+  <nav ref="{{ navRef }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); background: rgba(255,255,255,0); transition: background .35s ease, box-shadow .35s ease, padding .35s ease;">
+    <a href="#top" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: .01em; position: relative;">
+      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block;" />
+    </a>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
+      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="4">
+        <a href="{{ link.href }}" style="color: #000; padding: 4px 0; background-image: linear-gradient(#00BF63,#00BF63); background-repeat: no-repeat; background-position: left bottom; background-size: 0% 3px; transition: background-size .3s ease, color .2s ease;" style-hover="background-size: 100% 3px; color: #00BF63;">{{ link.label }}</a>
+      </sc-for>
+    </div>
+    </sc-if>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 14px; letter-spacing: .06em; background: #00BF63; color: #fff; padding: 10px 20px; border-radius: 999px; transition: transform .2s ease, background .3s ease; white-space: nowrap;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="cursor: pointer; background: #fff; border: 2px solid #000; border-radius: 12px; width: 44px; height: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 0; flex-shrink: 0;">
+        <span style="width: 20px; height: 2.5px; background: #000; border-radius: 2px;"></span>
+        <span style="width: 20px; height: 2.5px; background: #000; border-radius: 2px;"></span>
+        <span style="width: 20px; height: 2.5px; background: #000; border-radius: 2px;"></span>
+      </button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; top: 100%; left: 0; right: 0; background: #fff; border-top: 3px solid #000; border-bottom: 4px solid #00BF63; box-shadow: 0 14px 26px rgba(0,0,0,.16); display: flex; flex-direction: column; padding: 4px clamp(16px,4vw,48px) 14px;">
+      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="4">
+        <a href="{{ link.href }}" onClick="{{ closeMenu }}" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 18px; letter-spacing: .06em; color: #000; padding: 15px 4px; border-bottom: 1px solid #eee;">{{ link.label }}</a>
+      </sc-for>
+    </div>
+    </sc-if>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header id="top" style="position: relative; z-index: 4; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; padding: 96px 0 44px;">
+    <style>@media (max-height: 780px){ #top{ justify-content: flex-start !important; } }</style>
+    <!-- HERO 01: STACK on white -->
+    <sc-if value="{{ isStack }}" hint-placeholder-val="{{ true }}">
+      <div style="position: absolute; inset: 0; background: #FFFFFF;">
+        <div data-parallax="0.18" style="position: absolute; top: 12%; left: -6%; width: 42vw; height: 42vw; max-width: 560px; max-height: 560px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 14s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.32" style="position: absolute; bottom: -14%; right: -16%; width: 40vw; height: 40vw; max-width: 500px; max-height: 500px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .92; animation: drift2 18s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.5" style="position: absolute; top: 22%; right: 16%; width: 90px; height: 90px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
+      </div>
+      <div style="position: relative; text-align: center; padding: 0 20px;">
+        <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(240px,48vw,540px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
+        <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #000;">Come for the walk. Stay for the community.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- HERO 02: SPLIT color block -->
+    <sc-if value="{{ isSplit }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr;">
+        <div style="background: #FF914D; position: relative; overflow: hidden;"><div data-parallax="0.25" style="position: absolute; bottom: -10%; left: -10%; width: 60%; height: 60%; background: #fff; opacity: .16; border-radius: 50%; animation: drift1 16s ease-in-out infinite;"></div></div>
+        <div style="background: #00BF63; position: relative; overflow: hidden;"><div data-parallax="0.4" style="position: absolute; top: -10%; right: -10%; width: 60%; height: 60%; background: #000; opacity: .14; border-radius: 50%; animation: drift2 20s ease-in-out infinite;"></div></div>
+      </div>
+      <div style="position: relative; text-align: center; padding: 0 20px; mix-blend-mode: normal;">
+        <div style="display: inline-block; line-height: .76; background: #fff; padding: 30px 44px; border: 4px solid #000; box-shadow: 10px 10px 0 #000; transform: rotate(-2deg);">
+          <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(150px,34vw,380px); width: auto; display: block; margin: 0 auto;" />
+        </div>
+        <p style="font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 28px 0 26px; color: #fff; text-shadow: 2px 2px 0 #000;">Walk together. Connect. Grow.</p>
+        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
+      </div>
+    </sc-if>
+
+    <!-- HERO 03: DARK kinetic -->
+    <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; inset: 0; background: #000; overflow: hidden;">
+        <div data-parallax="0.2" style="position: absolute; top: 8%; left: 4%; width: 30vw; height: 30vw; max-width: 380px; max-height: 380px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 15s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.45" style="position: absolute; bottom: 6%; right: 6%; width: 34vw; height: 34vw; max-width: 440px; max-height: 440px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 50%; opacity: .85; animation: drift2 19s ease-in-out infinite;"></div></div>
+      </div>
+      <div style="position: relative; text-align: center; padding: 0 20px;">
+        <div style="display: inline-block; line-height: .74; position: relative;">
+          <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(160px,33vw,350px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
+        </div>
+        <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #fff;">Come for the walk. Stay for the community.</p>
+        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
+      </div>
+    </sc-if>
+
+    <div data-scrollhint style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-size: 11px; color: {{ scrollHintColor }}; display: flex; flex-direction: column; align-items: center; gap: 6px;">Scroll<span style="font-size: 16px; animation: wc-float 1.8s ease-in-out infinite;">↓</span></div>
+  </header>
+
+  <!-- ============ MARQUEE ============ -->
+  <div style="position: relative; z-index: 4; background: #000; color: #fff; padding: 16px 0; overflow: hidden; border-top: 4px solid #FF914D; border-bottom: 4px solid #00BF63;">
+    <div ref="{{ marqueeRef }}" style="display: flex; width: max-content; animation: marquee 22s linear infinite; font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: clamp(22px,4vw,44px); letter-spacing: .02em;">
+      <span style="display: flex; gap: 0;"><sc-for list="{{ tickerLoop }}" as="t" hint-placeholder-count="8"><span style="padding: 0 26px; color: {{ t.color }};">{{ t.text }} <span style="color: #FF914D;">●</span></span></sc-for></span>
+    </div>
+  </div>
+
+  <!-- ============ THE WEEKLY WALK (green) ============ -->
+  <section id="walk" style="position: relative; z-index: 4; background: #00BF63; color: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div data-parallax="0.15" style="position: absolute; top: -60px; right: -40px; width: 320px; height: 320px; background: rgba(255,255,255,.1); border-radius: 50%;"></div>
+    <div style="max-width: 1200px; margin: 0 auto; position: relative;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease;">
+        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; margin-bottom: 10px;">The weekly walk</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0 0 40px; max-width: 14ch;">Every Saturday. Same crew. Two miles.</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 18px; margin-bottom: 56px;">
+        <sc-for list="{{ schedule }}" as="s" hint-placeholder-count="3">
+          <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #fff; color: #000; border: 3px solid #000; border-radius: 20px; padding: 26px; box-shadow: 6px 6px 0 rgba(0,0,0,.35); transition: transform .2s ease, box-shadow .2s ease, opacity .7s ease;" style-hover="transform: translateY(-4px); box-shadow: 10px 10px 0 rgba(0,0,0,.45);">
+            <div style="font-family: 'Anton', sans-serif; font-size: 42px; color: #FF914D; line-height: 1;">{{ s.time }}</div>
+            <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .08em; font-size: 18px; margin: 8px 0 6px;">{{ s.title }}</div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 15px; color: #333;">{{ s.desc }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 30px; align-items: center;">
+        <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #000; border-radius: 24px; padding: 28px; position: relative; overflow: hidden;">
+          <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .2em; color: #00BF63; font-weight: 600; font-size: 13px; margin-bottom: 14px;">The route · Local Las Vegas park</div>
+          <svg viewBox="0 0 600 220" style="width: 100%; height: auto; display: block;">
+            <path d="M 30,180 C 120,180 120,60 210,60 C 300,60 300,170 390,170 C 480,170 500,50 570,50" fill="none" stroke="#333" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 14"></path>
+            <path ref="{{ miniRouteRef }}" d="M 30,180 C 120,180 120,60 210,60 C 300,60 300,170 390,170 C 480,170 500,50 570,50" fill="none" stroke="#FF914D" stroke-width="6" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"></path>
+            <circle cx="30" cy="180" r="12" fill="#00BF63" stroke="#fff" stroke-width="3"></circle>
+            <circle cx="570" cy="50" r="12" fill="#FF914D" stroke="#fff" stroke-width="3"></circle>
+            <g ref="{{ walkerRef }}" style="transform-box: fill-box; transform-origin: center;"><circle r="9" fill="#fff"></circle><circle cx="30" cy="180" r="9" fill="#fff" style="opacity:0"></circle></g>
+          </svg>
+          <div style="display: flex; justify-content: space-between; font-family: 'Oswald', sans-serif; text-transform: uppercase; font-size: 12px; letter-spacing: .1em; color: #fff; margin-top: 6px;"><span>Start</span><span>Finish</span></div>
+        </div>
+        <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; background: #FF914D; border: 4px solid #000; border-radius: 24px; padding: 34px 20px; box-shadow: 8px 8px 0 #000;">
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(70px,12vw,130px); color: #000; line-height: .9;"><span ref="{{ mileRef }}">0</span></div>
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(30px,5vw,52px); color: #fff; -webkit-text-stroke: 2px #000; line-height: 1;">MILES</div>
+          <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .1em; font-size: 14px; margin-top: 10px; font-weight: 600;">Easy pace · all levels</div>
+        </div>
+      </div>
+      <sc-if value="{{ showNeon }}" hint-placeholder-val="{{ false }}">
+      <a href="NeonNights.dc.html" data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease, box-shadow .2s ease; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; background: #000; color: #fff; border-radius: 24px; padding: 26px clamp(22px,4vw,40px); box-shadow: 0 0 0 rgba(0,0,0,0);" style-hover="box-shadow: 10px 10px 0 rgba(0,0,0,.4);">
+        <div>
+          <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .2em; font-size: 12px; color: #FF914D; margin-bottom: 6px; text-shadow: 0 0 10px rgba(255,145,77,.7);">New · First Wednesday monthly</div>
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(28px,4.5vw,48px); line-height: .95;"><span style="color: #FF914D; text-shadow: 0 0 14px rgba(255,145,77,.5);">NEON</span> <span style="color: #00BF63; text-shadow: 0 0 14px rgba(0,191,99,.5);">NIGHTS</span></div>
+          <div style="font-family: 'DM Sans', sans-serif; font-size: 15px; color: #bbb; margin-top: 4px;">An after-dark, mid-week walk under the city lights.</div>
+        </div>
+        <span style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 15px; background: #FF914D; color: #000; padding: 12px 24px; border-radius: 999px; white-space: nowrap;">Explore Neon Nights →</span>
+      </a>
+      </sc-if>
+    </div>
+  </section>
+
+  <sc-if value="{{ showEvents }}" hint-placeholder-val="{{ false }}">
+  <!-- ============ EVENTS (black) — SweatPals embed slot ============ -->
+  <section id="events" style="position: relative; z-index: 4; background: #000; color: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div data-parallax="0.2" style="position: absolute; bottom: -80px; left: -60px; width: 360px; height: 360px; background: #00BF63; opacity: .18; border-radius: 50%;"></div>
+    <div style="max-width: 1100px; margin: 0 auto; position: relative;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 40px;">
+        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #FF914D; margin-bottom: 10px;">Upcoming</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0;">Events &amp; RSVPs</h2>
+        <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #bbb; max-width: 46ch; margin: 16px auto 0;">Grab your spot for the next walk. Signups &amp; RSVPs run through SweatPals below.</p>
+      </div>
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #fff; border-radius: 24px; border: 4px solid #FF914D; padding: 12px; min-height: 420px; position: relative;">
+        <div class="sweatpals-embed" data-sweatpals-community="WALKCLUBLV" style="width: 100%; min-height: 400px; display: flex; align-items: center; justify-content: center; color: #000;">
+          <div style="text-align: center; font-family: 'Oswald', sans-serif;">
+            <div style="font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: #00BF63; font-weight: 700;">SweatPals calendar loading…</div>
+            <div style="font-family: 'DM Sans', sans-serif; color: #777; font-size: 14px; margin-top: 8px;">Live events widget for @walkclublv appears here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ JOIN / MEMBERSHIP (orange) ============ -->
+  <section id="join" style="position: relative; z-index: 4; background: #FF914D; color: #000; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div data-parallax="0.15" style="position: absolute; top: -50px; right: 10%; width: 220px; height: 220px; background: #fff; opacity: .18; border-radius: 50%;"></div>
+    <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; max-width: 760px; margin: 0 auto; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;">
+      <div style="font-family: 'Anton', sans-serif; font-size: clamp(56px,12vw,150px); line-height: .8; color: #000;">KICK IT<br /><span style="color: #fff; -webkit-text-stroke: 3px #000;">WITH US</span></div>
+      <p style="font-family: 'DM Sans', sans-serif; font-size: clamp(17px,2.2vw,21px); line-height: 1.5; max-width: 46ch; margin: 22px auto 10px; color: #000;">One tap to become a member on SweatPals — RSVPs, updates, and the whole crew in one place. Free to start.</p>
+      <button onClick="{{ handleJoin }}" title="Join free on SweatPals" style="cursor: pointer; background: none; border: 0; padding: 0; margin: 6px 0 10px; width: 100%; max-width: 560px; transition: transform .22s cubic-bezier(.2,.9,.3,1.3), filter .22s ease;" style-hover="transform: scale(1.04) rotate(-2.5deg); filter: drop-shadow(8px 12px 0 rgba(0,0,0,.32));">
+        <div style="width: 100%; max-width: 340px; margin: 0 auto; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;">
+          <div style="font-size: clamp(120px,26vw,190px); line-height: 1; animation: wc-float 2.6s ease-in-out infinite;">👟</div>
+        </div>
+      </button>
+      <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(14px,2vw,18px); color: #000; font-weight: 700;">Join free on SweatPals — Click the Shoe!</div>
+      <div ref="{{ joinMsgRef }}" style="opacity: 0; margin-top: 14px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #000; transition: opacity .4s ease;">You're in! Opening SweatPals… 🎉</div>
+    </div>
+  </section>
+
+  <sc-if value="{{ showMerch }}" hint-placeholder-val="{{ false }}">
+  <!-- ============ MERCH (white) ============ -->
+  <section id="merch" style="position: relative; z-index: 4; background: #FFFFFF; color: #000; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 40px;">
+        <div>
+          <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #00BF63; margin-bottom: 10px;">The shop</div>
+          <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .92; margin: 0;">Rep the club.</h2>
+        </div>
+        <a href="Merch.dc.html" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 15px; background: #000; color: #fff; padding: 12px 24px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Shop all →</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 18px;">
+        <sc-for list="{{ merch }}" as="m" hint-placeholder-count="6">
+          <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease;">
+            <div style="border: 3px solid #000; border-radius: 20px; overflow: hidden; background: {{ m.bg }}; transition: transform .25s ease, box-shadow .25s ease, background .35s ease; cursor: pointer; box-shadow: 5px 5px 0 #000;" style-hover="transform: translateY(-6px) rotate(-1deg); box-shadow: 10px 12px 0 #000; background: {{ m.bgHover }};">
+              <div style="aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; padding: 24px;">
+                <div style="font-family: 'Anton', sans-serif; font-size: clamp(30px,4vw,46px); color: {{ m.fg }}; text-align: center; line-height: .85;">{{ m.glyph }}</div>
+              </div>
+              <div style="background: #fff; border-top: 3px solid #000; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .05em; font-size: 16px;">{{ m.name }}</span>
+                <span style="font-family: 'Oswald', sans-serif; font-weight: 700; color: #00BF63;">{{ m.price }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+  </sc-if>
+
+  <!-- ============ ABOUT (green→black) ============ -->
+  <section id="about" style="position: relative; z-index: 4; background: #00BF63; color: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 40px; align-items: center;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease;">
+        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; margin-bottom: 10px;">Our story</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(32px,5vw,60px); line-height: .95; margin: 0 0 20px;">Come for the walk.<br /><span style="color: #000;">Stay for the community.</span></h2>
+        <p style="font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.6; max-width: 46ch; margin: 0 0 16px;">Walk Club LV started with a simple idea: a couple of friends, a park, and two easy miles every Saturday morning. Then we'd grab breakfast. Turns out that's a great way to make real friends in Vegas.</p>
+        <p style="font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1.6; max-width: 46ch; margin: 0;">No pace pressure, no experience needed — just show up, move, and connect. <strong>Walk together. Connect. Grow.</strong></p>
+        <a href="About.dc.html" style="display: inline-block; margin-top: 24px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 15px; background: #000; color: #fff; padding: 12px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Read our story →</a>
+      </div>
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; display: flex; justify-content: center; align-items: flex-end; gap: 6px; min-height: 260px;">
+        <sc-for list="{{ walkers }}" as="w" hint-placeholder-count="4">
+          <svg viewBox="0 0 60 150" style="width: clamp(46px,9vw,80px); height: auto; animation: walkbob 1.4s ease-in-out infinite; animation-delay: {{ w.delay }};">
+            <circle cx="30" cy="20" r="13" fill="{{ w.c1 }}" stroke="#000" stroke-width="3"></circle>
+            <rect x="20" y="36" width="20" height="52" rx="10" fill="{{ w.c2 }}" stroke="#000" stroke-width="3"></rect>
+            <line x1="24" y1="88" x2="16" y2="132" stroke="#000" stroke-width="7" stroke-linecap="round"></line>
+            <line x1="36" y1="88" x2="46" y2="130" stroke="#000" stroke-width="7" stroke-linecap="round"></line>
+            <line x1="22" y1="50" x2="10" y2="70" stroke="#000" stroke-width="6" stroke-linecap="round"></line>
+            <line x1="38" y1="50" x2="50" y2="64" stroke="#000" stroke-width="6" stroke-linecap="round"></line>
+          </svg>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOCIAL FEED (white) ============ -->
+  <section id="social" style="position: relative; z-index: 4; background: #FFFFFF; color: #000; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 44px;">
+        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #00BF63; margin-bottom: 10px;">@walkclublv</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .92; margin: 0;">Follow the club.</h2>
+        <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #555; max-width: 48ch; margin: 16px auto 0;">Tap a logo to see the crew in motion — fresh photos, reels and clips on our socials.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 28px; max-width: 720px; margin: 0 auto;">
+        <a href="https://instagram.com/walkclublv" target="_blank" data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-decoration: none;">
+          <div style="border: 4px solid #000; border-radius: 30px; box-shadow: 8px 8px 0 #000; background: #fff; padding: 40px 24px 26px; text-align: center; transition: transform .2s ease, box-shadow .2s ease;" style-hover="transform: translate(-3px,-3px); box-shadow: 12px 12px 0 #000;">
+            <svg viewBox="0 0 24 24" style="width: clamp(96px,20vw,150px); height: auto; animation: wc-float 2.8s ease-in-out infinite;" fill="none" stroke="#000" stroke-width="1.6"><rect x="2" y="2" width="20" height="20" rx="6"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.6" cy="6.4" r="1.5" fill="#FF914D" stroke="none"></circle></svg>
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3vw,30px); margin-top: 18px; color: #000;">INSTAGRAM</div>
+            <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; color: #00BF63; font-weight: 700; margin-top: 4px;">@walkclublv →</div>
+          </div>
+        </a>
+        <a href="https://www.tiktok.com/@walkclublv" target="_blank" data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-decoration: none;">
+          <div style="border: 4px solid #000; border-radius: 30px; box-shadow: 8px 8px 0 #000; background: #fff; padding: 40px 24px 26px; text-align: center; transition: transform .2s ease, box-shadow .2s ease;" style-hover="transform: translate(-3px,-3px); box-shadow: 12px 12px 0 #000;">
+            <svg viewBox="0 0 24 24" style="width: clamp(96px,20vw,150px); height: auto; animation: wc-float 2.8s ease-in-out infinite .2s;" fill="#000"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3vw,30px); margin-top: 18px; color: #000;">TIKTOK</div>
+            <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; color: #00BF63; font-weight: 700; margin-top: 4px;">@walkclublv →</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT + FOOTER (black) ============ -->
+  <footer id="contact" style="position: relative; z-index: 4; background: #000; color: #fff; padding: clamp(70px,10vw,120px) clamp(20px,5vw,80px) 40px; overflow: hidden;">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center; position: relative;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease;">
+        <h2 style="font-family: 'Anton', sans-serif; font-size: clamp(48px,13vw,180px); line-height: .82; margin: 0;"><span style="color: #FF914D;">LET'S</span><br /><span style="color: #00BF63;">WALK.</span></h2>
+        <p style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(14px,2vw,20px); margin: 24px 0 30px;">Come for the walk. Stay for the community.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;">
+          <a href="https://instagram.com/walkclublv" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #fff; color: #000; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #fff; transform: scale(1.05);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"></circle></svg>
+            @walkclublv
+          </a>
+          <a href="https://www.tiktok.com/@walkclublv" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #fff; color: #000; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>
+            @walkclublv
+          </a>
+          <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #00BF63; color: #fff; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; margin: 30px 0;">
+        <div style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: clamp(34px,6vw,60px);">
+          <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(56px,10vw,100px); width: auto; display: block;" />
+        </div>
+      </div>
+      <div style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: #888; border-top: 1px solid #333; padding-top: 22px;">© 2026 Walk Club LV · Las Vegas, Nevada · <a href="mailto:hello@walkclublv.com">hello@walkclublv.com</a></div>
+    </div>
+  </footer>
+
+  <canvas ref="{{ confettiRef }}" style="position: fixed; inset: 0; z-index: 100; pointer-events: none; width: 100%; height: 100%;"></canvas>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
+class Component extends DCLogic {
+  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false };
+
+  rootRef = React.createRef();
+  marqueeRef = React.createRef();
+  routeRef = React.createRef();
+  routeDrawRef = React.createRef();
+  miniRouteRef = React.createRef();
+  walkerRef = React.createRef();
+  mileRef = React.createRef();
+  navRef = React.createRef();
+  confettiRef = React.createRef();
+  joinMsgRef = React.createRef();
+
+  componentDidMount() {
+    this._onScroll = () => this.handleScroll();
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll, { passive: true });
+    this._onResize = () => { const m = window.innerWidth < 820; if (m !== this.state.isMobile) this.setState({ isMobile: m, menuOpen: false }); };
+    window.addEventListener('resize', this._onResize, { passive: true });
+    this.handleScroll();
+
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    this.initReveals();
+
+    // mile stat lives in a reveal card — observe separately
+    const mileCard = this.mileRef.current && this.mileRef.current.closest('[data-reveal]');
+    if (mileCard) {
+      const mio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { this.countMiles(); this.animateMiniRoute(); mio.disconnect(); } });
+      }, { threshold: 0.3 });
+      mio.observe(mileCard);
+      this._mio = mio;
+    }
+    this.injectIcons();
+    this.syncProps();
+  }
+
+  injectIcons() {
+    const root = this.rootRef.current;
+    if (!root) return;
+    const ig = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"></circle></svg>';
+    const tt = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>';
+    root.querySelectorAll('[data-icon]').forEach((el) => { el.innerHTML = el.getAttribute('data-icon') === 'tiktok' ? tt : ig; });
+  }
+
+  initReveals() {
+    const root = this.rootRef.current;
+    if (!root || !this._io) return;
+    root.querySelectorAll('[data-reveal]:not([data-io])').forEach((el) => {
+      el.setAttribute('data-io', '1');
+      this._io.observe(el);
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.heroTreatment !== this.props.heroTreatment && this.props.heroTreatment && this.props.heroTreatment !== this.state.hero) {
+      this.setState({ hero: this.props.heroTreatment });
+    }
+    this.initReveals();
+    this.injectIcons();
+    this.syncProps();
+  }
+
+  syncProps() {
+    const root = this.rootRef.current;
+    if (!root) return;
+    if (this.marqueeRef.current) this.marqueeRef.current.style.animationDuration = (this.props.marqueeSpeed || 22) + 's';
+    const play = (this.props.animateBlobs ?? true) ? 'running' : 'paused';
+    root.querySelectorAll('[data-parallax] > div').forEach((el) => { el.style.animationPlayState = play; });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+    window.removeEventListener('resize', this._onResize);
+    if (this._io) this._io.disconnect();
+    if (this._mio) this._mio.disconnect();
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  handleScroll() {
+    const y = window.scrollY || window.pageYOffset;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const prog = docH > 0 ? Math.min(1, Math.max(0, y / docH)) : 0;
+    if (this.routeDrawRef.current) this.routeDrawRef.current.style.strokeDashoffset = String(1 - prog);
+    const root = this.rootRef.current || document;
+    root.querySelectorAll('[data-parallax]').forEach((el) => {
+      const sp = parseFloat(el.getAttribute('data-parallax')) || 0;
+      const r = el.getBoundingClientRect();
+      const center = r.top + r.height / 2 - window.innerHeight / 2;
+      el.style.transform = 'translateY(' + (-center * sp) + 'px)';
+    });
+    if (this.navRef.current) {
+      if (y > 40) {
+        this.navRef.current.style.background = 'rgba(255,255,255,0.96)';
+        this.navRef.current.style.boxShadow = '0 2px 20px rgba(0,0,0,0.12)';
+        this.navRef.current.style.padding = '8px clamp(16px,4vw,48px)';
+      } else {
+        this.navRef.current.style.background = 'rgba(255,255,255,0)';
+        this.navRef.current.style.boxShadow = 'none';
+        this.navRef.current.style.padding = '14px clamp(16px,4vw,48px)';
+      }
+    }
+  }
+
+  countMiles() {
+    if (this._counted || !this.mileRef.current) return;
+    this._counted = true;
+    const el = this.mileRef.current;
+    const start = performance.now();
+    const dur = 1400;
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (eased * 2).toFixed(1).replace(/\.0$/, '');
+      if (p < 1) requestAnimationFrame(step); else el.textContent = '2';
+    };
+    requestAnimationFrame(step);
+  }
+
+  animateMiniRoute() {
+    const path = this.miniRouteRef.current;
+    const walker = this.walkerRef.current;
+    if (!path) return;
+    const len = path.getTotalLength();
+    const start = performance.now();
+    const dur = 2000;
+    const step = (t) => {
+      const p = Math.min(1, (t - start) / dur);
+      path.style.strokeDashoffset = String(1 - p);
+      if (walker && path.getPointAtLength) {
+        const pt = path.getPointAtLength(len * p);
+        walker.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+      }
+      if (p < 1) this._raf = requestAnimationFrame(step);
+    };
+    this._raf = requestAnimationFrame(step);
+  }
+
+  setHero(h) { this.setState({ hero: h }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+  handleJoin = () => {
+    this.fireConfetti();
+    if (this.joinMsgRef.current) this.joinMsgRef.current.style.opacity = '1';
+    setTimeout(() => { window.open(this.membershipUrl, '_blank'); }, 900);
+  };
+
+  get membershipUrl() { return 'https://sweatpals.com/host/WALKCLUBLV/membership?getMembership=true&membershipTierId=83835170-67a0-4247-b40d-db8bbc000e6d'; }
+
+  fireConfetti() {
+    const canvas = this.confettiRef.current;
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width = window.innerWidth * dpr;
+    const H = canvas.height = window.innerHeight * dpr;
+    const ctx = canvas.getContext('2d');
+    const colors = ['#FF914D', '#00BF63', '#000000', '#ffffff'];
+    const parts = [];
+    for (let i = 0; i < 160; i++) {
+      parts.push({
+        x: W / 2 + (Math.random() - 0.5) * 200 * dpr,
+        y: H * 0.6,
+        vx: (Math.random() - 0.5) * 26 * dpr,
+        vy: (-Math.random() * 22 - 8) * dpr,
+        s: (Math.random() * 8 + 5) * dpr,
+        c: colors[(Math.random() * colors.length) | 0],
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.4,
+        life: 1,
+      });
+    }
+    const g = 0.6 * dpr;
+    const start = performance.now();
+    const draw = (t) => {
+      const el = t - start;
+      ctx.clearRect(0, 0, W, H);
+      let alive = false;
+      parts.forEach((p) => {
+        p.vy += g; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.rot += p.vr;
+        if (el > 1400) p.life -= 0.03;
+        if (p.life > 0 && p.y < H + 40) {
+          alive = true;
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          ctx.restore();
+        }
+      });
+      if (alive) requestAnimationFrame(draw); else ctx.clearRect(0, 0, W, H);
+    };
+    requestAnimationFrame(draw);
+  }
+
+  toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+
+  renderVals() {
+    const hero = this.state.hero;
+    const heroOptions = [
+      { num: '1', title: 'Stack on white', bg: hero === 'stack' ? '#000' : '#fff', fg: hero === 'stack' ? '#fff' : '#000', select: () => this.setHero('stack') },
+      { num: '2', title: 'Split color block', bg: hero === 'split' ? '#000' : '#fff', fg: hero === 'split' ? '#fff' : '#000', select: () => this.setHero('split') },
+      { num: '3', title: 'Dark kinetic', bg: hero === 'dark' ? '#000' : '#fff', fg: hero === 'dark' ? '#fff' : '#000', select: () => this.setHero('dark') },
+    ];
+    return {
+      rootRef: this.rootRef, routeRef: this.routeRef, routeDrawRef: this.routeDrawRef,
+      miniRouteRef: this.miniRouteRef, walkerRef: this.walkerRef, mileRef: this.mileRef,
+      navRef: this.navRef, confettiRef: this.confettiRef, joinMsgRef: this.joinMsgRef,
+      marqueeRef: this.marqueeRef,
+      showRoute: this.props.showRouteLine ?? true,
+      handleJoin: this.handleJoin,
+      membershipUrl: this.membershipUrl,
+      isStack: hero === 'stack', isSplit: hero === 'split', isDark: hero === 'dark',
+      scrollHintColor: hero === 'dark' ? '#fff' : '#000',
+      heroOptions,
+      navLinks: [
+        { label: 'The Walk', href: '#walk' },
+        { label: 'Follow', href: '#social' },
+        { label: 'About', href: '#about' },
+        { label: 'Contact', href: '#contact' },
+      ],
+      isMobile: this.state.isMobile,
+      isDesktop: !this.state.isMobile,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      showNeon: this.props.showNeonNights ?? false,
+      showEvents: this.props.showEvents ?? false,
+      showMerch: this.props.showMerch ?? false,
+      socials: [
+        { key: 'instagram', platform: 'Instagram', platformShort: 'POST', cta: 'Follow on Instagram', url: 'https://instagram.com/walkclublv', bar: '#FF914D', barFg: '#000', tile: '#00BF63', tileFg: '#fff' },
+        { key: 'tiktok', platform: 'TikTok', platformShort: 'CLIP', cta: 'Follow on TikTok', url: 'https://www.tiktok.com/@walkclublv', bar: '#000', barFg: '#fff', tile: '#FF914D', tileFg: '#000' },
+      ],
+      tickerLoop: Array.from({ length: 8 }).map((_, i) => ({
+        text: i % 2 === 0 ? 'COME FOR THE WALK' : 'STAY FOR THE COMMUNITY',
+        color: '#fff',
+      })),
+      schedule: [
+        { time: '8:00', title: 'Meet up', desc: 'Roll in, say hey, grab a sticker. Saturdays at the park.' },
+        { time: '8:30', title: 'We walk', desc: 'Two easy miles together. Any pace, all levels welcome.' },
+        { time: '9:15', title: 'Social hour', desc: 'Breakfast with the crew at a local spot. The best part.' },
+      ],
+      merch: [
+        { name: 'Tee', price: '$28', glyph: 'WALK\nCLUB', bg: '#FF914D', bgHover: '#00BF63', fg: '#fff' },
+        { name: 'Tote', price: '$18', glyph: '2 MI\nCLUB', bg: '#00BF63', bgHover: '#FF914D', fg: '#fff' },
+        { name: 'Bottle', price: '$22', glyph: 'HYDRATE', bg: '#000', bgHover: '#FF914D', fg: '#00BF63' },
+        { name: 'Cap', price: '$26', glyph: 'LV', bg: '#FF914D', bgHover: '#000', fg: '#000' },
+        { name: 'Stickers', price: '$6', glyph: '★ WCLV', bg: '#00BF63', bgHover: '#000', fg: '#fff' },
+        { name: 'Socks', price: '$14', glyph: 'STEP\nUP', bg: '#000', bgHover: '#00BF63', fg: '#FF914D' },
+      ],
+      walkers: [
+        { c1: '#FF914D', c2: '#00BF63', delay: '0s' },
+        { c1: '#00BF63', c2: '#FF914D', delay: '.2s' },
+        { c1: '#000', c2: '#FF914D', delay: '.4s' },
+        { c1: '#FF914D', c2: '#000', delay: '.6s' },
+      ],
+    };
+  }
+}
+</script>
 </body>
 </html>
