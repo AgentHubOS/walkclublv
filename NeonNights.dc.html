@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #050505; font-family: 'DM Sans', system-ui, sans-serif; color: #fff; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+  a { color: #00BF63; text-decoration: none; }
+  a:hover { color: #FF914D; }
+  ::selection { background: #FF914D; color: #000; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes glowdrift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-24px) scale(1.1); } }
+  @keyframes glowdrift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-34px,26px) scale(1.08); } }
+  @keyframes wc-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes flickerO {
+    0%,18%,22%,25%,53%,57%,100% { opacity: 1; text-shadow: 0 0 2px #fff2e6, 0 0 7px #ffb37d, 0 0 18px #FF914D, 0 0 40px rgba(255,122,41,.75), 0 0 70px rgba(255,106,18,.45); }
+    20%,24%,55% { opacity: .6; text-shadow: 0 0 2px #fff2e6, 0 0 6px #FF914D; }
+  }
+  @keyframes flickerG {
+    0%,10%,12%,40%,42%,90%,92%,100% { opacity: 1; text-shadow: 0 0 2px #e6fff0, 0 0 7px #66d99b, 0 0 18px #00BF63, 0 0 40px rgba(0,212,110,.75), 0 0 70px rgba(0,224,116,.45); }
+    11%,41%,91% { opacity: .55; text-shadow: 0 0 2px #e6fff0, 0 0 6px #00BF63; }
+  }
+  @keyframes flickerLV {
+    0%,30%,33%,70%,73%,100% { opacity: 1; text-shadow: 0 0 2px #fff, 0 0 8px #fff, 0 0 20px #cfe8ff, 0 0 40px rgba(156,201,255,.6); }
+    31%,71% { opacity: .65; text-shadow: 0 0 2px #fff, 0 0 7px #fff; }
+  }
+  @keyframes tubebuzz { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position: relative; width: 100%; background: radial-gradient(1200px 800px at 50% -10%, #16130f 0%, #050505 60%);">
+
+  <nav style="display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); position: sticky; top: 0; z-index: 30; background: rgba(5,5,5,0.85); backdrop-filter: blur(8px); border-bottom: 1px solid #1a1a1a;">
+    <a href="WalkClubLV.dc.html" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px;">
+      <span style="display: flex; flex-direction: column;"><span style="color: #FF914D;">WALK</span><span style="color: #00BF63;">CLUB</span></span>
+      <span style="font-family: 'Permanent Marker', cursive; color: #fff; font-size: 15px; transform: rotate(-9deg); margin-left: 3px; align-self: flex-end; margin-bottom: 2px;">LV</span>
+    </a>
+    <a href="WalkClubLV.dc.html" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 14px; letter-spacing: .06em; background: #fff; color: #000; padding: 10px 20px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #fff; transform: scale(1.05);">← Back home</a>
+  </nav>
+
+  <!-- HERO: NEON SIGN -->
+  <header style="position: relative; min-height: 92svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 20px; overflow: hidden;">
+    <div style="position: absolute; top: 14%; left: 6%; width: 34vw; height: 34vw; max-width: 420px; max-height: 420px; background: #FF914D; filter: blur(90px); opacity: .28; border-radius: 50%; animation: glowdrift 16s ease-in-out infinite;"></div>
+    <div style="position: absolute; bottom: 8%; right: 4%; width: 38vw; height: 38vw; max-width: 460px; max-height: 460px; background: #00BF63; filter: blur(100px); opacity: .26; border-radius: 50%; animation: glowdrift2 20s ease-in-out infinite;"></div>
+
+    <div style="position: relative; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .4em; font-weight: 600; font-size: clamp(12px,1.6vw,16px); color: #FF914D; margin-bottom: 26px; text-shadow: 0 0 10px #FF914D, 0 0 24px #ff7a29;">First Wednesday · After Dark</div>
+
+    <div style="position: relative; display: inline-block; line-height: .74;">
+      <div style="font-family: 'Anton', sans-serif; color: #FFB27D; -webkit-text-stroke: 2px #FF914D; font-size: clamp(72px,18vw,230px); letter-spacing: .01em; animation: flickerO 6s infinite steps(1,end);">WALK</div>
+      <div style="font-family: 'Anton', sans-serif; color: #5BD79B; -webkit-text-stroke: 2px #00BF63; font-size: clamp(72px,18vw,230px); letter-spacing: .01em; position: relative; animation: flickerG 7s infinite steps(1,end);">CLUB<span style="position: absolute; right: -.06em; bottom: 0; font-family: 'Permanent Marker', cursive; color: #fff; -webkit-text-stroke: 0; font-size: .34em; transform: rotate(-9deg); animation: flickerLV 5s infinite steps(1,end);">LV</span></div>
+    </div>
+
+    <div style="position: relative; margin-top: 30px; font-family: 'Anton', sans-serif; font-size: clamp(30px,7vw,72px); color: #fff; text-shadow: 0 0 8px #fff, 0 0 22px #9cc9ff, 0 0 44px #6aa8ff; animation: tubebuzz 3s ease-in-out infinite;">NEON NIGHTS</div>
+    <p style="position: relative; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .16em; font-size: clamp(14px,2.2vw,22px); color: #cfcfcf; margin: 18px 0 30px;">A mid-week walk under the lights.</p>
+    <a href="{{ membershipUrl }}" target="_blank" style="position: relative; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; box-shadow: 0 0 20px rgba(255,145,77,.6); transition: transform .18s ease, background .3s ease, box-shadow .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05); box-shadow: 0 0 26px rgba(0,191,99,.7);">RSVP on SweatPals →</a>
+  </header>
+
+  <div style="background: #FF914D; color: #000; padding: 12px 0; overflow: hidden;">
+    <div style="display: flex; width: max-content; animation: marquee 20s linear infinite; font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: clamp(20px,3.4vw,38px);">
+      <span style="display: flex;"><sc-for list="{{ ticker }}" as="t" hint-placeholder-count="8"><span style="padding: 0 24px;">NEON NIGHTS <span style="color: #00BF63;">●</span> FIRST WEDNESDAY <span style="color: #fff;">●</span></span></sc-for></span>
+    </div>
+  </div>
+
+  <!-- DETAILS -->
+  <section style="max-width: 1100px; margin: 0 auto; padding: clamp(56px,8vw,110px) clamp(20px,5vw,60px);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: 18px;">
+      <sc-for list="{{ facts }}" as="f" hint-placeholder-count="4">
+        <div style="background: #0d0d0d; border: 2px solid {{ f.line }}; border-radius: 20px; padding: 28px; box-shadow: 0 0 24px {{ f.glow }};">
+          <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .2em; font-size: 12px; color: {{ f.line }}; margin-bottom: 10px;">{{ f.label }}</div>
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(26px,3.4vw,40px); color: #fff; line-height: 1;">{{ f.value }}</div>
+          <div style="font-family: 'DM Sans', sans-serif; font-size: 14px; color: #999; margin-top: 8px;">{{ f.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 40px; background: #0d0d0d; border: 1px solid #222; border-radius: 24px; padding: clamp(28px,5vw,48px); text-align: center;">
+      <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(26px,4.5vw,48px); margin: 0 0 14px; color: #fff;">Same crew. <span style="color: #FF914D;">Cooler air.</span> <span style="color: #00BF63;">Better light.</span></h2>
+      <p style="font-family: 'DM Sans', sans-serif; font-size: clamp(16px,2.1vw,19px); line-height: 1.6; color: #bbb; max-width: 54ch; margin: 0 auto;">Once a month we swap the sunrise for the city glow. Meet up after dark on the first Wednesday, walk a couple easy miles at a park of our choosing, and catch up mid-week. Watch <a href="https://instagram.com/walkclublv" target="_blank">@walkclublv</a> for the location drop.</p>
+    </div>
+  </section>
+
+  <footer style="background: #000; color: #fff; text-align: center; padding: clamp(56px,8vw,100px) 20px 44px; border-top: 1px solid #1a1a1a;">
+    <div style="font-family: 'Anton', sans-serif; font-size: clamp(40px,11vw,120px); line-height: .84;"><span style="color: #FF914D; text-shadow: 0 0 20px rgba(255,145,77,.6);">SEE YOU</span><br /><span style="color: #00BF63; text-shadow: 0 0 20px rgba(0,191,99,.6);">AFTER DARK.</span></div>
+    <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+      <a href="https://instagram.com/walkclublv" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 17px; background: #fff; color: #000; padding: 13px 26px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #fff; transform: scale(1.05);">@walkclublv</a>
+      <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 17px; background: #00BF63; color: #fff; padding: 13px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  get membershipUrl() { return 'https://sweatpals.com/host/WALKCLUBLV/membership?getMembership=true&membershipTierId=83835170-67a0-4247-b40d-db8bbc000e6d'; }
+  renderVals() {
+    return {
+      rootRef: this.rootRef,
+      membershipUrl: this.membershipUrl,
+      ticker: Array.from({ length: 8 }),
+      facts: [
+        { label: 'When', value: '1st Wed', note: 'First Wednesday of every month', line: '#FF914D', glow: 'rgba(255,145,77,.18)' },
+        { label: 'Time', value: 'After Dark', note: 'Cooler air, city lights', line: '#00BF63', glow: 'rgba(0,191,99,.18)' },
+        { label: 'Distance', value: '~2 Miles', note: 'Easy pace, all levels', line: '#fff', glow: 'rgba(255,255,255,.12)' },
+        { label: 'Where', value: "Dealer's Choice", note: 'A park of our choosing — check IG', line: '#FF914D', glow: 'rgba(255,145,77,.18)' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

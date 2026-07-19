@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; font-family: 'DM Sans', system-ui, sans-serif; color: #000; overflow-x: hidden; }
+  a { color: #00BF63; text-decoration: none; }
+  a:hover { color: #FF914D; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes wc-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="position: relative; width: 100%;">
+  <nav style="display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,0.96); box-shadow: 0 2px 20px rgba(0,0,0,.1);">
+    <a href="WalkClubLV.dc.html" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px;">
+      <span style="display: flex; flex-direction: column;"><span style="color: #FF914D;">WALK</span><span style="color: #00BF63;">CLUB</span></span>
+      <span style="font-family: 'Permanent Marker', cursive; color: #000; font-size: 15px; transform: rotate(-9deg); margin-left: 3px; align-self: flex-end; margin-bottom: 2px;">LV</span>
+    </a>
+    <a href="WalkClubLV.dc.html" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 14px; letter-spacing: .06em; background: #000; color: #fff; padding: 10px 20px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">← Back home</a>
+  </nav>
+
+  <header style="background: #FF914D; color: #000; padding: clamp(60px,9vw,110px) clamp(20px,5vw,80px) clamp(50px,7vw,90px); text-align: center; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -60px; left: -40px; width: 260px; height: 260px; background: #fff; opacity: .16; border-radius: 50%; animation: wc-float 6s ease-in-out infinite;"></div>
+    <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; margin-bottom: 12px; position: relative;">The shop</div>
+    <h1 style="font-family: 'Anton', sans-serif; font-size: clamp(56px,15vw,180px); line-height: .82; margin: 0; position: relative;">REP THE CLUB</h1>
+    <p style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(14px,2vw,20px); margin: 18px 0 0; position: relative;">Every piece printed for the crew. Come for the walk, stay for the fits.</p>
+  </header>
+
+  <div style="background: #000; color: #fff; padding: 14px 0; overflow: hidden;">
+    <div style="display: flex; width: max-content; animation: marquee 20s linear infinite; font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: clamp(20px,3.4vw,38px);">
+      <span style="display: flex;"><sc-for list="{{ ticker }}" as="t" hint-placeholder-count="8"><span style="padding: 0 24px;">WALK CLUB LV <span style="color: #00BF63;">●</span> LIMITED DROPS <span style="color: #FF914D;">●</span></span></sc-for></span>
+    </div>
+  </div>
+
+  <section style="max-width: 1200px; margin: 0 auto; padding: clamp(50px,7vw,90px) clamp(20px,5vw,60px);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 22px;">
+      <sc-for list="{{ merch }}" as="m" hint-placeholder-count="6">
+        <div style="border: 3px solid #000; border-radius: 22px; overflow: hidden; background: {{ m.bg }}; transition: transform .25s ease, box-shadow .25s ease, background .35s ease; cursor: pointer; box-shadow: 6px 6px 0 #000;" style-hover="transform: translateY(-8px) rotate(-1.2deg); box-shadow: 12px 14px 0 #000; background: {{ m.bgHover }};">
+          <div style="aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; padding: 28px;">
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(34px,4.5vw,54px); color: {{ m.fg }}; text-align: center; line-height: .85; white-space: pre-line;">{{ m.glyph }}</div>
+          </div>
+          <div style="background: #fff; border-top: 3px solid #000; padding: 16px 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .04em; font-size: 19px; color: #000;">{{ m.name }}</span>
+              <span style="font-family: 'Anton', sans-serif; color: #00BF63; font-size: 22px;">{{ m.price }}</span>
+            </div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 14px; color: #555; margin-top: 4px;">{{ m.desc }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="background: #00BF63; color: #fff; text-align: center; padding: clamp(50px,8vw,90px) 20px;">
+    <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(30px,6vw,60px); margin: 0 0 20px;">Want it on your back?</h2>
+    <a href="https://instagram.com/walkclublv" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 18px; background: #000; color: #fff; padding: 14px 30px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">DM us @walkclublv</a>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  rootRef = React.createRef();
+  renderVals() {
+    return {
+      rootRef: this.rootRef,
+      ticker: Array.from({ length: 8 }),
+      merch: [
+        { name: 'Club Tee', price: '$28', glyph: 'WALK\nCLUB', bg: '#FF914D', bgHover: '#00BF63', fg: '#fff', desc: 'Heavyweight cotton. Orange or green.' },
+        { name: 'Route Tote', price: '$18', glyph: '2 MI\nCLUB', bg: '#00BF63', bgHover: '#FF914D', fg: '#fff', desc: 'Canvas carry-all for post-walk breakfast.' },
+        { name: 'Hydro Bottle', price: '$22', glyph: 'HYDRATE', bg: '#000', bgHover: '#FF914D', fg: '#00BF63', desc: '24oz insulated. Stay watered on the walk.' },
+        { name: 'LV Cap', price: '$26', glyph: 'LV', bg: '#FF914D', bgHover: '#000', fg: '#000', desc: 'Structured 6-panel with brush-script LV.' },
+        { name: 'Sticker Pack', price: '$6', glyph: '★ WCLV', bg: '#00BF63', bgHover: '#000', fg: '#fff', desc: 'Six vinyl die-cuts. Slap em everywhere.' },
+        { name: 'Trail Socks', price: '$14', glyph: 'STEP\nUP', bg: '#000', bgHover: '#00BF63', fg: '#FF914D', desc: 'Cushioned crew socks in club colors.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

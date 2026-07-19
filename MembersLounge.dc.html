@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f4f2ee; font-family: 'DM Sans', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
+  a { color: #00BF63; text-decoration: none; }
+  a:hover { color: #FF914D; }
+  textarea { font-family: 'DM Sans', sans-serif; }
+  @keyframes ml-pop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height: 100svh; display: flex; flex-direction: column; align-items: center; background: #f4f2ee;">
+
+  <!-- top bar -->
+  <div style="width: 100%; background: #000; color: #fff; border-bottom: 4px solid #00BF63; position: sticky; top: 0; z-index: 20;">
+    <div style="max-width: 640px; margin: 0 auto; padding: 12px clamp(14px,4vw,22px); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 22px;">
+        <span style="display: flex; flex-direction: column;"><span style="color: #FF914D;">WALK</span><span style="color: #00BF63;">CLUB</span></span>
+        <span style="font-family: 'Permanent Marker', cursive; color: #fff; font-size: 13px; transform: rotate(-9deg); margin-left: 3px; align-self: flex-end; margin-bottom: 2px;">LV</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 700; color: #00BF63; border: 1.5px solid #00BF63; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">🔒 Members only</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- name gate -->
+  <sc-if value="{{ needsName }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+    <div style="max-width: 420px; width: 100%; background: #fff; border: 3px solid #000; border-radius: 22px; box-shadow: 8px 8px 0 #000; padding: 32px 26px; text-align: center;">
+      <div style="font-family: 'Anton', sans-serif; font-size: 40px; line-height: .9; color: #FF914D;">THE LOUNGE</div>
+      <p style="font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.5; color: #444; margin: 14px 0 20px;">Members-only chat for the crew. Drop your first name to hop in — this is just so everyone knows who's talking.</p>
+      <input value="{{ nameDraft }}" onInput="{{ updateName }}" onKeyDown="{{ onNameKey }}" placeholder="First name" style="width: 100%; font-size: 17px; padding: 13px 14px; border: 2px solid #000; border-radius: 12px; outline: none; margin-bottom: 14px;" />
+      <button onClick="{{ join }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 16px; background: #00BF63; color: #fff; border: 2px solid #000; border-radius: 12px; padding: 13px; transition: background .25s ease;" style-hover="background: #FF914D;">Enter the lounge →</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- board -->
+  <sc-if value="{{ joined }}" hint-placeholder-val="{{ true }}">
+  <div style="flex: 1; width: 100%; max-width: 640px; display: flex; flex-direction: column;">
+    <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 20px clamp(14px,4vw,22px) 14px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="text-align: center; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; color: #999; padding: 6px 0 2px;">Welcome, {{ name }} 👋 · Be kind. Share pics. Tag your walk buddies.</div>
+      <sc-for list="{{ messages }}" as="msg" hint-placeholder-count="3">
+        <div style="display: flex; gap: 12px; align-items: flex-start; animation: ml-pop .3s ease both;">
+          <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #000; background: {{ msg.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 18px;">{{ msg.initial }}</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px;">
+              <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px;">{{ msg.name }}</span>
+              <span style="font-family: 'DM Sans', sans-serif; font-size: 12px; color: #999;">{{ msg.time }}</span>
+            </div>
+            <div style="background: #fff; border: 2px solid #000; border-radius: 4px 16px 16px 16px; padding: 10px 14px; font-size: 15px; line-height: 1.5; word-wrap: break-word;">
+              <sc-for list="{{ msg.segments }}" as="seg" hint-placeholder-count="1"><sc-if value="{{ seg.m }}" hint-placeholder-val="{{ false }}"><span style="color: #00BF63; font-weight: 700;">{{ seg.t }}</span></sc-if><sc-if value="{{ seg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ seg.t }}</span></sc-if></sc-for>
+              {{ msg.imgEl }}
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- composer -->
+    <div style="border-top: 3px solid #000; background: #fff; padding: 12px clamp(14px,4vw,22px); position: sticky; bottom: 0;">
+      <sc-if value="{{ pendingImg }}" hint-placeholder-val="{{ false }}">
+      <div style="position: relative; display: inline-block; margin-bottom: 10px;">
+        {{ pendingImgEl }}
+        <button onClick="{{ clearImg }}" title="Remove" style="cursor: pointer; position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background: #000; color: #fff; border: 2px solid #fff; font-size: 13px; line-height: 1; padding: 0;">✕</button>
+      </div>
+      </sc-if>
+      <div style="display: flex; gap: 8px; align-items: flex-end;">
+        <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 44px; height: 44px; border: 2px solid #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: #f4f2ee;">
+          🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
+        </label>
+        <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="Message the crew… use @name to tag someone" style="flex: 1; resize: none; font-size: 15px; line-height: 1.4; padding: 12px 14px; border: 2px solid #000; border-radius: 12px; outline: none; max-height: 120px;"></textarea>
+        <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 14px; background: #FF914D; color: #000; border: 2px solid #000; border-radius: 12px; padding: 12px 18px; height: 44px; transition: background .25s ease, color .25s ease;" style-hover="background: #00BF63; color: #fff;">Send</button>
+      </div>
+      <div style="font-family: 'DM Sans', sans-serif; font-size: 11px; color: #aaa; margin-top: 7px;">Paste a Giphy/image URL right in the message to share a GIF, or use the 🖼️ button for a photo.</div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  state = { joined: false, name: '', nameDraft: '', draft: '', pendingImg: null, msgs: [] };
+
+  rootRef = React.createRef();
+  feedRef = React.createRef();
+  fileRef = React.createRef();
+
+  MSG_KEY = 'wclv_lounge_msgs';
+  NAME_KEY = 'wclv_lounge_name';
+  PALETTE = ['#FF914D', '#00BF63', '#111827', '#0ea5a3', '#d1495b'];
+
+  componentDidMount() {
+    let msgs = [];
+    try { msgs = JSON.parse(localStorage.getItem(this.MSG_KEY) || 'null'); } catch (e) { msgs = null; }
+    if (!Array.isArray(msgs) || !msgs.length) msgs = this.seed();
+    const name = localStorage.getItem(this.NAME_KEY) || '';
+    this.setState({ msgs, name, joined: !!name }, () => this.scrollFeed());
+  }
+
+  seed() {
+    const now = Date.now();
+    return [
+      { id: 'a', name: 'Jenn', text: "Welcome to the Lounge! 🎉 Members-only — drop your pics from Saturday's walk right here.", img: null, t: now - 3600000 },
+      { id: 'b', name: 'Marcus', text: 'Great pace today @everyone — same spot next week? 👟', img: null, t: now - 1800000 },
+    ];
+  }
+
+  save(msgs) { try { localStorage.setItem(this.MSG_KEY, JSON.stringify(msgs)); } catch (e) {} }
+
+  scrollFeed() {
+    const f = this.feedRef.current;
+    if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; });
+  }
+
+  updateName = (e) => this.setState({ nameDraft: e.target.value });
+  onNameKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.join(); } };
+  join = () => {
+    const name = (this.state.nameDraft || '').trim();
+    if (!name) return;
+    try { localStorage.setItem(this.NAME_KEY, name); } catch (e) {}
+    this.setState({ name, joined: true, nameDraft: '' }, () => this.scrollFeed());
+  };
+
+  updateDraft = (e) => this.setState({ draft: e.target.value });
+  onDraftKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.post(); } };
+
+  onFile = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => this.setState({ pendingImg: reader.result });
+    reader.readAsDataURL(file);
+  };
+  clearImg = () => { this.setState({ pendingImg: null }); if (this.fileRef.current) this.fileRef.current.value = ''; };
+
+  post = () => {
+    const text = (this.state.draft || '').trim();
+    if (!text && !this.state.pendingImg) return;
+    const msg = { id: 'm' + Date.now(), name: this.state.name || 'Guest', text, img: this.state.pendingImg || null, t: Date.now() };
+    const msgs = [...this.state.msgs, msg];
+    this.save(msgs);
+    if (this.fileRef.current) this.fileRef.current.value = '';
+    this.setState({ msgs, draft: '', pendingImg: null }, () => this.scrollFeed());
+  };
+
+  colorFor(name) {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+    return this.PALETTE[h % this.PALETTE.length];
+  }
+
+  segmentsOf(text) {
+    return (text || '').split(/(@\w+|https?:\/\/\S+)/).filter((s) => s !== '').map((s) => {
+      const mention = /^@\w+$/.test(s);
+      return { t: s, m: mention, plain: !mention };
+    });
+  }
+
+  fmtTime(t) {
+    try { return new Date(t).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); } catch (e) { return ''; }
+  }
+
+  renderVals() {
+    const messages = (this.state.msgs || []).map((m) => ({
+      id: m.id,
+      name: m.name,
+      initial: (m.name || '?').trim().charAt(0).toUpperCase() || '?',
+      color: this.colorFor(m.name || '?'),
+      time: this.fmtTime(m.t),
+      segments: this.segmentsOf(m.text),
+      imgEl: m.img ? React.createElement('img', { src: m.img, alt: 'shared', style: { display: 'block', marginTop: '10px', maxWidth: '100%', borderRadius: '12px', border: '2px solid #000' } }) : null,
+    }));
+    return {
+      rootRef: this.rootRef, feedRef: this.feedRef, fileRef: this.fileRef,
+      needsName: !this.state.joined,
+      joined: this.state.joined,
+      name: this.state.name,
+      nameDraft: this.state.nameDraft,
+      draft: this.state.draft,
+      pendingImg: this.state.pendingImg || false,
+      pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '90px', borderRadius: '10px', border: '2px solid #000', display: 'block' } }) : null,
+      messages,
+      updateName: this.updateName, onNameKey: this.onNameKey, join: this.join,
+      updateDraft: this.updateDraft, onDraftKey: this.onDraftKey,
+      onFile: this.onFile, clearImg: this.clearImg, post: this.post,
+    };
+  }
+}
+</script>
+</body>
+</html>
