@@ -35,6 +35,7 @@
   @keyframes walkbob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
   @keyframes dashmove { to { stroke-dashoffset: -100; } }
   @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  @media (max-height: 760px) { [data-scrollhint] { display: none !important; } }
 </style>
 </helmet>
 <div ref="{{ rootRef }}" style="position: relative; width: 100%; overflow: hidden;">
@@ -49,11 +50,7 @@
   <!-- NAV -->
   <nav ref="{{ navRef }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); background: rgba(255,255,255,0); transition: background .35s ease, box-shadow .35s ease, padding .35s ease;">
     <a href="#top" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: .01em; position: relative;">
-      <span style="display: flex; flex-direction: column;">
-        <span style="color: #FF914D;">WALK</span>
-        <span style="color: #00BF63;">CLUB</span>
-      </span>
-      <span style="font-family: 'Permanent Marker', cursive; color: #000; font-size: 15px; transform: rotate(-9deg); margin-left: 3px; align-self: flex-end; margin-bottom: 2px;">LV</span>
+      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block;" />
     </a>
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
     <div style="display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
@@ -82,8 +79,8 @@
   </nav>
 
   <!-- ============ HERO ============ -->
-  <header id="top" style="position: relative; z-index: 4; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden;">
-
+  <header id="top" style="position: relative; z-index: 4; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; padding: 96px 0 44px;">
+    <style>@media (max-height: 780px){ #top{ justify-content: flex-start !important; } }</style>
     <!-- HERO 01: STACK on white -->
     <sc-if value="{{ isStack }}" hint-placeholder-val="{{ true }}">
       <div style="position: absolute; inset: 0; background: #FFFFFF;">
@@ -92,15 +89,7 @@
         <div data-parallax="0.5" style="position: absolute; top: 22%; right: 16%; width: 90px; height: 90px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
       </div>
       <div style="position: relative; text-align: center; padding: 0 20px;">
-        <div style="display: inline-block; position: relative; line-height: .78;">
-          <div style="font-family: 'Anton', sans-serif; color: #FF914D; font-size: clamp(74px,19vw,240px); letter-spacing: .01em; animation: wc-float 5s ease-in-out infinite; text-shadow: 0 4px 20px rgba(0,0,0,.32), 2px 2px 0 rgba(0,0,0,.16);">
-            <span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .05s;">W</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .12s;">A</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .19s;">L</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .26s;">K</span>
-          </div>
-          <div style="font-family: 'Anton', sans-serif; color: #00BF63; font-size: clamp(74px,19vw,240px); letter-spacing: .01em; position: relative; animation: wc-floatB 5s ease-in-out infinite .3s; text-shadow: 0 3px 0 rgba(0,0,0,.18);">
-            <span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .34s;">C</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .41s;">L</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .48s;">U</span><span style="display: inline-block; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: .55s;">B</span>
-            <span style="position: absolute; right: -.05em; bottom: -.02em; font-family: 'Permanent Marker', cursive; color: #000; font-size: .34em; transform: rotate(-9deg); animation: wc-pop .5s ease both .9s;">LV</span>
-          </div>
-        </div>
+        <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(240px,48vw,540px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
         <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #000;">Come for the walk. Stay for the community.</p>
         <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
           <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
@@ -116,8 +105,7 @@
       </div>
       <div style="position: relative; text-align: center; padding: 0 20px; mix-blend-mode: normal;">
         <div style="display: inline-block; line-height: .76; background: #fff; padding: 30px 44px; border: 4px solid #000; box-shadow: 10px 10px 0 #000; transform: rotate(-2deg);">
-          <div style="font-family: 'Anton', sans-serif; color: #FF914D; font-size: clamp(64px,15vw,190px);"><span style="display: inline-block; animation: wc-slide .7s cubic-bezier(.2,.8,.2,1) both;">WALK</span></div>
-          <div style="font-family: 'Anton', sans-serif; color: #00BF63; font-size: clamp(64px,15vw,190px); position: relative;"><span style="display: inline-block; animation: wc-slide .7s cubic-bezier(.2,.8,.2,1) both .15s;">CLUB</span><span style="position: absolute; right: -.15em; bottom: 0; font-family: 'Permanent Marker', cursive; color: #000; font-size: .34em; transform: rotate(-9deg); animation: wc-pop .5s ease both .6s;">LV</span></div>
+          <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(150px,34vw,380px); width: auto; display: block; margin: 0 auto;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 28px 0 26px; color: #fff; text-shadow: 2px 2px 0 #000;">Walk together. Connect. Grow.</p>
         <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
@@ -132,15 +120,14 @@
       </div>
       <div style="position: relative; text-align: center; padding: 0 20px;">
         <div style="display: inline-block; line-height: .74; position: relative;">
-          <div style="font-family: 'Anton', sans-serif; color: #fff; font-size: clamp(72px,18vw,230px); animation: wc-float 5s ease-in-out infinite;"><span style="display: inline-block; color: #FF914D; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both;">WALK</span></div>
-          <div style="font-family: 'Anton', sans-serif; color: #fff; font-size: clamp(72px,18vw,230px); position: relative; animation: wc-floatB 5s ease-in-out infinite .3s;"><span style="display: inline-block; color: #00BF63; animation: wc-slide .8s cubic-bezier(.2,.8,.2,1) both .2s;">CLUB</span><span style="position: absolute; right: -.02em; bottom: 0; font-family: 'Permanent Marker', cursive; color: #fff; font-size: .32em; transform: rotate(-9deg); animation: wc-pop .5s ease both .8s;">LV</span></div>
+          <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(160px,33vw,350px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #fff;">Come for the walk. Stay for the community.</p>
         <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
       </div>
     </sc-if>
 
-    <div style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-size: 11px; color: {{ scrollHintColor }}; display: flex; flex-direction: column; align-items: center; gap: 6px;">Scroll<span style="font-size: 16px; animation: wc-float 1.8s ease-in-out infinite;">↓</span></div>
+    <div data-scrollhint style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-size: 11px; color: {{ scrollHintColor }}; display: flex; flex-direction: column; align-items: center; gap: 6px;">Scroll<span style="font-size: 16px; animation: wc-float 1.8s ease-in-out infinite;">↓</span></div>
   </header>
 
   <!-- ============ MARQUEE ============ -->
@@ -297,29 +284,23 @@
       <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 44px;">
         <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #00BF63; margin-bottom: 10px;">@walkclublv</div>
         <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .92; margin: 0;">Follow the club.</h2>
-        <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #555; max-width: 48ch; margin: 16px auto 0;">See the crew in motion. Fresh from our feeds on Instagram and TikTok.</p>
+        <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #555; max-width: 48ch; margin: 16px auto 0;">Tap a logo to see the crew in motion — fresh photos, reels and clips on our socials.</p>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 22px;">
-        <sc-for list="{{ socials }}" as="s" hint-placeholder-count="2">
-          <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease;">
-            <div style="border: 3px solid #000; border-radius: 24px; overflow: hidden; box-shadow: 6px 6px 0 #000; background: #fff;">
-              <div style="display: flex; align-items: center; gap: 12px; padding: 16px 18px; background: {{ s.bar }}; color: {{ s.barFg }};">
-                <span style="width: 38px; height: 38px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; color: #000;" data-icon="{{ s.key }}"></span>
-                <div style="line-height: 1.1;">
-                  <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 16px;">{{ s.platform }}</div>
-                  <div style="font-family: 'DM Sans', sans-serif; font-size: 13px; opacity: .85;">@walkclublv</div>
-                </div>
-              </div>
-              <div data-embed-slot="{{ s.key }}" style="aspect-ratio: 4/5; background: {{ s.tile }}; display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; position: relative;">
-                <div>
-                  <div style="font-family: 'Anton', sans-serif; font-size: clamp(28px,4vw,42px); color: {{ s.tileFg }}; line-height: .9;">LATEST<br />{{ s.platformShort }}</div>
-                  <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .14em; font-size: 12px; color: {{ s.tileFg }}; opacity: .85; margin-top: 10px;">{{ s.key }} embed slot</div>
-                </div>
-              </div>
-              <a href="{{ s.url }}" target="_blank" style="display: block; text-align: center; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 15px; padding: 16px; background: #000; color: #fff; border-top: 3px solid #000; transition: background .3s ease;" style-hover="background: {{ s.bar }}; color: {{ s.barFg }};">{{ s.cta }} →</a>
-            </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 28px; max-width: 720px; margin: 0 auto;">
+        <a href="https://instagram.com/walkclublv" target="_blank" data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-decoration: none;">
+          <div style="border: 4px solid #000; border-radius: 30px; box-shadow: 8px 8px 0 #000; background: #fff; padding: 40px 24px 26px; text-align: center; transition: transform .2s ease, box-shadow .2s ease;" style-hover="transform: translate(-3px,-3px); box-shadow: 12px 12px 0 #000;">
+            <svg viewBox="0 0 24 24" style="width: clamp(96px,20vw,150px); height: auto; animation: wc-float 2.8s ease-in-out infinite;" fill="none" stroke="#000" stroke-width="1.6"><rect x="2" y="2" width="20" height="20" rx="6"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.6" cy="6.4" r="1.5" fill="#FF914D" stroke="none"></circle></svg>
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3vw,30px); margin-top: 18px; color: #000;">INSTAGRAM</div>
+            <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; color: #00BF63; font-weight: 700; margin-top: 4px;">@walkclublv →</div>
           </div>
-        </sc-for>
+        </a>
+        <a href="https://www.tiktok.com/@walkclublv" target="_blank" data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-decoration: none;">
+          <div style="border: 4px solid #000; border-radius: 30px; box-shadow: 8px 8px 0 #000; background: #fff; padding: 40px 24px 26px; text-align: center; transition: transform .2s ease, box-shadow .2s ease;" style-hover="transform: translate(-3px,-3px); box-shadow: 12px 12px 0 #000;">
+            <svg viewBox="0 0 24 24" style="width: clamp(96px,20vw,150px); height: auto; animation: wc-float 2.8s ease-in-out infinite .2s;" fill="#000"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3vw,30px); margin-top: 18px; color: #000;">TIKTOK</div>
+            <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; color: #00BF63; font-weight: 700; margin-top: 4px;">@walkclublv →</div>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -344,8 +325,7 @@
       </div>
       <div style="display: flex; justify-content: center; margin: 30px 0;">
         <div style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: clamp(34px,6vw,60px);">
-          <span style="display: flex; flex-direction: column;"><span style="color: #FF914D;">WALK</span><span style="color: #00BF63;">CLUB</span></span>
-          <span style="font-family: 'Permanent Marker', cursive; color: #fff; font-size: clamp(18px,3vw,30px); transform: rotate(-9deg); margin-left: 5px; align-self: flex-end; margin-bottom: 4px;">LV</span>
+          <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(56px,10vw,100px); width: auto; display: block;" />
         </div>
       </div>
       <div style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: #888; border-top: 1px solid #333; padding-top: 22px;">© 2026 Walk Club LV · Las Vegas, Nevada · <a href="mailto:hello@walkclublv.com">hello@walkclublv.com</a></div>
