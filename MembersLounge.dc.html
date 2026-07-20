@@ -787,7 +787,7 @@ class Component extends DCLogic {
       rooms, currentName: room.name, currentIcon: room.icon, currentSub: room.sub,
       posts, empty: posts.length === 0,
       draft: this.state.draft, addrDraft: this.state.addrDraft, updateDraft: this.updateDraft, updateAddr: this.updateAddr, onDraftKey: this.onDraftKey, post: this.post,
-      composerHint: room.id === 'gallery' ? 'Add a photo with the 🖼️ button, then a caption…' : 'Message the crew… use @name to tag someone',
+      composerHint: room.id === 'gallery' ? 'Add a photo + caption…' : 'Message the crew…',
       onFile: this.onFile, clearImg: this.clearImg, pendingImg: this.state.pendingImg || false,
       pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '84px', maxWidth: '100%', borderRadius: '9px', border: '2px solid var(--line)', display: 'block' } }) : null,
       chatComposer, mapComposer, pollCreator, lockedNotice, lockedText, muted,
