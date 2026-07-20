@@ -33,7 +33,7 @@
   @keyframes wc-neon { 0%,100% { text-shadow: 0 0 8px rgba(0,191,99,.9), 0 0 24px rgba(0,191,99,.55); } 47% { text-shadow: 0 0 6px rgba(0,191,99,.8); } 50% { text-shadow: none; } 53% { text-shadow: 0 0 10px rgba(0,191,99,.9); } }
 </style>
 </helmet>
-<div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; min-height: 100svh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink);">
+<div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; min-height: 100svh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink); overflow-x: hidden;">
 
   <!-- ===== TOP BAR ===== -->
   <div style="width: 100%; background: #000; color: #fff; border-bottom: 3px solid #00BF63; position: sticky; top: 0; z-index: 30;">
@@ -49,10 +49,12 @@
             <button onClick="{{ openMessages }}" title="Messages" style="cursor: pointer; position: relative; border: none; border-radius: 999px; padding: 5px 11px; font-size: 14px; background: {{ msgBtnBg }};">✉️<sc-if value="{{ hasDMBadge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #d1495b; color: #fff; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px; line-height: 16px; text-align: center; border: 1.5px solid #000;">{{ dmBadge }}</span></sc-if></button>
           </div>
           <button onClick="{{ toggleMembers }}" title="Members" style="cursor: pointer; width: 32px; height: 32px; border-radius: 999px; border: 1.5px solid #2c2c2c; background: #141414; color: #fff; font-size: 14px;">👥</button>
+          <sc-if value="{{ showRoleSwitch }}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; background: #141414; border: 1.5px solid #2c2c2c; border-radius: 999px; padding: 2px;">
             <button onClick="{{ setMember }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; font-weight: 700; border: none; border-radius: 999px; padding: 5px 8px; background: {{ memberTabBg }}; color: {{ memberTabColor }};">Mbr</button>
             <button onClick="{{ setMod }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; font-weight: 700; border: none; border-radius: 999px; padding: 5px 8px; background: {{ modTabBg }}; color: {{ modTabColor }};">Mod</button>
           </div>
+          </sc-if>
         </div>
       </sc-if>
     </div>
@@ -187,7 +189,7 @@
                 </sc-for>
                 <sc-if value="{{ p.canComment }}" hint-placeholder-val="{{ true }}">
                   <div style="display: flex; gap: 6px;">
-                    <input value="{{ p.commentDraft }}" onInput="{{ p.onCommentInput }}" onKeyDown="{{ p.onCommentKey }}" placeholder="Add a comment…" style="flex: 1; font-size: 13px; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 999px; outline: none; background: var(--field);" />
+                    <input value="{{ p.commentDraft }}" onInput="{{ p.onCommentInput }}" onKeyDown="{{ p.onCommentKey }}" placeholder="Add a comment…" style="flex: 1; min-width: 0; font-size: 13px; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 999px; outline: none; background: var(--field);" />
                     <button onClick="{{ p.onComment }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 0 13px;">Post</button>
                   </div>
                 </sc-if>
@@ -225,7 +227,7 @@
           <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #FF914D;">{{ mapComposerLabel }}</div>
           <input value="{{ addrDraft }}" onInput="{{ updateAddr }}" placeholder="Address or place (e.g. Sunset Park, Las Vegas)" style="width: 100%; font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field);" />
           <div style="display: flex; gap: 7px; align-items: flex-end;">
-            <textarea value="{{ draft }}" onInput="{{ updateDraft }}" rows="1" placeholder="Details — date, meet & walk times, notes…" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+            <textarea value="{{ draft }}" onInput="{{ updateDraft }}" rows="1" placeholder="Details — date, meet & walk times, notes…" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
             <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Post</button>
           </div>
         </div>
@@ -242,7 +244,7 @@
           <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 42px; height: 42px; border: 2px solid var(--line); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 19px; background: var(--chip);">
             🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
           </label>
-          <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
         </div>
       </sc-if>
@@ -313,7 +315,7 @@
       </div>
       <div style="border-top: 3px solid var(--line); background: var(--card); padding: 10px clamp(12px,4vw,18px); position: sticky; bottom: 0;">
         <div style="display: flex; gap: 7px; align-items: flex-end;">
-          <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ sendDM }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
         </div>
       </div>
@@ -438,6 +440,11 @@ class Component extends DCLogic {
   SEEND_KEY = 'wclv_seen_dms';
   PALETTE = ['#FF914D', '#00BF63', '#0ea5a3', '#d1495b', '#7c3aed', '#2563eb'];
 
+  // Example/seed posts auto-hide at midnight tonight (local).
+  SEED_IDS = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+  SEED_EXPIRE = new Date(2026, 6, 21, 0, 0, 0).getTime();
+  seedsGone() { return Date.now() >= this.SEED_EXPIRE; }
+
   LIGHT = { '--bg': '#f4f2ee', '--card': '#fff', '--ink': '#111', '--line': '#000', '--muted': '#999', '--field': '#fff', '--chip': '#f4f2ee', '--dash': '#ddd', '--accentSoft': '#ffe3d3' };
   DARK = { '--bg': '#15161a', '--card': '#1e2025', '--ink': '#f0f0f0', '--line': '#0a0a0a', '--muted': '#8b9096', '--field': '#282b31', '--chip': '#2a2d33', '--dash': '#3a3d44', '--accentSoft': '#3a2a1e' };
 
@@ -493,6 +500,7 @@ class Component extends DCLogic {
     let dms = (dp.data || []).map((r) => this.mapDMIn(r));
     if (!members.length) { members = this.seedMembers(); members.forEach((m) => this.syncMember(m)); }
     if (!posts.length) { const seed = this.seedPosts(); seed.forEach((p) => this.syncPost(p)); posts = seed.map((p) => this.mapPostIn(this.mapPostOut(p))); }
+    if (this.seedsGone()) { this.SEED_IDS.forEach((id) => this.remoteDelete('posts', 'id', id)); posts = posts.filter((p) => !this.SEED_IDS.includes(p.id)); }
     const pass = (sp.data || []).find((x) => x.key === 'speak_pass'); if (pass && pass.value) { try { localStorage.setItem('wclv_speak_pass', pass.value); } catch (e) {} }
     const role = this.isModPhone(this.state.phone) ? 'mod' : this.state.role;
     this.setState({ members, posts, dms, role }, () => this.scrollFeed());
@@ -701,7 +709,8 @@ class Component extends DCLogic {
       return { id: r.id, name: r.name, icon: r.icon, lock: r.modOnly, onClick: () => this.switchRoom(r.id), bg: active ? 'var(--ink)' : 'var(--card)', color: active ? 'var(--bg)' : 'var(--ink)', hasDot: showDot, dotColor: note.mention ? '#FF914D' : '#00BF63' };
     });
 
-    const posts = this.state.posts.filter((p) => p.room === this.state.room).sort((a, b) => a.t - b.t).map((p) => {
+    const seedsGone = this.seedsGone();
+    const posts = this.state.posts.filter((p) => p.room === this.state.room && !(seedsGone && this.SEED_IDS.includes(p.id))).sort((a, b) => a.t - b.t).map((p) => {
       const rxObj = p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {});
       const reactions = Object.keys(rxObj).filter((e) => rxObj[e].length).map((e) => ({ emoji: e, count: rxObj[e].length, bg: rxObj[e].includes(me) ? 'var(--accentSoft)' : 'var(--card)', onToggle: () => this.toggleReaction(p.id, e) }));
       const picker = this.REACTIONS.map((e) => ({ emoji: e, onPick: () => this.toggleReaction(p.id, e) }));
@@ -770,7 +779,7 @@ class Component extends DCLogic {
       hasDMBadge: dmBadgeTotal > 0, dmBadge: dmBadgeTotal > 9 ? '9+' : ('' + dmBadgeTotal),
       memberTabBg: isMod ? 'transparent' : '#00BF63', memberTabColor: isMod ? '#888' : '#fff',
       modTabBg: isMod ? '#FF914D' : 'transparent', modTabColor: isMod ? '#000' : '#888',
-      setMember: this.setMember, setMod: this.setMod,
+      setMember: this.setMember, setMod: this.setMod, showRoleSwitch: this.isModPhone(this.state.phone),
       toggleMembers: this.toggleMembers, showMembers: this.state.showMembers, stop: this.stop, members, memberCount: members.length,
       isMod, updatePassSet: this.updatePassSet, setSpeakPass: this.setSpeakPass, passSetDraft: this.state.passSetDraft,
       currentPass: (() => { try { return localStorage.getItem('wclv_speak_pass') || 'kick it'; } catch (e) { return 'kick it'; } })(),
@@ -780,7 +789,7 @@ class Component extends DCLogic {
       draft: this.state.draft, addrDraft: this.state.addrDraft, updateDraft: this.updateDraft, updateAddr: this.updateAddr, onDraftKey: this.onDraftKey, post: this.post,
       composerHint: room.id === 'gallery' ? 'Add a photo with the 🖼️ button, then a caption…' : 'Message the crew… use @name to tag someone',
       onFile: this.onFile, clearImg: this.clearImg, pendingImg: this.state.pendingImg || false,
-      pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '84px', borderRadius: '9px', border: '2px solid var(--line)', display: 'block' } }) : null,
+      pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '84px', maxWidth: '100%', borderRadius: '9px', border: '2px solid var(--line)', display: 'block' } }) : null,
       chatComposer, mapComposer, pollCreator, lockedNotice, lockedText, muted,
       mapComposerLabel: room.id === 'neon' ? 'New Neon Nights walk' : 'New walk',
       pollQ: this.state.pollQ, updatePollQ: this.updatePollQ, addPollOption: this.addPollOption, createPoll: this.createPoll,
