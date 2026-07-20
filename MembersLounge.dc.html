@@ -8,195 +8,788 @@
 <body>
 <x-dc>
 <helmet>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="apple-mobile-web-app-title" content="WCLV Lounge" />
+<meta name="theme-color" content="#00BF63" />
+<link rel="manifest" href="lounge.webmanifest" />
+<link rel="apple-touch-icon" href="lounge-icon-180.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #f4f2ee; font-family: 'DM Sans', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
   a { color: #00BF63; text-decoration: none; }
   a:hover { color: #FF914D; }
-  textarea { font-family: 'DM Sans', sans-serif; }
-  @keyframes ml-pop { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+  textarea, input { font-family: 'DM Sans', sans-serif; color: inherit; }
+  ::-webkit-scrollbar { height: 0; width: 7px; }
+  ::-webkit-scrollbar-thumb { background: #0003; border-radius: 8px; }
+  @keyframes ml-pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes wc-doorL { to { transform: translateX(-100%); } }
+  @keyframes wc-doorR { to { transform: translateX(100%); } }
+  @keyframes wc-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes wc-neon { 0%,100% { text-shadow: 0 0 8px rgba(0,191,99,.9), 0 0 24px rgba(0,191,99,.55); } 47% { text-shadow: 0 0 6px rgba(0,191,99,.8); } 50% { text-shadow: none; } 53% { text-shadow: 0 0 10px rgba(0,191,99,.9); } }
 </style>
 </helmet>
-<div ref="{{ rootRef }}" style="min-height: 100svh; display: flex; flex-direction: column; align-items: center; background: #f4f2ee;">
+<div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; min-height: 100svh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink);">
 
-  <!-- top bar -->
-  <div style="width: 100%; background: #000; color: #fff; border-bottom: 4px solid #00BF63; position: sticky; top: 0; z-index: 20;">
-    <div style="max-width: 640px; margin: 0 auto; padding: 12px clamp(14px,4vw,22px); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-      <div style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 22px;">
-        <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: 38px; width: auto; display: block;" />
+  <!-- ===== TOP BAR ===== -->
+  <div style="width: 100%; background: #000; color: #fff; border-bottom: 3px solid #00BF63; position: sticky; top: 0; z-index: 30;">
+    <div style="max-width: 620px; margin: 0 auto; padding: 8px clamp(12px,4vw,18px); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 9px; min-width: 0;">
+        <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: 28px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,.4));" />
+        <span style="font-family: 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .02em; font-size: 15px; color: #fff; white-space: nowrap;">Members Lounge</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 700; color: #00BF63; border: 1.5px solid #00BF63; border-radius: 999px; padding: 4px 10px; white-space: nowrap;">🔒 Members only</span>
-      </div>
+      <sc-if value="{{ joined }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="display: flex; background: #141414; border: 1.5px solid #2c2c2c; border-radius: 999px; padding: 2px;">
+            <button onClick="{{ openLounge }}" title="Lounge" style="cursor: pointer; border: none; border-radius: 999px; padding: 5px 11px; font-size: 14px; background: {{ loungeBtnBg }};">🍸</button>
+            <button onClick="{{ openMessages }}" title="Messages" style="cursor: pointer; position: relative; border: none; border-radius: 999px; padding: 5px 11px; font-size: 14px; background: {{ msgBtnBg }};">✉️<sc-if value="{{ hasDMBadge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #d1495b; color: #fff; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px; line-height: 16px; text-align: center; border: 1.5px solid #000;">{{ dmBadge }}</span></sc-if></button>
+          </div>
+          <button onClick="{{ toggleMembers }}" title="Members" style="cursor: pointer; width: 32px; height: 32px; border-radius: 999px; border: 1.5px solid #2c2c2c; background: #141414; color: #fff; font-size: 14px;">👥</button>
+          <div style="display: flex; background: #141414; border: 1.5px solid #2c2c2c; border-radius: 999px; padding: 2px;">
+            <button onClick="{{ setMember }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; font-weight: 700; border: none; border-radius: 999px; padding: 5px 8px; background: {{ memberTabBg }}; color: {{ memberTabColor }};">Mbr</button>
+            <button onClick="{{ setMod }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 9px; font-weight: 700; border: none; border-radius: 999px; padding: 5px 8px; background: {{ modTabBg }}; color: {{ modTabColor }};">Mod</button>
+          </div>
+        </div>
+      </sc-if>
     </div>
   </div>
 
-  <!-- name gate -->
-  <sc-if value="{{ needsName }}" hint-placeholder-val="{{ false }}">
+  <!-- ===== NAME / PHONE GATE ===== -->
+  <sc-if value="{{ needsName }}" hint-placeholder-val="{{ true }}">
   <div style="flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
-    <div style="max-width: 420px; width: 100%; background: #fff; border: 3px solid #000; border-radius: 22px; box-shadow: 8px 8px 0 #000; padding: 32px 26px; text-align: center;">
-      <div style="font-family: 'Anton', sans-serif; font-size: 40px; line-height: .9; color: #FF914D;">THE LOUNGE</div>
-      <p style="font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.5; color: #444; margin: 14px 0 20px;">Members-only chat for the crew. Drop your first name to hop in — this is just so everyone knows who's talking.</p>
-      <input value="{{ nameDraft }}" onInput="{{ updateName }}" onKeyDown="{{ onNameKey }}" placeholder="First name" style="width: 100%; font-size: 17px; padding: 13px 14px; border: 2px solid #000; border-radius: 12px; outline: none; margin-bottom: 14px;" />
-      <button onClick="{{ join }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 16px; background: #00BF63; color: #fff; border: 2px solid #000; border-radius: 12px; padding: 13px; transition: background .25s ease;" style-hover="background: #FF914D;">Enter the lounge →</button>
+    <div style="max-width: 400px; width: 100%; background: var(--card); border: 3px solid var(--line); border-radius: 20px; box-shadow: 7px 7px 0 var(--line); padding: 30px 24px; text-align: center;">
+      <div style="font-family: 'Anton', sans-serif; font-size: 42px; line-height: .9; color: #FF914D;">THE LOUNGE</div>
+      <p style="font-size: 14px; line-height: 1.5; color: var(--muted); margin: 12px 0 18px;">Members-only. First name + last initial and your number — we'll text you a code to hop in. No passwords, no accounts.</p>
+      <input value="{{ nameDraft }}" onInput="{{ updateName }}" placeholder="First name + last initial (e.g. Brandon E.)" style="width: 100%; font-size: 16px; padding: 12px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; margin-bottom: 10px; background: var(--field);" />
+      <input value="{{ phoneDraft }}" onInput="{{ updatePhone }}" onKeyDown="{{ onNameKey }}" inputmode="tel" placeholder="Mobile number" style="width: 100%; font-size: 16px; padding: 12px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; margin-bottom: 14px; background: var(--field);" />
+      <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .1em; font-size: 11px; color: var(--muted); margin-bottom: 8px;">Theme</div>
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <button onClick="{{ pickLight }}" style="cursor: pointer; flex: 1; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--line); border-radius: 11px; padding: 11px; background: {{ lightBtnBg }}; color: {{ lightBtnColor }};">☀️ Light</button>
+        <button onClick="{{ pickDark }}" style="cursor: pointer; flex: 1; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; border: 2px solid var(--line); border-radius: 11px; padding: 11px; background: {{ darkBtnBg }}; color: {{ darkBtnColor }};">🌙 Dark</button>
+      </div>
+      <button onClick="{{ join }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; background: #00BF63; color: #fff; border: 2px solid var(--line); border-radius: 11px; padding: 12px;" style-hover="background: #FF914D;">Enter the lounge →</button>
+      <div style="font-size: 11px; color: var(--muted); margin-top: 11px;">SMS verification goes live once the backend is wired. You can switch theme anytime in Members.</div>
     </div>
   </div>
   </sc-if>
 
-  <!-- board -->
-  <sc-if value="{{ joined }}" hint-placeholder-val="{{ true }}">
-  <div style="flex: 1; width: 100%; max-width: 640px; display: flex; flex-direction: column;">
-    <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 20px clamp(14px,4vw,22px) 14px; display: flex; flex-direction: column; gap: 16px;">
-      <div style="text-align: center; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; color: #999; padding: 6px 0 2px;">Welcome, {{ name }} 👋 · Be kind. Share pics. Tag your walk buddies.</div>
-      <sc-for list="{{ messages }}" as="msg" hint-placeholder-count="3">
-        <div style="display: flex; gap: 12px; align-items: flex-start; animation: ml-pop .3s ease both;">
-          <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #000; background: {{ msg.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 18px;">{{ msg.initial }}</div>
-          <div style="flex: 1; min-width: 0;">
-            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 3px;">
-              <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px;">{{ msg.name }}</span>
-              <span style="font-family: 'DM Sans', sans-serif; font-size: 12px; color: #999;">{{ msg.time }}</span>
+  <!-- ===== LOUNGE (ROOMS) ===== -->
+  <sc-if value="{{ isLoungeView }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; width: 100%; max-width: 620px; display: flex; flex-direction: column; min-height: 0;">
+
+    <div style="position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 9px clamp(12px,4vw,18px) 4px;">
+      <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 5px;">
+        <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="7">
+          <button onClick="{{ room.onClick }}" style="cursor: pointer; position: relative; flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 12px; border: 2px solid var(--line); border-radius: 999px; padding: 6px 12px; background: {{ room.bg }}; color: {{ room.color }}; white-space: nowrap;">
+            <span style="font-size: 14px;">{{ room.icon }}</span>{{ room.name }}<sc-if value="{{ room.lock }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; opacity: .7;">🔒</span></sc-if>
+            <sc-if value="{{ room.hasDot }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; width: 11px; height: 11px; border-radius: 50%; background: {{ room.dotColor }}; border: 2px solid var(--bg);"></span></sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding: 2px clamp(12px,4vw,18px) 6px;">
+      <div style="font-family: 'Anton', sans-serif; font-size: 25px; line-height: .95; color: var(--ink);">{{ currentIcon }} {{ currentName }}</div>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 1px;">{{ currentSub }}</div>
+    </div>
+
+    <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 2px clamp(12px,4vw,18px) 14px; display: flex; flex-direction: column; gap: 10px;">
+      <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">Nothing here yet — be the first.</div>
+      </sc-if>
+      <sc-for list="{{ posts }}" as="p" hint-placeholder-count="3">
+        <div style="background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
+
+          <sc-if value="{{ p.isGallery }}" hint-placeholder-val="{{ false }}">
+            {{ p.galleryImgEl }}
+          </sc-if>
+
+          <sc-if value="{{ p.isMap }}" hint-placeholder-val="{{ false }}">
+            <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--chip);">
+              <iframe src="{{ p.mapSrc }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width: 100%; height: 100%; border: 0; display: block;"></iframe>
             </div>
-            <div style="background: #fff; border: 2px solid #000; border-radius: 4px 16px 16px 16px; padding: 10px 14px; font-size: 15px; line-height: 1.5; word-wrap: break-word;">
-              <sc-for list="{{ msg.segments }}" as="seg" hint-placeholder-count="1"><sc-if value="{{ seg.m }}" hint-placeholder-val="{{ false }}"><span style="color: #00BF63; font-weight: 700;">{{ seg.t }}</span></sc-if><sc-if value="{{ seg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ seg.t }}</span></sc-if></sc-for>
-              {{ msg.imgEl }}
+          </sc-if>
+
+          <div style="padding: 9px 12px 10px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <div style="flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--line); background: {{ p.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 14px;">{{ p.initial }}</div>
+              <div style="flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 7px;">
+                <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px;">{{ p.name }}</span>
+                <span style="font-size: 11px; color: var(--muted);">{{ p.time }}</span>
+              </div>
+              <sc-if value="{{ p.canModerate }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.onDelete }}" title="Delete" style="cursor: pointer; flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--line); background: var(--card); color: #d1495b; font-size: 12px;">🗑</button>
+              </sc-if>
             </div>
+
+            <sc-if value="{{ p.isMap }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ p.mapLink }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 13px; color: #00BF63; border: 1.5px solid #00BF63; border-radius: 999px; padding: 5px 11px; margin-bottom: 6px;">📍 {{ p.address }} <span style="opacity: .6; font-weight: 500;">· navigate</span></a>
+            </sc-if>
+
+            <sc-if value="{{ p.hasText }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size: 14px; line-height: 1.45; word-wrap: break-word; margin-bottom: 6px; color: var(--ink);">
+                <sc-for list="{{ p.segments }}" as="seg" hint-placeholder-count="1"><sc-if value="{{ seg.m }}" hint-placeholder-val="{{ false }}"><span style="color: #00BF63; font-weight: 700;">{{ seg.t }}</span></sc-if><sc-if value="{{ seg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ seg.t }}</span></sc-if></sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ p.isChatImg }}" hint-placeholder-val="{{ false }}">
+              {{ p.inlineImgEl }}
+            </sc-if>
+
+            <sc-if value="{{ p.hasPoll }}" hint-placeholder-val="{{ false }}">
+              <div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px; background: var(--chip); margin-bottom: 6px;">
+                <div style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 9px;">{{ p.pollQuestion }}</div>
+                <div style="display: flex; flex-direction: column; gap: 7px;">
+                  <sc-for list="{{ p.options }}" as="opt" hint-placeholder-count="3">
+                    <button onClick="{{ opt.onVote }}" style="cursor: pointer; position: relative; text-align: left; border: 2px solid var(--line); border-radius: 9px; padding: 9px 11px; background: var(--card); overflow: hidden; width: 100%; color: var(--ink);">
+                      <div style="position: absolute; left: 0; top: 0; bottom: 0; width: {{ opt.pct }}; background: {{ opt.barColor }}; transition: width .4s ease;"></div>
+                      <div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                        <span style="font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ opt.voted }} {{ opt.label }}</span>
+                        <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 13px; color: var(--muted);">{{ opt.pct }}</span>
+                      </div>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="font-size: 11px; color: var(--muted); margin-top: 8px;">{{ p.pollTotal }} · tap to vote</div>
+              </div>
+            </sc-if>
+
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding-top: 2px;">
+              <sc-for list="{{ p.reactions }}" as="rx" hint-placeholder-count="1">
+                <button onClick="{{ rx.onToggle }}" style="cursor: pointer; display: flex; align-items: center; gap: 4px; border: 1.5px solid var(--line); background: {{ rx.bg }}; color: var(--ink); border-radius: 999px; padding: 4px 9px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px;">{{ rx.emoji }} {{ rx.count }}</button>
+              </sc-for>
+              <div style="position: relative;">
+                <button onClick="{{ p.onTogglePicker }}" title="Add reaction" style="cursor: pointer; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 4px 11px; font-size: 15px; line-height: 1; white-space: nowrap;">＋</button>
+                <sc-if value="{{ p.showPicker }}" hint-placeholder-val="{{ false }}">
+                  <div style="position: absolute; bottom: 118%; left: 0; z-index: 6; display: flex; gap: 3px; background: var(--card); border: 2px solid var(--line); border-radius: 999px; padding: 5px 8px; box-shadow: 3px 3px 0 var(--line);">
+                    <sc-for list="{{ p.picker }}" as="pe" hint-placeholder-count="6"><button onClick="{{ pe.onPick }}" style="cursor: pointer; border: none; background: transparent; font-size: 20px; line-height: 1; padding: 2px 3px;">{{ pe.emoji }}</button></sc-for>
+                  </div>
+                </sc-if>
+              </div>
+              <button onClick="{{ p.onToggleComments }}" style="cursor: pointer; display: flex; align-items: center; gap: 5px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 5px 11px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px;">💬 {{ p.commentCount }}</button>
+            </div>
+
+            <sc-if value="{{ p.showComments }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top: 9px; border-top: 1.5px dashed var(--dash); padding-top: 9px; display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ p.comments }}" as="c" hint-placeholder-count="1">
+                  <div style="display: flex; gap: 7px; align-items: flex-start;">
+                    <div style="flex-shrink: 0; width: 23px; height: 23px; border-radius: 50%; border: 1.5px solid var(--line); background: {{ c.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 11px;">{{ c.initial }}</div>
+                    <div style="flex: 1; min-width: 0;">
+                      <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px;">{{ c.name }}</span>
+                      <span style="font-size: 10px; color: var(--muted); margin-left: 5px;">{{ c.time }}</span>
+                      <div style="font-size: 13px; line-height: 1.4; word-wrap: break-word; color: var(--ink);">{{ c.text }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ p.canComment }}" hint-placeholder-val="{{ true }}">
+                  <div style="display: flex; gap: 6px;">
+                    <input value="{{ p.commentDraft }}" onInput="{{ p.onCommentInput }}" onKeyDown="{{ p.onCommentKey }}" placeholder="Add a comment…" style="flex: 1; font-size: 13px; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 999px; outline: none; background: var(--field);" />
+                    <button onClick="{{ p.onComment }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 0 13px;">Post</button>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
           </div>
         </div>
       </sc-for>
     </div>
 
-    <!-- composer -->
-    <div style="border-top: 3px solid #000; background: #fff; padding: 12px clamp(14px,4vw,22px); position: sticky; bottom: 0;">
-      <sc-if value="{{ pendingImg }}" hint-placeholder-val="{{ false }}">
-      <div style="position: relative; display: inline-block; margin-bottom: 10px;">
-        {{ pendingImgEl }}
-        <button onClick="{{ clearImg }}" title="Remove" style="cursor: pointer; position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; background: #000; color: #fff; border: 2px solid #fff; font-size: 13px; line-height: 1; padding: 0;">✕</button>
+    <div style="border-top: 3px solid var(--line); background: var(--card); padding: 10px clamp(12px,4vw,18px); position: sticky; bottom: 0;">
+      <sc-if value="{{ muted }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align: center; font-size: 12px; color: #d1495b; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .06em; padding: 5px 0;">🔇 You've been muted by a moderator.</div>
+      </sc-if>
+      <sc-if value="{{ lockedNotice }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align: center; font-size: 12px; color: var(--muted); padding: 5px 0;">{{ lockedText }}</div>
+      </sc-if>
+
+      <sc-if value="{{ pollCreator }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #FF914D;">New poll</div>
+          <input value="{{ pollQ }}" onInput="{{ updatePollQ }}" placeholder="Ask the crew a question…" style="width: 100%; font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field);" />
+          <sc-for list="{{ pollOptions }}" as="o" hint-placeholder-count="2">
+            <input value="{{ o.value }}" onInput="{{ o.onInput }}" placeholder="{{ o.placeholder }}" style="width: 100%; font-size: 13px; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 9px; outline: none; background: var(--field);" />
+          </sc-for>
+          <div style="display: flex; gap: 7px;">
+            <button onClick="{{ addPollOption }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: var(--chip); color: var(--ink); border: 1.5px solid var(--line); border-radius: 9px; padding: 8px 13px;">+ Option</button>
+            <button onClick="{{ createPoll }}" style="cursor: pointer; flex: 1; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: .05em; background: #00BF63; color: #fff; border: 2px solid var(--line); border-radius: 9px; padding: 8px;">Post poll</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ mapComposer }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 7px;">
+          <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #FF914D;">{{ mapComposerLabel }}</div>
+          <input value="{{ addrDraft }}" onInput="{{ updateAddr }}" placeholder="Address or place (e.g. Sunset Park, Las Vegas)" style="width: 100%; font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field);" />
+          <div style="display: flex; gap: 7px; align-items: flex-end;">
+            <textarea value="{{ draft }}" onInput="{{ updateDraft }}" rows="1" placeholder="Details — date, meet & walk times, notes…" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+            <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Post</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ chatComposer }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ pendingImg }}" hint-placeholder-val="{{ false }}">
+          <div style="position: relative; display: inline-block; margin-bottom: 8px;">
+            {{ pendingImgEl }}
+            <button onClick="{{ clearImg }}" title="Remove" style="cursor: pointer; position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%; background: #000; color: #fff; border: 2px solid #fff; font-size: 12px; line-height: 1; padding: 0;">✕</button>
+          </div>
+        </sc-if>
+        <div style="display: flex; gap: 7px; align-items: flex-end;">
+          <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 42px; height: 42px; border: 2px solid var(--line); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 19px; background: var(--chip);">
+            🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
+          </label>
+          <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===== MESSAGES (DMs) ===== -->
+  <sc-if value="{{ isMessagesView }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; width: 100%; max-width: 620px; display: flex; flex-direction: column; min-height: 0;">
+
+    <sc-if value="{{ dmList }}" hint-placeholder-val="{{ true }}">
+      <div style="padding: 12px clamp(12px,4vw,18px) 8px; display: flex; align-items: center; justify-content: space-between;">
+        <div style="font-family: 'Anton', sans-serif; font-size: 26px; color: var(--ink);">✉️ MESSAGES</div>
+        <button onClick="{{ startNewDM }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; background: #00BF63; color: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 8px 14px;">+ New</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 clamp(12px,4vw,18px) 16px; display: flex; flex-direction: column; gap: 9px;">
+        <sc-if value="{{ noDMs }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">No messages yet — start one with the crew.</div>
+        </sc-if>
+        <sc-for list="{{ conversations }}" as="dm" hint-placeholder-count="2">
+          <button onClick="{{ dm.onOpen }}" style="cursor: pointer; text-align: left; display: flex; align-items: center; gap: 11px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); padding: 11px 13px;">
+            <div style="position: relative; flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--line); background: {{ dm.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 15px;">{{ dm.initial }}<sc-if value="{{ dm.unread }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; width: 13px; height: 13px; border-radius: 50%; background: #d1495b; border: 2px solid var(--card);"></span></sc-if></div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; justify-content: space-between; gap: 8px;"><span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink);">{{ dm.title }}</span><span style="font-size: 11px; color: var(--muted); flex-shrink: 0;">{{ dm.time }}</span></div>
+              <div style="font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ dm.preview }}</div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ dmNew }}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 12px clamp(12px,4vw,18px) 8px; display: flex; align-items: center; gap: 10px;">
+        <button onClick="{{ backToDMList }}" style="cursor: pointer; width: 32px; height: 32px; border-radius: 9px; border: 2px solid var(--line); background: var(--card); color: var(--ink); font-size: 15px;">←</button>
+        <div style="font-family: 'Anton', sans-serif; font-size: 22px; color: var(--ink);">NEW MESSAGE</div>
+      </div>
+      <div style="font-size: 12px; color: var(--muted); padding: 0 clamp(12px,4vw,18px) 8px;">Pick one person for a DM, or several for a group.</div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 clamp(12px,4vw,18px) 8px; display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{ pickable }}" as="pk" hint-placeholder-count="3">
+          <button onClick="{{ pk.onToggle }}" style="cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px; background: {{ pk.bg }}; border: 2px solid var(--line); border-radius: 12px; padding: 9px 12px;">
+            <div style="flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--line); background: {{ pk.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 13px;">{{ pk.initial }}</div>
+            <span style="flex: 1; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px; color: var(--ink);">{{ pk.name }}</span>
+            <span style="font-size: 16px;">{{ pk.check }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="padding: 10px clamp(12px,4vw,18px); border-top: 3px solid var(--line); background: var(--card);">
+        <button onClick="{{ createDM }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 14px; background: #00BF63; color: #fff; border: 2px solid var(--line); border-radius: 11px; padding: 12px;">Start conversation</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ dmThread }}" hint-placeholder-val="{{ false }}">
+      <div style="position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 11px clamp(12px,4vw,18px) 8px; display: flex; align-items: center; gap: 10px;">
+        <button onClick="{{ backToDMList }}" style="cursor: pointer; width: 32px; height: 32px; border-radius: 9px; border: 2px solid var(--line); background: var(--card); color: var(--ink); font-size: 15px;">←</button>
+        <div style="min-width: 0;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink);">{{ activeTitle }}</div><div style="font-size: 11px; color: var(--muted);">{{ activeSub }}</div></div>
+      </div>
+      <div ref="{{ dmFeedRef }}" style="flex: 1; overflow-y: auto; padding: 6px clamp(12px,4vw,18px) 14px; display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{ threadMsgs }}" as="m" hint-placeholder-count="3">
+          <div style="display: flex; flex-direction: {{ m.dir }}; align-items: flex-end; gap: 7px;">
+            <div style="max-width: 78%;">
+              <sc-if value="{{ m.showName }}" hint-placeholder-val="{{ false }}"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 11px; color: var(--muted); margin: 0 0 2px 4px;">{{ m.name }}</div></sc-if>
+              <div style="background: {{ m.bubbleBg }}; color: {{ m.bubbleColor }}; border: 2px solid var(--line); border-radius: {{ m.radius }}; padding: 8px 12px; font-size: 14px; line-height: 1.4; word-wrap: break-word;">{{ m.text }}</div>
+              <div style="font-size: 10px; color: var(--muted); margin: 2px 4px 0; text-align: {{ m.align }};">{{ m.time }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top: 3px solid var(--line); background: var(--card); padding: 10px clamp(12px,4vw,18px); position: sticky; bottom: 0;">
+        <div style="display: flex; gap: 7px; align-items: flex-end;">
+          <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <button onClick="{{ sendDM }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ===== WELCOME (secret entry) ===== -->
+  <sc-if value="{{ showWelcome }}" hint-placeholder-val="{{ false }}">
+  <div style="position: fixed; inset: 0; z-index: 200; background: #08080a; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+    <div style="position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: #000; border-right: 2px solid #00BF63; animation: wc-doorL 1.1s cubic-bezier(.7,0,.2,1) .3s forwards; z-index: 2;"></div>
+    <div style="position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #000; border-left: 2px solid #00BF63; animation: wc-doorR 1.1s cubic-bezier(.7,0,.2,1) .3s forwards; z-index: 2;"></div>
+    <div style="position: relative; z-index: 1; max-width: 460px; width: 100%; max-height: 94svh; overflow-y: auto; padding: 30px 24px; text-align: center; animation: wc-rise .7s ease 1s both;">
+      <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: 58px; width: auto; margin: 0 auto 14px; display: block; filter: drop-shadow(0 3px 12px rgba(0,191,99,.45));" />
+      <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .34em; font-size: 11px; color: #FF914D;">You know the knock</div>
+      <div style="font-family: 'Anton', sans-serif; font-size: clamp(30px,8vw,44px); line-height: .95; color: #fff; margin: 8px 0 10px; animation: wc-neon 2.6s ease-in-out 1.2s infinite;">WELCOME TO<br>THE LOUNGE</div>
+      <p style="font-size: 14px; line-height: 1.55; color: #b9bdc4; margin: 0 0 20px;">The door's shut behind you and your name's on the list. So glad you're here — here's the lay of the land.</p>
+      <div style="display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 18px;">
+        <sc-for list="{{ welcomeRooms }}" as="wr" hint-placeholder-count="7">
+          <div style="display: flex; gap: 11px; align-items: flex-start; background: #131418; border: 1.5px solid #24262c; border-radius: 12px; padding: 10px 12px; animation: wc-rise .5s ease both; animation-delay: {{ wr.delay }};">
+            <span style="font-size: 20px; line-height: 1.2; flex-shrink: 0;">{{ wr.icon }}</span>
+            <div><div style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px; color: #fff;">{{ wr.name }}</div><div style="font-size: 12.5px; color: #9aa0a8; line-height: 1.4;">{{ wr.desc }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-family: 'DM Sans', sans-serif; font-size: 12px; color: #6f7580; font-style: italic; margin-bottom: 18px;">What happens in the Lounge, stays in the Lounge. 🤫</div>
+      <button onClick="{{ dismissWelcome }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; background: #00BF63; color: #000; border: 2px solid #000; border-radius: 12px; padding: 14px;">Step inside →</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===== MEMBERS PANEL ===== -->
+  <sc-if value="{{ showMembers }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ toggleMembers }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center;">
+    <div onClick="{{ stop }}" style="width: 100%; max-width: 620px; max-height: 82svh; overflow-y: auto; background: var(--card); border: 3px solid var(--line); border-radius: 20px 20px 0 0; padding: 18px clamp(14px,4vw,22px) 26px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="font-family: 'Anton', sans-serif; font-size: 24px; color: var(--ink);">👥 MEMBERS <span style="font-size: 14px; color: var(--muted);">{{ memberCount }}</span></div>
+        <button onClick="{{ toggleMembers }}" style="cursor: pointer; width: 30px; height: 30px; border-radius: 9px; border: 2px solid var(--line); background: var(--card); color: var(--ink); font-size: 14px;">✕</button>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <span style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; color: var(--ink);">Theme</span>
+        <div style="display: flex; gap: 6px;">
+          <button onClick="{{ pickLight }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 12px; background: {{ lightBtnBg }}; color: {{ lightBtnColor }};">☀️ Light</button>
+          <button onClick="{{ pickDark }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 12px; background: {{ darkBtnBg }}; color: {{ darkBtnColor }};">🌙 Dark</button>
+        </div>
+      </div>
+
+      <sc-if value="{{ isMod }}" hint-placeholder-val="{{ false }}">
+      <div style="border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; color: var(--ink); margin-bottom: 8px;">🔑 Speakeasy password</div>
+        <div style="display: flex; gap: 6px;">
+          <input value="{{ passSetDraft }}" onInput="{{ updatePassSet }}" placeholder="{{ currentPass }}" style="flex: 1; font-size: 14px; padding: 9px 11px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--field); outline: none;" />
+          <button onClick="{{ setSpeakPass }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 9px; padding: 0 14px;">Save</button>
+        </div>
+        <div style="font-size: 11px; color: var(--muted); margin-top: 6px;">{{ passHint }}</div>
       </div>
       </sc-if>
-      <div style="display: flex; gap: 8px; align-items: flex-end;">
-        <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 44px; height: 44px; border: 2px solid #000; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: #f4f2ee;">
-          🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
-        </label>
-        <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="Message the crew… use @name to tag someone" style="flex: 1; resize: none; font-size: 15px; line-height: 1.4; padding: 12px 14px; border: 2px solid #000; border-radius: 12px; outline: none; max-height: 120px;"></textarea>
-        <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 14px; background: #FF914D; color: #000; border: 2px solid #000; border-radius: 12px; padding: 12px 18px; height: 44px; transition: background .25s ease, color .25s ease;" style-hover="background: #00BF63; color: #fff;">Send</button>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{ members }}" as="mem" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 10px; border: 2px solid var(--line); border-radius: 12px; padding: 9px 11px;">
+            <div style="flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line); background: {{ mem.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 15px;">{{ mem.initial }}</div>
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px;">{{ mem.name }}</span><sc-if value="{{ mem.muted }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; color: #d1495b;">🔇</span></sc-if></div>
+              <sc-if value="{{ mem.showPhone }}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: var(--muted);">{{ mem.phone }}</span></sc-if>
+            </div>
+            <sc-if value="{{ mem.actionable }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; gap: 5px; flex-shrink: 0;">
+                <button onClick="{{ mem.onMute }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: .04em; background: var(--chip); color: var(--ink); border: 1.5px solid var(--line); border-radius: 7px; padding: 6px 9px;">{{ mem.muteLabel }}</button>
+                <button onClick="{{ mem.onRemove }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: .04em; background: #d1495b; color: #fff; border: 1.5px solid var(--line); border-radius: 7px; padding: 6px 9px;">Remove</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
       </div>
-      <div style="font-family: 'DM Sans', sans-serif; font-size: 11px; color: #aaa; margin-top: 7px;">Paste a Giphy/image URL right in the message to share a GIF, or use the 🖼️ button for a photo.</div>
     </div>
   </div>
   </sc-if>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;420px&quot;,&quot;height&quot;:&quot;760px&quot;}}">
 class Component extends DCLogic {
-  state = { joined: false, name: '', nameDraft: '', draft: '', pendingImg: null, msgs: [] };
+  state = {
+    joined: false, name: '', phone: '', role: 'member', theme: 'light',
+    nameDraft: '', phoneDraft: '',
+    view: 'lounge', room: 'lobby',
+    draft: '', pendingImg: null, addrDraft: '',
+    posts: [], members: [],
+    commentDrafts: {}, openComments: {},
+    pollQ: '', pollOpts: ['', ''],
+    showMembers: false,
+    dms: [], dmView: 'list', activeDM: null, dmDraft: '', newSel: [],
+    seenRooms: {}, seenDMs: {},
+    openPicker: {}, passSetDraft: '', passSaved: false, showWelcome: false,
+  };
+
+  WELCOME_DESC = {
+    lobby: 'Pull up a seat — this is where the whole crew hangs.',
+    gallery: 'Our wall of fame: every sunrise and finish-line selfie.',
+    trailhead: "Saturday's route drops here. Tap the map, we'll guide you in.",
+    neon: 'After-dark walks under the lights. First Wednesdays only.',
+    locker: 'Shoe talk, gear nerdery, and hot takes on socks.',
+    marquee: 'The house announcements — read up, stay in the know.',
+    polls: 'Big calls get a vote. Your say shapes the club.',
+  };
+
+  REACTIONS = ['❤️', '🔥', '👏', '😂', '🙌', '🎉'];
 
   rootRef = React.createRef();
   feedRef = React.createRef();
   fileRef = React.createRef();
+  dmFeedRef = React.createRef();
 
-  MSG_KEY = 'wclv_lounge_msgs';
+  POSTS_KEY = 'wclv_posts_v4';
+  MEM_KEY = 'wclv_members_v4';
+  DM_KEY = 'wclv_dms_v4';
   NAME_KEY = 'wclv_lounge_name';
-  PALETTE = ['#FF914D', '#00BF63', '#111827', '#0ea5a3', '#d1495b'];
+  PHONE_KEY = 'wclv_lounge_phone';
+  THEME_KEY = 'wclv_theme';
+  SEENR_KEY = 'wclv_seen_rooms';
+  SEEND_KEY = 'wclv_seen_dms';
+  PALETTE = ['#FF914D', '#00BF63', '#0ea5a3', '#d1495b', '#7c3aed', '#2563eb'];
 
-  componentDidMount() {
-    let msgs = [];
-    try { msgs = JSON.parse(localStorage.getItem(this.MSG_KEY) || 'null'); } catch (e) { msgs = null; }
-    if (!Array.isArray(msgs) || !msgs.length) msgs = this.seed();
-    const name = localStorage.getItem(this.NAME_KEY) || '';
-    this.setState({ msgs, name, joined: !!name }, () => this.scrollFeed());
+  LIGHT = { '--bg': '#f4f2ee', '--card': '#fff', '--ink': '#111', '--line': '#000', '--muted': '#999', '--field': '#fff', '--chip': '#f4f2ee', '--dash': '#ddd', '--accentSoft': '#ffe3d3' };
+  DARK = { '--bg': '#15161a', '--card': '#1e2025', '--ink': '#f0f0f0', '--line': '#0a0a0a', '--muted': '#8b9096', '--field': '#282b31', '--chip': '#2a2d33', '--dash': '#3a3d44', '--accentSoft': '#3a2a1e' };
+
+  ROOMS = [
+    { id: 'lobby', name: 'The Lobby', icon: '🛋️', layout: 'chat', modOnly: false, sub: 'General chat for the whole crew.' },
+    { id: 'gallery', name: 'The Gallery', icon: '🖼️', layout: 'gallery', modOnly: false, sub: 'Photos from the walks — post a pic.' },
+    { id: 'trailhead', name: 'The Trailhead', icon: '🥾', layout: 'map', modOnly: true, sub: "This Saturday's walk & meet spot." },
+    { id: 'neon', name: 'Neon Nights', icon: '🌃', layout: 'map', modOnly: true, sub: 'The after-dark, first-Wednesday walk.' },
+    { id: 'locker', name: 'The Locker Room', icon: '👟', layout: 'chat', modOnly: false, sub: 'Gear, shoes & fitness talk.' },
+    { id: 'marquee', name: 'The Marquee', icon: '📣', layout: 'chat', modOnly: true, sub: 'Official announcements from the mods.' },
+    { id: 'polls', name: 'Show of Hands', icon: '✋', layout: 'poll', modOnly: true, sub: 'Cast your vote on club decisions.' },
+  ];
+
+  // Moderators are matched by phone number (any format). Add a member's number here to make them a mod.
+  MOD_PHONES = ['7027864275', '8087228959', '7757508787', '7027930456', '7027886611'];
+  normPhone(p) { return (p || '').replace(/\D/g, '').replace(/^1(\d{10})$/, '$1'); }
+  isModPhone(p) { return this.MOD_PHONES.map((x) => this.normPhone(x)).includes(this.normPhone(p)); }
+
+  // ===== Supabase (multi-user backend) =====
+  SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
+  SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
+  remote = null;
+
+  loadScript(src) { return new Promise((res, rej) => { if (window.supabase) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); setTimeout(rej, 6000); }); }
+  async initSupabase() {
+    if (!this.SUPA_URL || !this.SUPA_KEY) return;
+    try {
+      await this.loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+      if (!window.supabase) return;
+      this.remote = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
+      await this.loadRemote();
+      this.subscribeRemote();
+    } catch (e) { this.remote = null; }
+  }
+  mapPostOut(p) { return { id: p.id, room: p.room, author: p.author, role: p.role, body: p.text || '', img: p.img || null, address: p.address || null, t: p.t, reactions: p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {}), comments: p.comments || [], poll: p.poll || null }; }
+  mapPostIn(r) { return { id: r.id, room: r.room, author: r.author, role: r.role, text: r.body || '', img: r.img || null, address: r.address || null, t: Number(r.t) || 0, reactions: r.reactions || {}, comments: r.comments || [], poll: r.poll || null }; }
+  mapDMOut(d) { return { id: d.id, members: d.members || [], is_group: !!d.group, name: d.name || null, messages: d.messages || [] }; }
+  mapDMIn(r) { return { id: r.id, members: r.members || [], group: !!r.is_group, name: r.name || null, messages: r.messages || [] }; }
+  remoteUpsert(table, row) { if (this.remote) { try { this.remote.from(table).upsert(row).then(() => {}, () => {}); } catch (e) {} } }
+  remoteDelete(table, col, val) { if (this.remote) { try { this.remote.from(table).delete().eq(col, val).then(() => {}, () => {}); } catch (e) {} } }
+  syncPost(p) { this.remoteUpsert('posts', this.mapPostOut(p)); }
+  syncDM(d) { this.remoteUpsert('dms', this.mapDMOut(d)); }
+  syncMember(m) { this.remoteUpsert('members', { phone: m.phone, name: m.name, role: m.role, muted: !!m.muted }); }
+  async loadRemote() {
+    const [mp, pp, dp, sp] = await Promise.all([
+      this.remote.from('members').select('*'),
+      this.remote.from('posts').select('*'),
+      this.remote.from('dms').select('*'),
+      this.remote.from('settings').select('*'),
+    ]);
+    let members = (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, role: m.role, muted: !!m.muted }));
+    let posts = (pp.data || []).map((r) => this.mapPostIn(r));
+    let dms = (dp.data || []).map((r) => this.mapDMIn(r));
+    if (!members.length) { members = this.seedMembers(); members.forEach((m) => this.syncMember(m)); }
+    if (!posts.length) { const seed = this.seedPosts(); seed.forEach((p) => this.syncPost(p)); posts = seed.map((p) => this.mapPostIn(this.mapPostOut(p))); }
+    const pass = (sp.data || []).find((x) => x.key === 'speak_pass'); if (pass && pass.value) { try { localStorage.setItem('wclv_speak_pass', pass.value); } catch (e) {} }
+    const role = this.isModPhone(this.state.phone) ? 'mod' : this.state.role;
+    this.setState({ members, posts, dms, role }, () => this.scrollFeed());
+  }
+  reloadTable(table) {
+    if (!this.remote) return;
+    if (table === 'posts') this.remote.from('posts').select('*').then((r) => { if (r.data) this.setState({ posts: r.data.map((x) => this.mapPostIn(x)) }); }, () => {});
+    else if (table === 'members') this.remote.from('members').select('*').then((r) => { if (r.data) this.setState({ members: r.data.map((m) => ({ name: m.name, phone: m.phone, role: m.role, muted: !!m.muted })) }); }, () => {});
+    else if (table === 'dms') this.remote.from('dms').select('*').then((r) => { if (r.data) this.setState({ dms: r.data.map((x) => this.mapDMIn(x)) }); }, () => {});
+  }
+  subscribeRemote() {
+    try {
+      this.remote.channel('lounge')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => this.reloadTable('posts'))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => this.reloadTable('members'))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'dms' }, () => this.reloadTable('dms'))
+        .subscribe();
+    } catch (e) {}
   }
 
-  seed() {
+  componentDidMount() {
+    let posts = null, members = null, dms = null, seenR = {}, seenD = {};
+    try { posts = JSON.parse(localStorage.getItem(this.POSTS_KEY) || 'null'); } catch (e) {}
+    try { members = JSON.parse(localStorage.getItem(this.MEM_KEY) || 'null'); } catch (e) {}
+    try { dms = JSON.parse(localStorage.getItem(this.DM_KEY) || 'null'); } catch (e) {}
+    try { seenR = JSON.parse(localStorage.getItem(this.SEENR_KEY) || '{}') || {}; } catch (e) {}
+    try { seenD = JSON.parse(localStorage.getItem(this.SEEND_KEY) || '{}') || {}; } catch (e) {}
+    if (!Array.isArray(posts) || !posts.length) posts = this.seedPosts();
+    if (!Array.isArray(members) || !members.length) members = this.seedMembers();
+    if (!Array.isArray(dms)) dms = [];
+    const name = localStorage.getItem(this.NAME_KEY) || '';
+    const phone = localStorage.getItem(this.PHONE_KEY) || '';
+    const theme = localStorage.getItem(this.THEME_KEY) || 'light';
+    const role = this.isModPhone(phone) ? 'mod' : 'member';
+    let welcome = false;
+    try { if (!!name && localStorage.getItem('wclv_justEntered') === '1') { welcome = true; localStorage.removeItem('wclv_justEntered'); } } catch (e) {}
+    this.setState({ posts, members, dms, name, phone, theme, role, joined: !!name, seenRooms: seenR, seenDMs: seenD, showWelcome: welcome }, () => { this.applyTheme(theme); this.scrollFeed(); this.initSupabase(); });
+  }
+
+  applyTheme(theme) { const el = this.rootRef.current; if (!el) return; const set = theme === 'dark' ? this.DARK : this.LIGHT; Object.keys(set).forEach((k) => el.style.setProperty(k, set[k])); }
+  pickLight = () => { try { localStorage.setItem(this.THEME_KEY, 'light'); } catch (e) {} this.setState({ theme: 'light' }, () => this.applyTheme('light')); };
+  pickDark = () => { try { localStorage.setItem(this.THEME_KEY, 'dark'); } catch (e) {} this.setState({ theme: 'dark' }, () => this.applyTheme('dark')); };
+
+  seedMembers() {
+    return [
+      { name: 'Jenn K.', phone: '808-722-8959', role: 'mod', muted: false },
+      { name: 'Brandon E.', phone: '702-786-4275', role: 'mod', muted: false },
+      { name: 'Dee R.', phone: '702-555-0143', role: 'member', muted: false },
+      { name: 'Tomás V.', phone: '702-555-0164', role: 'member', muted: false },
+    ];
+  }
+  seedPosts() {
     const now = Date.now();
     return [
-      { id: 'a', name: 'Jenn', text: "Welcome to the Lounge! 🎉 Members-only — drop your pics from Saturday's walk right here.", img: null, t: now - 3600000 },
-      { id: 'b', name: 'Marcus', text: 'Great pace today @everyone — same spot next week? 👟', img: null, t: now - 1800000 },
+      { id: 'p1', room: 'lobby', author: 'Jenn K.', role: 'mod', text: "Welcome to the Lounge! 🎉 Say hi and tell us where you're walking from.", img: null, t: now - 7200000, likes: ['Marcus T.', 'Dee R.'], comments: [{ author: 'Dee R.', text: 'So happy this exists!', t: now - 7000000 }] },
+      { id: 'p2', room: 'lobby', author: 'Marcus T.', role: 'mod', text: 'Great pace today @everyone — same spot next week? 👟', img: null, t: now - 3600000, likes: ['Jenn K.'], comments: [] },
+      { id: 'p3', room: 'trailhead', author: 'Jenn K.', role: 'mod', text: 'This Saturday · meet 8:00, walk 8:30, coffee after. See you there!', address: 'Sunset Park, 2601 E Sunset Rd, Las Vegas, NV', img: null, t: now - 5400000, likes: ['Tomás V.', 'Dee R.', 'Marcus T.'], comments: [] },
+      { id: 'p4', room: 'neon', author: 'Marcus T.', role: 'mod', text: 'Neon Nights · first Wednesday, 7:30pm. Bring your glow! ✨', address: 'The Strat, 2000 Las Vegas Blvd S, Las Vegas, NV', img: null, t: now - 90000000, likes: ['Jenn K.', 'Dee R.'], comments: [] },
+      { id: 'p5', room: 'marquee', author: 'Jenn K.', role: 'mod', text: '🚨 New members: drop your intro in The Lobby so we can welcome you!', img: null, t: now - 86400000, likes: ['Marcus T.', 'Dee R.', 'Tomás V.'], comments: [{ author: 'Tomás V.', text: "On it 🙌", t: now - 80000000 }] },
+      { id: 'p6', room: 'polls', author: 'Marcus T.', role: 'mod', text: '', img: null, t: now - 1800000, likes: [], comments: [], poll: { question: 'Where should we walk next Saturday?', options: [ { label: 'Sunset Park', votes: ['Jenn K.', 'Dee R.'] }, { label: 'Springs Preserve', votes: ['Tomás V.'] }, { label: 'Downtown Arts District', votes: [] } ] } },
     ];
   }
 
-  save(msgs) { try { localStorage.setItem(this.MSG_KEY, JSON.stringify(msgs)); } catch (e) {} }
-
-  scrollFeed() {
-    const f = this.feedRef.current;
-    if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; });
-  }
+  savePosts(p) { try { localStorage.setItem(this.POSTS_KEY, JSON.stringify(p)); } catch (e) {} }
+  saveMembers(m) { try { localStorage.setItem(this.MEM_KEY, JSON.stringify(m)); } catch (e) {} }
+  saveDMs(d) { try { localStorage.setItem(this.DM_KEY, JSON.stringify(d)); } catch (e) {} }
+  saveSeenR(s) { try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(s)); } catch (e) {} }
+  saveSeenD(s) { try { localStorage.setItem(this.SEEND_KEY, JSON.stringify(s)); } catch (e) {} }
+  scrollFeed() { const f = this.feedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
+  scrollDM() { const f = this.dmFeedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
 
   updateName = (e) => this.setState({ nameDraft: e.target.value });
+  updatePhone = (e) => this.setState({ phoneDraft: e.target.value });
   onNameKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.join(); } };
   join = () => {
     const name = (this.state.nameDraft || '').trim();
-    if (!name) return;
-    try { localStorage.setItem(this.NAME_KEY, name); } catch (e) {}
-    this.setState({ name, joined: true, nameDraft: '' }, () => this.scrollFeed());
+    const phone = (this.state.phoneDraft || '').trim();
+    if (!name || !phone) return;
+    const role = this.isModPhone(phone) ? 'mod' : 'member';
+    try { localStorage.setItem(this.NAME_KEY, name); localStorage.setItem(this.PHONE_KEY, phone); localStorage.setItem('wclv_member', '1'); } catch (e) {}
+    let members = this.state.members.slice();
+    const meRow = { name, phone, role, muted: false };
+    if (!members.some((m) => m.name.toLowerCase() === name.toLowerCase())) { members = [...members, meRow]; this.saveMembers(members); }
+    this.syncMember(meRow);
+    // welcome DM so notifications + messaging can be demoed
+    let dms = this.state.dms.slice();
+    if (!dms.some((d) => d.members.includes(name))) { const wdm = { id: 'dmw' + Date.now(), members: [name, 'Jenn K.'], group: false, messages: [{ author: 'Jenn K.', text: 'Welcome to the Lounge! 👋 Ping me anytime.', t: Date.now() }] }; dms = [...dms, wdm]; this.saveDMs(dms); this.syncDM(wdm); }
+    try { localStorage.removeItem('wclv_justEntered'); } catch (e) {}
+    this.setState({ name, phone, role, joined: true, members, dms, nameDraft: '', phoneDraft: '', showWelcome: true }, () => this.scrollFeed());
   };
+
+  dismissWelcome = () => { try { localStorage.setItem('wclv_welcomed', '1'); } catch (e) {} this.setState({ showWelcome: false }); };
+  setMember = () => this.setState({ role: 'member' });
+  setMod = () => this.setState({ role: 'mod' });
+  isMuted() { const me = this.state.members.find((m) => m.name.toLowerCase() === (this.state.name || '').toLowerCase()); return !!(me && me.muted); }
+
+  openLounge = () => this.setState({ view: 'lounge' });
+  openMessages = () => this.setState({ view: 'messages', dmView: 'list', activeDM: null });
+
+  switchRoom = (id) => { const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms }, () => this.scrollFeed()); };
 
   updateDraft = (e) => this.setState({ draft: e.target.value });
+  updateAddr = (e) => this.setState({ addrDraft: e.target.value });
   onDraftKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.post(); } };
-
-  onFile = (e) => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => this.setState({ pendingImg: reader.result });
-    reader.readAsDataURL(file);
-  };
+  onFile = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => this.setState({ pendingImg: r.result }); r.readAsDataURL(file); };
   clearImg = () => { this.setState({ pendingImg: null }); if (this.fileRef.current) this.fileRef.current.value = ''; };
 
   post = () => {
+    if (this.isMuted()) return;
+    const room = this.ROOMS.find((r) => r.id === this.state.room);
     const text = (this.state.draft || '').trim();
-    if (!text && !this.state.pendingImg) return;
-    const msg = { id: 'm' + Date.now(), name: this.state.name || 'Guest', text, img: this.state.pendingImg || null, t: Date.now() };
-    const msgs = [...this.state.msgs, msg];
-    this.save(msgs);
+    const addr = (this.state.addrDraft || '').trim();
+    if (room.layout === 'map') { if (!addr) return; } else if (!text && !this.state.pendingImg) return;
+    const msg = { id: 'm' + Date.now(), room: this.state.room, author: this.state.name, role: this.state.role, text, img: this.state.pendingImg || null, address: room.layout === 'map' ? addr : null, t: Date.now(), likes: [], comments: [] };
+    const posts = [...this.state.posts, msg];
+    const seenRooms = { ...this.state.seenRooms, [this.state.room]: Date.now() };
+    this.savePosts(posts); this.saveSeenR(seenRooms); this.syncPost(msg);
     if (this.fileRef.current) this.fileRef.current.value = '';
-    this.setState({ msgs, draft: '', pendingImg: null }, () => this.scrollFeed());
+    this.setState({ posts, draft: '', pendingImg: null, addrDraft: '', seenRooms }, () => this.scrollFeed());
   };
 
-  colorFor(name) {
-    let h = 0;
-    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-    return this.PALETTE[h % this.PALETTE.length];
-  }
-
-  segmentsOf(text) {
-    return (text || '').split(/(@\w+|https?:\/\/\S+)/).filter((s) => s !== '').map((s) => {
-      const mention = /^@\w+$/.test(s);
-      return { t: s, m: mention, plain: !mention };
+  toggleReaction = (id, emoji) => {
+    const me = this.state.name;
+    const posts = this.state.posts.map((p) => {
+      if (p.id !== id) return p;
+      const rx = { ...(p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes.slice() } : {})) };
+      const arr = (rx[emoji] || []).slice();
+      rx[emoji] = arr.includes(me) ? arr.filter((n) => n !== me) : [...arr, me];
+      if (!rx[emoji].length) delete rx[emoji];
+      const np = { ...p, reactions: rx }; delete np.likes; return np;
     });
-  }
+    this.savePosts(posts); { const cp = posts.find((p) => p.id === id); if (cp) this.syncPost(cp); }
+    this.setState((s) => ({ posts, openPicker: { ...s.openPicker, [id]: false } }));
+  };
+  togglePicker = (id) => this.setState((s) => ({ openPicker: { ...s.openPicker, [id]: !s.openPicker[id] } }));
+  updatePassSet = (e) => this.setState({ passSetDraft: e.target.value, passSaved: false });
+  setSpeakPass = () => { const v = (this.state.passSetDraft || '').trim(); if (!v) return; try { localStorage.setItem('wclv_speak_pass', v); } catch (e) {} this.remoteUpsert('settings', { key: 'speak_pass', value: v }); this.setState({ passSetDraft: '', passSaved: true }); };
+  toggleComments = (id) => this.setState((s) => ({ openComments: { ...s.openComments, [id]: !s.openComments[id] } }));
+  updateComment = (id, e) => { const v = e.target.value; this.setState((s) => ({ commentDrafts: { ...s.commentDrafts, [id]: v } })); };
+  onCommentKey = (id, e) => { if (e.key === 'Enter') { e.preventDefault(); this.addComment(id); } };
+  addComment = (id) => { if (this.isMuted()) return; const text = (this.state.commentDrafts[id] || '').trim(); if (!text) return; const posts = this.state.posts.map((p) => p.id === id ? { ...p, comments: [...(p.comments || []), { author: this.state.name, text, t: Date.now() }] } : p); this.savePosts(posts); { const cp = posts.find((p) => p.id === id); if (cp) this.syncPost(cp); } this.setState((s) => ({ posts, commentDrafts: { ...s.commentDrafts, [id]: '' }, openComments: { ...s.openComments, [id]: true } })); };
 
-  fmtTime(t) {
-    try { return new Date(t).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); } catch (e) { return ''; }
+  deletePost = (id) => { const posts = this.state.posts.filter((p) => p.id !== id); this.savePosts(posts); this.remoteDelete('posts', 'id', id); this.setState({ posts }); };
+  toggleMembers = () => this.setState((s) => ({ showMembers: !s.showMembers }));
+  stop = (e) => e.stopPropagation();
+  muteMember = (name) => { const members = this.state.members.map((m) => m.name === name ? { ...m, muted: !m.muted } : m); this.saveMembers(members); { const cm = members.find((m) => m.name === name); if (cm) this.syncMember(cm); } this.setState({ members }); };
+  removeMember = (name) => { const gone = this.state.members.find((m) => m.name === name); const members = this.state.members.filter((m) => m.name !== name); this.saveMembers(members); if (gone) this.remoteDelete('members', 'phone', gone.phone); this.setState({ members }); };
+
+  updatePollQ = (e) => this.setState({ pollQ: e.target.value });
+  updatePollOpt = (i, e) => { const v = e.target.value; this.setState((s) => { const o = s.pollOpts.slice(); o[i] = v; return { pollOpts: o }; }); };
+  addPollOption = () => this.setState((s) => ({ pollOpts: [...s.pollOpts, ''] }));
+  createPoll = () => { const q = (this.state.pollQ || '').trim(); const opts = this.state.pollOpts.map((o) => o.trim()).filter(Boolean); if (!q || opts.length < 2) return; const poll = { id: 'poll' + Date.now(), room: 'polls', author: this.state.name, role: this.state.role, text: '', img: null, t: Date.now(), likes: [], comments: [], poll: { question: q, options: opts.map((label) => ({ label, votes: [] })) } }; const posts = [...this.state.posts, poll]; this.savePosts(posts); this.syncPost(poll); this.setState({ posts, pollQ: '', pollOpts: ['', ''] }, () => this.scrollFeed()); };
+  votePoll = (postId, optIdx) => { const me = this.state.name; const posts = this.state.posts.map((p) => { if (p.id !== postId || !p.poll) return p; const options = p.poll.options.map((o, i) => { let votes = (o.votes || []).filter((n) => n !== me); if (i === optIdx && !(o.votes || []).includes(me)) votes = [...votes, me]; return { ...o, votes }; }); return { ...p, poll: { ...p.poll, options } }; }); this.savePosts(posts); { const cp = posts.find((p) => p.id === postId); if (cp) this.syncPost(cp); } this.setState({ posts }); };
+
+  openDM = (id) => { const seenDMs = { ...this.state.seenDMs, [id]: Date.now() }; this.saveSeenD(seenDMs); this.setState({ dmView: 'thread', activeDM: id, seenDMs }, () => this.scrollDM()); };
+  backToDMList = () => this.setState({ dmView: 'list', activeDM: null, newSel: [] });
+  startNewDM = () => this.setState({ dmView: 'new', newSel: [] });
+  toggleSel = (name) => this.setState((s) => ({ newSel: s.newSel.includes(name) ? s.newSel.filter((n) => n !== name) : [...s.newSel, name] }));
+  createDM = () => {
+    const sel = this.state.newSel; if (!sel.length) return;
+    const membersArr = [this.state.name, ...sel];
+    const existing = this.state.dms.find((d) => d.members.length === membersArr.length && membersArr.every((n) => d.members.includes(n)));
+    if (existing) { this.openDM(existing.id); this.setState({ newSel: [] }); return; }
+    const group = sel.length > 1;
+    const dm = { id: 'dm' + Date.now(), members: membersArr, group, name: group ? sel.join(', ') : sel[0], messages: [] };
+    const dms = [...this.state.dms, dm];
+    this.saveDMs(dms); this.syncDM(dm);
+    this.setState({ dms, dmView: 'thread', activeDM: dm.id, newSel: [] }, () => this.scrollDM());
+  };
+  updateDmDraft = (e) => this.setState({ dmDraft: e.target.value });
+  onDmKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendDM(); } };
+  sendDM = () => { const text = (this.state.dmDraft || '').trim(); if (!text || !this.state.activeDM) return; const dms = this.state.dms.map((d) => d.id === this.state.activeDM ? { ...d, messages: [...d.messages, { author: this.state.name, text, t: Date.now() }] } : d); const seenDMs = { ...this.state.seenDMs, [this.state.activeDM]: Date.now() }; this.saveDMs(dms); this.saveSeenD(seenDMs); { const cd = dms.find((d) => d.id === this.state.activeDM); if (cd) this.syncDM(cd); } this.setState({ dms, dmDraft: '', seenDMs }, () => this.scrollDM()); };
+
+  colorFor(name) { let h = 0; const s = name || '?'; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return this.PALETTE[h % this.PALETTE.length]; }
+  segmentsOf(text) { return (text || '').split(/(@\w+|https?:\/\/\S+)/).filter((s) => s !== '').map((s) => { const m = /^@\w+$/.test(s); return { t: s, m, plain: !m }; }); }
+  fmtTime(t) { try { const d = new Date(t), diff = (Date.now() - t) / 1000; if (diff < 60) return 'just now'; if (diff < 3600) return Math.floor(diff / 60) + 'm ago'; if (diff < 86400) return Math.floor(diff / 3600) + 'h ago'; return d.toLocaleDateString([], { month: 'short', day: 'numeric' }); } catch (e) { return ''; } }
+  initialOf(n) { return (n || '?').trim().charAt(0).toUpperCase() || '?'; }
+  dmTitle(d) { const others = d.members.filter((n) => n !== this.state.name); return d.group ? (d.name || others.join(', ')) : others[0] || 'You'; }
+
+  myDMs() { const me = this.state.name; return this.state.dms.filter((d) => d.members.includes(me)); }
+  dmUnreadCount(d) { const me = this.state.name; const seen = this.state.seenDMs[d.id] || 0; return d.messages.filter((m) => m.author !== me && m.t > seen).length; }
+  roomNote(roomId) {
+    const me = (this.state.name || '').toLowerCase();
+    const seen = this.state.seenRooms[roomId] || 0;
+    let unread = false, mention = false;
+    this.state.posts.filter((p) => p.room === roomId).forEach((p) => {
+      if (p.author !== this.state.name && p.t > seen) unread = true;
+      if (p.t > seen && (p.text || '').toLowerCase().includes('@' + me)) mention = true;
+      (p.comments || []).forEach((c) => { if (c.t > seen && (c.text || '').toLowerCase().includes('@' + me)) mention = true; });
+    });
+    return { unread, mention };
   }
 
   renderVals() {
-    const messages = (this.state.msgs || []).map((m) => ({
-      id: m.id,
-      name: m.name,
-      initial: (m.name || '?').trim().charAt(0).toUpperCase() || '?',
-      color: this.colorFor(m.name || '?'),
-      time: this.fmtTime(m.t),
-      segments: this.segmentsOf(m.text),
-      imgEl: m.img ? React.createElement('img', { src: m.img, alt: 'shared', style: { display: 'block', marginTop: '10px', maxWidth: '100%', borderRadius: '12px', border: '2px solid #000' } }) : null,
+    const me = this.state.name;
+    const isMod = this.state.role === 'mod';
+    const dark = this.state.theme === 'dark';
+    const room = this.ROOMS.find((r) => r.id === this.state.room) || this.ROOMS[0];
+    const muted = this.isMuted();
+    const canPostHere = !room.modOnly || isMod;
+
+    const rooms = this.ROOMS.map((r) => {
+      const active = r.id === this.state.room;
+      const note = this.roomNote(r.id);
+      const showDot = !active && (note.unread || note.mention);
+      return { id: r.id, name: r.name, icon: r.icon, lock: r.modOnly, onClick: () => this.switchRoom(r.id), bg: active ? 'var(--ink)' : 'var(--card)', color: active ? 'var(--bg)' : 'var(--ink)', hasDot: showDot, dotColor: note.mention ? '#FF914D' : '#00BF63' };
+    });
+
+    const posts = this.state.posts.filter((p) => p.room === this.state.room).sort((a, b) => a.t - b.t).map((p) => {
+      const rxObj = p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {});
+      const reactions = Object.keys(rxObj).filter((e) => rxObj[e].length).map((e) => ({ emoji: e, count: rxObj[e].length, bg: rxObj[e].includes(me) ? 'var(--accentSoft)' : 'var(--card)', onToggle: () => this.toggleReaction(p.id, e) }));
+      const picker = this.REACTIONS.map((e) => ({ emoji: e, onPick: () => this.toggleReaction(p.id, e) }));
+      let pollFields = { hasPoll: false, options: [] };
+      if (p.poll) {
+        const total = p.poll.options.reduce((s, o) => s + (o.votes || []).length, 0);
+        pollFields = { hasPoll: true, pollQuestion: p.poll.question, pollTotal: total + (total === 1 ? ' vote' : ' votes'),
+          options: p.poll.options.map((o, i) => { const cnt = (o.votes || []).length; const pct = total ? Math.round((cnt / total) * 100) : 0; const voted = (o.votes || []).includes(me); return { label: o.label, pct: pct + '%', voted: voted ? '✓' : '', barColor: voted ? 'rgba(0,191,99,.28)' : (dark ? 'rgba(255,255,255,.07)' : 'rgba(0,0,0,.07)'), onVote: () => this.votePoll(p.id, i) }; }) };
+      }
+      const isGallery = room.layout === 'gallery' && !!p.img;
+      const isMap = room.layout === 'map' && !!p.address;
+      const isChatImg = !isGallery && !isMap && !!p.img;
+      return {
+        id: p.id, name: p.author, initial: this.initialOf(p.author), color: this.colorFor(p.author), time: this.fmtTime(p.t),
+        isGallery, isMap, isChatImg,
+        galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', maxHeight: '460px', objectFit: 'cover' } }) : null,
+        inlineImgEl: isChatImg ? React.createElement('img', { src: p.img, alt: 'shared', style: { display: 'block', marginBottom: '6px', maxWidth: '100%', borderRadius: '10px', border: '2px solid var(--line)' } }) : null,
+        address: p.address, mapSrc: isMap ? ('https://www.google.com/maps?q=' + encodeURIComponent(p.address) + '&z=15&output=embed') : '', mapLink: isMap ? ('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address)) : '',
+        hasText: !!(p.text && p.text.trim()), segments: this.segmentsOf(p.text),
+        reactions, picker, showPicker: !!this.state.openPicker[p.id], onTogglePicker: () => this.togglePicker(p.id),
+        commentCount: (p.comments || []).length, showComments: !!this.state.openComments[p.id],
+        canModerate: isMod, onDelete: () => this.deletePost(p.id),
+        onToggleComments: () => this.toggleComments(p.id),
+        comments: (p.comments || []).map((c) => ({ name: c.author, initial: this.initialOf(c.author), color: this.colorFor(c.author), time: this.fmtTime(c.t), text: c.text })),
+        canComment: !muted, commentDraft: this.state.commentDrafts[p.id] || '',
+        onCommentInput: (e) => this.updateComment(p.id, e), onCommentKey: (e) => this.onCommentKey(p.id, e), onComment: () => this.addComment(p.id),
+        ...pollFields,
+      };
+    });
+
+    const members = this.state.members.map((m) => ({
+      name: m.name, initial: this.initialOf(m.name), color: this.colorFor(m.name), phone: m.phone,
+      muted: !!m.muted, showPhone: isMod,
+      actionable: isMod && m.name.toLowerCase() !== (me || '').toLowerCase(),
+      muteLabel: m.muted ? 'Unmute' : 'Mute', onMute: () => this.muteMember(m.name), onRemove: () => this.removeMember(m.name),
     }));
+
+    let lockedNotice = false, lockedText = '';
+    if (room.modOnly && !isMod) { lockedNotice = true; if (room.id === 'marquee') lockedText = '📣 Only moderators post here — but you can like & comment.'; else if (room.id === 'polls') lockedText = '✋ Moderators post the polls — cast your vote above!'; else lockedText = '🔒 Only moderators can post in ' + room.name + ' — you can like & comment.'; }
+    const chatComposer = (room.layout === 'chat' || room.layout === 'gallery') && canPostHere && !muted;
+    const mapComposer = room.layout === 'map' && isMod && !muted;
+    const pollCreator = room.layout === 'poll' && isMod && !muted;
+
+    const myDMs = this.myDMs();
+    const conversations = myDMs.map((d) => { const last = d.messages[d.messages.length - 1]; const title = this.dmTitle(d); const un = this.dmUnreadCount(d); return { id: d.id, title: d.group ? ('👥 ' + title) : title, initial: this.initialOf(title), color: this.colorFor(title), preview: last ? ((last.author === me ? 'You: ' : (last.author + ': ')) + last.text) : 'No messages yet', time: last ? this.fmtTime(last.t) : '', unread: un > 0, onOpen: () => this.openDM(d.id) }; });
+    const dmBadgeTotal = myDMs.reduce((s, d) => s + this.dmUnreadCount(d), 0);
+    const active = this.state.dms.find((d) => d.id === this.state.activeDM);
+    const threadMsgs = active ? active.messages.map((m, i, arr) => { const mine = m.author === me; const prev = arr[i - 1]; const showName = active.group && !mine && (!prev || prev.author !== m.author); return { text: m.text, time: this.fmtTime(m.t), name: m.author, dir: mine ? 'row-reverse' : 'row', align: mine ? 'right' : 'left', showName, bubbleBg: mine ? '#00BF63' : 'var(--card)', bubbleColor: mine ? '#fff' : 'var(--ink)', radius: mine ? '14px 14px 4px 14px' : '14px 14px 14px 4px' }; }) : [];
+    const pickable = this.state.members.filter((m) => m.name.toLowerCase() !== (me || '').toLowerCase()).map((m) => { const sel = this.state.newSel.includes(m.name); return { name: m.name, initial: this.initialOf(m.name), color: this.colorFor(m.name), check: sel ? '✅' : '⚪', bg: sel ? 'rgba(0,191,99,.18)' : 'var(--card)', onToggle: () => this.toggleSel(m.name) }; });
+
+    const lightActive = !dark, darkActive = dark;
     return {
-      rootRef: this.rootRef, feedRef: this.feedRef, fileRef: this.fileRef,
-      needsName: !this.state.joined,
-      joined: this.state.joined,
-      name: this.state.name,
-      nameDraft: this.state.nameDraft,
-      draft: this.state.draft,
-      pendingImg: this.state.pendingImg || false,
-      pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '90px', borderRadius: '10px', border: '2px solid #000', display: 'block' } }) : null,
-      messages,
-      updateName: this.updateName, onNameKey: this.onNameKey, join: this.join,
-      updateDraft: this.updateDraft, onDraftKey: this.onDraftKey,
-      onFile: this.onFile, clearImg: this.clearImg, post: this.post,
+      rootRef: this.rootRef, feedRef: this.feedRef, fileRef: this.fileRef, dmFeedRef: this.dmFeedRef,
+      needsName: !this.state.joined, joined: this.state.joined,
+      showWelcome: this.state.showWelcome, dismissWelcome: this.dismissWelcome,
+      welcomeRooms: this.ROOMS.map((r, i) => ({ icon: r.icon, name: r.name, desc: this.WELCOME_DESC[r.id] || r.sub, delay: (0.9 + i * 0.08).toFixed(2) + 's' })),
+      nameDraft: this.state.nameDraft, phoneDraft: this.state.phoneDraft,
+      updateName: this.updateName, updatePhone: this.updatePhone, onNameKey: this.onNameKey, join: this.join,
+      pickLight: this.pickLight, pickDark: this.pickDark,
+      lightBtnBg: lightActive ? '#FF914D' : 'var(--card)', lightBtnColor: lightActive ? '#000' : 'var(--ink)',
+      darkBtnBg: darkActive ? '#FF914D' : 'var(--card)', darkBtnColor: darkActive ? '#000' : 'var(--ink)',
+      isLoungeView: this.state.joined && this.state.view === 'lounge',
+      isMessagesView: this.state.joined && this.state.view === 'messages',
+      openLounge: this.openLounge, openMessages: this.openMessages,
+      loungeBtnBg: this.state.view === 'lounge' ? '#00BF63' : 'transparent', msgBtnBg: this.state.view === 'messages' ? '#00BF63' : 'transparent',
+      hasDMBadge: dmBadgeTotal > 0, dmBadge: dmBadgeTotal > 9 ? '9+' : ('' + dmBadgeTotal),
+      memberTabBg: isMod ? 'transparent' : '#00BF63', memberTabColor: isMod ? '#888' : '#fff',
+      modTabBg: isMod ? '#FF914D' : 'transparent', modTabColor: isMod ? '#000' : '#888',
+      setMember: this.setMember, setMod: this.setMod,
+      toggleMembers: this.toggleMembers, showMembers: this.state.showMembers, stop: this.stop, members, memberCount: members.length,
+      isMod, updatePassSet: this.updatePassSet, setSpeakPass: this.setSpeakPass, passSetDraft: this.state.passSetDraft,
+      currentPass: (() => { try { return localStorage.getItem('wclv_speak_pass') || 'kick it'; } catch (e) { return 'kick it'; } })(),
+      passHint: this.state.passSaved ? 'Saved! Members use this after the knock.' : 'Members enter this after the secret knock.',
+      rooms, currentName: room.name, currentIcon: room.icon, currentSub: room.sub,
+      posts, empty: posts.length === 0,
+      draft: this.state.draft, addrDraft: this.state.addrDraft, updateDraft: this.updateDraft, updateAddr: this.updateAddr, onDraftKey: this.onDraftKey, post: this.post,
+      composerHint: room.id === 'gallery' ? 'Add a photo with the 🖼️ button, then a caption…' : 'Message the crew… use @name to tag someone',
+      onFile: this.onFile, clearImg: this.clearImg, pendingImg: this.state.pendingImg || false,
+      pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '84px', borderRadius: '9px', border: '2px solid var(--line)', display: 'block' } }) : null,
+      chatComposer, mapComposer, pollCreator, lockedNotice, lockedText, muted,
+      mapComposerLabel: room.id === 'neon' ? 'New Neon Nights walk' : 'New walk',
+      pollQ: this.state.pollQ, updatePollQ: this.updatePollQ, addPollOption: this.addPollOption, createPoll: this.createPoll,
+      pollOptions: this.state.pollOpts.map((v, i) => ({ value: v, placeholder: 'Option ' + (i + 1), onInput: (e) => this.updatePollOpt(i, e) })),
+      dmList: this.state.dmView === 'list', dmNew: this.state.dmView === 'new', dmThread: this.state.dmView === 'thread',
+      conversations, noDMs: conversations.length === 0, startNewDM: this.startNewDM, backToDMList: this.backToDMList,
+      pickable, createDM: this.createDM,
+      activeTitle: active ? (active.group ? ('👥 ' + this.dmTitle(active)) : this.dmTitle(active)) : '', activeSub: active ? (active.group ? (active.members.length + ' members') : 'Direct message') : '',
+      threadMsgs, dmDraft: this.state.dmDraft, updateDmDraft: this.updateDmDraft, onDmKey: this.onDmKey, sendDM: this.sendDM,
     };
   }
 }

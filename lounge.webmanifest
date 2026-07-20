@@ -1,0 +1,15 @@
+{
+  "name": "Walk Club LV — The Lounge",
+  "short_name": "WCLV Lounge",
+  "description": "Members-only lounge for Walk Club LV.",
+  "start_url": "./MembersLounge.dc.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#00BF63",
+  "icons": [
+    { "src": "lounge-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "lounge-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

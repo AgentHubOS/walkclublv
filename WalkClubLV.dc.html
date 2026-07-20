@@ -50,10 +50,10 @@
   <!-- NAV -->
   <nav ref="{{ navRef }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); background: rgba(255,255,255,0); transition: background .35s ease, box-shadow .35s ease, padding .35s ease;">
     <a href="#top" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: .01em; position: relative;">
-      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block;" />
+      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
     </a>
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-    <div style="display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
+    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
       <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="4">
         <a href="{{ link.href }}" style="color: #000; padding: 4px 0; background-image: linear-gradient(#00BF63,#00BF63); background-repeat: no-repeat; background-position: left bottom; background-size: 0% 3px; transition: background-size .3s ease, color .2s ease;" style-hover="background-size: 100% 3px; color: #00BF63;">{{ link.label }}</a>
       </sc-for>
@@ -84,13 +84,18 @@
     <!-- HERO 01: STACK on white -->
     <sc-if value="{{ isStack }}" hint-placeholder-val="{{ true }}">
       <div style="position: absolute; inset: 0; background: #FFFFFF;">
-        <div data-parallax="0.18" style="position: absolute; top: 12%; left: -6%; width: 42vw; height: 42vw; max-width: 560px; max-height: 560px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 14s ease-in-out infinite;"></div></div>
-        <div data-parallax="0.32" style="position: absolute; bottom: -14%; right: -16%; width: 40vw; height: 40vw; max-width: 500px; max-height: 500px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .92; animation: drift2 18s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.18" style="position: absolute; top: 4%; left: -20%; width: 30vw; height: 30vw; max-width: 400px; max-height: 400px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 50%; opacity: .78; animation: drift1 14s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.32" style="position: absolute; bottom: -14%; right: -20%; width: 36vw; height: 36vw; max-width: 460px; max-height: 460px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .88; animation: drift2 18s ease-in-out infinite;"></div></div>
         <div data-parallax="0.5" style="position: absolute; top: 22%; right: 16%; width: 90px; height: 90px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
       </div>
       <div style="position: relative; text-align: center; padding: 0 20px;">
-        <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(240px,48vw,540px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
-        <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #000;">Come for the walk. Stay for the community.</p>
+        <div style="position: relative; display: inline-block; margin: 0 auto; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.28)) drop-shadow(0 0 2px rgba(0,0,0,0.35)); animation: wc-float 5s ease-in-out infinite;">
+          <div style="display: inline-flex; flex-direction: column; align-items: center; font-family: 'Anton', sans-serif; font-size: clamp(120px,21vw,290px); line-height: .9; letter-spacing: -.035em; text-transform: uppercase; transform: scaleX(.66); transform-origin: center;">
+            <div style="color: #FF914D;">W<span style="margin-left: -.055em;">A</span>LK</div>
+            <div style="position: relative; color: #00BF63;">CLUB<img src="assets/lv-mark.png" alt="LV" onClick="{{ knock }}" style="position: absolute; right: -.55em; bottom: -.18em; height: .46em; width: auto; transform: scaleX(1.515); transform-origin: bottom right; cursor: default;" /></div>
+          </div>
+        </div>
+        <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 84px 0 30px; color: #000;">Come for the walk. Stay for the community.</p>
         <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
           <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
         </div>
@@ -127,7 +132,6 @@
       </div>
     </sc-if>
 
-    <div data-scrollhint style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-size: 11px; color: {{ scrollHintColor }}; display: flex; flex-direction: column; align-items: center; gap: 6px;">Scroll<span style="font-size: 16px; animation: wc-float 1.8s ease-in-out infinite;">↓</span></div>
   </header>
 
   <!-- ============ MARQUEE ============ -->
@@ -316,11 +320,11 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"></circle></svg>
             @walkclublv
           </a>
+          <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #00BF63; color: #fff; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
           <a href="https://www.tiktok.com/@walkclublv" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #fff; color: #000; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>
             @walkclublv
           </a>
-          <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #00BF63; color: #fff; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
         </div>
       </div>
       <div style="display: flex; justify-content: center; margin: 30px 0;">
@@ -332,12 +336,25 @@
     </div>
   </footer>
 
+  <sc-if value="{{ showSpeak }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeSpeak }}" style="position: fixed; inset: 0; z-index: 120; background: rgba(0,0,0,.85); display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div onClick="{{ stopSpeak }}" style="max-width: 360px; width: 100%; background: #0d0d0d; border: 2px solid #00BF63; border-radius: 16px; padding: 28px 22px; text-align: center; box-shadow: 0 0 44px rgba(0,191,99,.35);">
+      <div style="font-family: 'Anton', sans-serif; font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: #00BF63;">Members only</div>
+      <div style="font-family: 'Anton', sans-serif; font-size: 30px; color: #fff; margin: 8px 0 4px; line-height: 1;">WHAT'S THE PASSWORD?</div>
+      <p style="font-size: 13px; color: #888; margin: 0 0 16px;">If you know, you know.</p>
+      <input value="{{ passDraft }}" onInput="{{ updatePass }}" onKeyDown="{{ onPassKey }}" placeholder="Whisper it…" style="width: 100%; text-align: center; font-size: 16px; padding: 12px; border: 2px solid {{ passBorder }}; border-radius: 10px; background: #000; color: #fff; outline: none;" />
+      <sc-if value="{{ denied }}" hint-placeholder-val="{{ false }}"><div style="color: #d1495b; font-size: 12px; margin-top: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .1em;">🚪 Not tonight.</div></sc-if>
+      <button onClick="{{ submitPass }}" style="cursor: pointer; width: 100%; margin-top: 14px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; background: #00BF63; color: #000; border: none; border-radius: 10px; padding: 12px;">Knock knock →</button>
+    </div>
+  </div>
+  </sc-if>
+
   <canvas ref="{{ confettiRef }}" style="position: fixed; inset: 0; z-index: 100; pointer-events: none; width: 100%; height: 100%;"></canvas>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
 class Component extends DCLogic {
-  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false };
+  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false };
 
   rootRef = React.createRef();
   marqueeRef = React.createRef();
@@ -543,6 +560,33 @@ class Component extends DCLogic {
   toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
   closeMenu = () => this.setState({ menuOpen: false });
 
+  SPEAK_DEFAULT = 'kick it';
+  speakPass() { try { return (localStorage.getItem('wclv_speak_pass') || this.SPEAK_DEFAULT).toLowerCase(); } catch (e) { return this.SPEAK_DEFAULT; } }
+  isKnownMember() {
+    try {
+      const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+      return standalone || localStorage.getItem('wclv_member') === '1' || !!localStorage.getItem('wclv_lounge_name');
+    } catch (e) { return false; }
+  }
+
+  knock = () => {
+    if (this.isKnownMember()) { window.location.href = 'MembersLounge.dc.html'; return; }
+    this.setState((s) => ({ knocks: s.knocks + 1 }), () => {
+      clearTimeout(this._knockT);
+      if (this.state.knocks >= 3) { this.setState({ showSpeak: true, knocks: 0, denied: false, passDraft: '' }); }
+      else { this._knockT = setTimeout(() => this.setState({ knocks: 0 }), 1200); }
+    });
+  };
+  closeSpeak = () => this.setState({ showSpeak: false, denied: false, passDraft: '' });
+  stopSpeak = (e) => e.stopPropagation();
+  updatePass = (e) => this.setState({ passDraft: e.target.value, denied: false });
+  onPassKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.submitPass(); } };
+  submitPass = () => {
+    const v = (this.state.passDraft || '').trim().toLowerCase();
+    if (v === this.speakPass()) { try { localStorage.setItem('wclv_member', '1'); localStorage.setItem('wclv_justEntered', '1'); } catch (e) {} window.location.href = 'MembersLounge.dc.html'; }
+    else { this.setState({ denied: true }); }
+  };
+
   renderVals() {
     const hero = this.state.hero;
     const heroOptions = [
@@ -572,6 +616,9 @@ class Component extends DCLogic {
       menuOpen: this.state.menuOpen,
       toggleMenu: this.toggleMenu,
       closeMenu: this.closeMenu,
+      knock: this.knock, showSpeak: this.state.showSpeak, closeSpeak: this.closeSpeak, stopSpeak: this.stopSpeak,
+      passDraft: this.state.passDraft, updatePass: this.updatePass, onPassKey: this.onPassKey, submitPass: this.submitPass,
+      denied: this.state.denied, passBorder: this.state.denied ? '#d1495b' : '#00BF63',
       showNeon: this.props.showNeonNights ?? false,
       showEvents: this.props.showEvents ?? false,
       showMerch: this.props.showMerch ?? false,
