@@ -40,7 +40,7 @@
     <div style="max-width: 620px; margin: 0 auto; padding: 8px clamp(12px,4vw,18px); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
       <div style="display: flex; align-items: center; gap: 9px; min-width: 0;">
         <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: 28px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,.4));" />
-        <span style="font-family: 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .02em; font-size: 15px; color: #fff; white-space: nowrap;">Members Lounge</span>
+        <span style="font-family: 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .02em; font-size: 15px; color: #fff; white-space: nowrap;">Members Only Lounge</span>
       </div>
       <sc-if value="{{ joined }}" hint-placeholder-val="{{ false }}">
         <div style="display: flex; align-items: center; gap: 6px;">
@@ -81,30 +81,39 @@
 
   <!-- ===== LOUNGE (ROOMS) ===== -->
   <sc-if value="{{ isLoungeView }}" hint-placeholder-val="{{ false }}">
-  <div style="flex: 1; width: 100%; max-width: 620px; display: flex; flex-direction: column; min-height: 0;">
+  <div style="flex: 1; width: 100%; max-width: min(1080px, 100%); margin: 0 auto; display: flex; flex-direction: column; min-height: 0;">
 
-    <div style="position: sticky; top: 0; z-index: 10; background: var(--bg); padding: 9px clamp(12px,4vw,18px) 4px;">
-      <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 5px;">
-        <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="7">
-          <button onClick="{{ room.onClick }}" style="cursor: pointer; position: relative; flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 12px; border: 2px solid var(--line); border-radius: 999px; padding: 6px 12px; background: {{ room.bg }}; color: {{ room.color }}; white-space: nowrap;">
-            <span style="font-size: 14px;">{{ room.icon }}</span>{{ room.name }}<sc-if value="{{ room.lock }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; opacity: .7;">🔒</span></sc-if>
-            <sc-if value="{{ room.hasDot }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -2px; right: -2px; width: 11px; height: 11px; border-radius: 50%; background: {{ room.dotColor }}; border: 2px solid var(--bg);"></span></sc-if>
+    <div style="position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 2px solid var(--line); padding: 12px clamp(12px,4vw,26px);">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px;">
+        <div style="flex: 1 1 210px; min-width: 0;">
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(21px,2.6vw,30px); line-height: .95; color: var(--ink);">{{ currentIcon }} {{ currentName }}</div>
+          <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">{{ currentSub }}</div>
+        </div>
+        <div style="flex: 0 0 auto; position: relative;">
+          <button onClick="{{ toggleRoomMenu }}" title="Change room" style="cursor: pointer; position: relative; display: flex; align-items: center; gap: 8px; border: 2px solid var(--line); border-radius: 999px; padding: 8px 14px; background: var(--ink); color: var(--bg); font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; white-space: nowrap;">
+            <span style="font-size: 15px;">{{ currentIcon }}</span>{{ currentName }}<span style="font-size: 11px; opacity: .8; margin-left: 2px;">▾</span>
+            <sc-if value="{{ anyOtherRoomDot }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; width: 12px; height: 12px; border-radius: 50%; background: #FF914D; border: 2px solid var(--bg);"></span></sc-if>
           </button>
-        </sc-for>
+          <sc-if value="{{ roomMenuOpen }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ closeRoomMenu }}" style="position: fixed; inset: 0; z-index: 35;"></div>
+            <div style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; min-width: 236px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 5px 5px 0 var(--line); overflow: hidden;">
+              <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="7">
+                <button onClick="{{ room.onClick }}" style="cursor: pointer; display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; border: none; border-bottom: 1px solid var(--dash); padding: 11px 14px; background: {{ room.bg }}; color: {{ room.color }}; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; white-space: nowrap;">
+                  <span style="font-size: 16px;">{{ room.icon }}</span>{{ room.name }}<span style="flex: 1;"></span><sc-if value="{{ room.hasDot }}" hint-placeholder-val="{{ false }}"><span style="width: 9px; height: 9px; border-radius: 50%; background: {{ room.dotColor }};"></span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
       </div>
     </div>
 
-    <div style="padding: 2px clamp(12px,4vw,18px) 6px;">
-      <div style="font-family: 'Anton', sans-serif; font-size: 25px; line-height: .95; color: var(--ink);">{{ currentIcon }} {{ currentName }}</div>
-      <div style="font-size: 12px; color: var(--muted); margin-top: 1px;">{{ currentSub }}</div>
-    </div>
-
-    <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 2px clamp(12px,4vw,18px) 14px; display: flex; flex-direction: column; gap: 10px;">
+    <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 12px clamp(12px,4vw,18px) 16px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
       <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
         <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">Nothing here yet — be the first.</div>
       </sc-if>
       <sc-for list="{{ posts }}" as="p" hint-placeholder-count="3">
-        <div style="background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
+        <div style="width: 100%; max-width: 720px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
 
           <sc-if value="{{ p.isGallery }}" hint-placeholder-val="{{ false }}">
             {{ p.galleryImgEl }}
@@ -201,6 +210,7 @@
     </div>
 
     <div style="border-top: 3px solid var(--line); background: var(--card); padding: 10px clamp(12px,4vw,18px); position: sticky; bottom: 0;">
+      <div style="max-width: 760px; margin: 0 auto;">
       <sc-if value="{{ muted }}" hint-placeholder-val="{{ false }}">
         <div style="text-align: center; font-size: 12px; color: #d1495b; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .06em; padding: 5px 0;">🔇 You've been muted by a moderator.</div>
       </sc-if>
@@ -248,13 +258,14 @@
           <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
         </div>
       </sc-if>
+      </div>
     </div>
   </div>
   </sc-if>
 
   <!-- ===== MESSAGES (DMs) ===== -->
   <sc-if value="{{ isMessagesView }}" hint-placeholder-val="{{ false }}">
-  <div style="flex: 1; width: 100%; max-width: 620px; display: flex; flex-direction: column; min-height: 0;">
+  <div style="flex: 1; width: 100%; max-width: min(780px, 100%); margin: 0 auto; display: flex; flex-direction: column; min-height: 0;">
 
     <sc-if value="{{ dmList }}" hint-placeholder-val="{{ true }}">
       <div style="padding: 12px clamp(12px,4vw,18px) 8px; display: flex; align-items: center; justify-content: space-between;">
@@ -410,7 +421,7 @@ class Component extends DCLogic {
     showMembers: false,
     dms: [], dmView: 'list', activeDM: null, dmDraft: '', newSel: [],
     seenRooms: {}, seenDMs: {},
-    openPicker: {}, passSetDraft: '', passSaved: false, showWelcome: false,
+    openPicker: {}, passSetDraft: '', passSaved: false, showWelcome: false, roomMenuOpen: false,
   };
 
   WELCOME_DESC = {
@@ -600,7 +611,9 @@ class Component extends DCLogic {
   openLounge = () => this.setState({ view: 'lounge' });
   openMessages = () => this.setState({ view: 'messages', dmView: 'list', activeDM: null });
 
-  switchRoom = (id) => { const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms }, () => this.scrollFeed()); };
+  switchRoom = (id) => { const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms, roomMenuOpen: false }, () => this.scrollFeed()); };
+  toggleRoomMenu = () => this.setState((s) => ({ roomMenuOpen: !s.roomMenuOpen }));
+  closeRoomMenu = () => this.setState({ roomMenuOpen: false });
 
   updateDraft = (e) => this.setState({ draft: e.target.value });
   updateAddr = (e) => this.setState({ addrDraft: e.target.value });
@@ -785,6 +798,8 @@ class Component extends DCLogic {
       currentPass: (() => { try { return localStorage.getItem('wclv_speak_pass') || 'kick it'; } catch (e) { return 'kick it'; } })(),
       passHint: this.state.passSaved ? 'Saved! Members use this after the knock.' : 'Members enter this after the secret knock.',
       rooms, currentName: room.name, currentIcon: room.icon, currentSub: room.sub,
+      roomMenuOpen: this.state.roomMenuOpen, toggleRoomMenu: this.toggleRoomMenu, closeRoomMenu: this.closeRoomMenu,
+      anyOtherRoomDot: rooms.some((r) => r.hasDot),
       posts, empty: posts.length === 0,
       draft: this.state.draft, addrDraft: this.state.addrDraft, updateDraft: this.updateDraft, updateAddr: this.updateAddr, onDraftKey: this.onDraftKey, post: this.post,
       composerHint: room.id === 'gallery' ? 'Add a photo + caption…' : 'Message the crew…',
