@@ -602,7 +602,8 @@
           <sc-if value="{{ profileHasBio }}" hint-placeholder-val="{{ true }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">About</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink); white-space: pre-wrap;">{{ profileBio }}</div></div></sc-if>
           <sc-if value="{{ profileHasHobbies }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Hobbies</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink);">{{ profileHobbies }}</div></div></sc-if>
           <sc-if value="{{ profileHasBiz }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Business</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink);">{{ profileBiz }}</div></div></sc-if>
-          <sc-if value="{{ profileHasAddr }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Location</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink);">{{ profileAddr }}</div></div></sc-if>
+          <sc-if value="{{ profileHasAddr }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Neighborhood</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink);">{{ profileAddr }}</div></div></sc-if>
+          <sc-if value="{{ profileHasWeb }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Website / Linktree</div><a href="{{ profileWeb }}" target="_blank" rel="noopener" style="font-size: 14px; line-height: 1.5; color: #00BF63; word-break: break-all;">{{ profileWeb }}</a></div></sc-if>
           <sc-if value="{{ profileHasEmail }}" hint-placeholder-val="{{ false }}"><div style="border: 2px solid var(--line); border-radius: 12px; padding: 11px 13px;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 10px; color: var(--muted); margin-bottom: 4px;">Email</div><div style="font-size: 14px; line-height: 1.5; color: var(--ink); word-break: break-all;">{{ profileEmail }}</div></div></sc-if>
         </div>
       </sc-if>
@@ -621,7 +622,8 @@
           <textarea value="{{ pBio }}" onInput="{{ updatePBio }}" rows="3" placeholder="Bio — tell the crew as much or as little as you like…" style="resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);"></textarea>
           <input value="{{ pHobbies }}" onInput="{{ updatePHobbies }}" placeholder="Hobbies (e.g. hiking, coffee, live music)" style="font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);" />
           <input value="{{ pBiz }}" onInput="{{ updatePBiz }}" placeholder="Business name (optional)" style="font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);" />
-          <input value="{{ pAddr }}" onInput="{{ updatePAddr }}" placeholder="Address / area (optional)" style="font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);" />
+          <input value="{{ pAddr }}" onInput="{{ updatePAddr }}" placeholder="Neighborhood (optional)" style="font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);" />
+          <input value="{{ pWeb }}" onInput="{{ updatePWeb }}" inputmode="url" placeholder="Website or Linktree (optional)" style="font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field); color: var(--ink);" />
           <button onClick="{{ saveProfile }}" style="cursor: pointer; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; background: #00BF63; color: #fff; border: 2px solid var(--line); border-radius: 11px; padding: 12px;">Save profile</button>
         </div>
       </sc-if>
@@ -646,7 +648,7 @@ class Component extends DCLogic {
     seenRooms: {}, seenDMs: {},
     openPicker: {}, passSetDraft: '', passSaved: false, showWelcome: false, roomMenuOpen: false,
     bannedInput: '', flags: [], postError: '',
-    profileName: null, profileEdit: false, pBio: '', pHobbies: '', pBiz: '', pAddr: '', pAvatar: '',
+    profileName: null, profileEdit: false, pBio: '', pHobbies: '', pBiz: '', pAddr: '', pWeb: '', pAvatar: '',
     totalMiles: 0, milesAdding: false, milesInput: '', milesClicks: 0,
     showNotif: false, seenAlerts: 0,
     editingPost: null, editPostDraft: '', editingComment: null, editCommentDraft: '',
@@ -751,16 +753,17 @@ class Component extends DCLogic {
   mkAv(url, absolute) { if (!url) return null; const style = absolute ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } : { width: '100%', height: '100%', objectFit: 'cover' }; return React.createElement('img', { src: url, alt: '', style }); }
   openProfile = (name) => { const mine = (name || '').toLowerCase() === (this.state.name || '').toLowerCase(); this.setState({ profileName: name, profileEdit: false, showMembers: false }); };
   closeProfile = () => this.setState({ profileName: null, profileEdit: false });
-  toggleProfileEdit = () => { const m = this.memberByName(this.state.name) || {}; this.setState((s) => ({ profileEdit: !s.profileEdit, pBio: m.bio || '', pHobbies: m.hobbies || '', pBiz: m.business || '', pAddr: m.address || '', pAvatar: m.avatar || '' })); };
+  toggleProfileEdit = () => { const m = this.memberByName(this.state.name) || {}; this.setState((s) => ({ profileEdit: !s.profileEdit, pBio: m.bio || '', pHobbies: m.hobbies || '', pBiz: m.business || '', pAddr: m.address || '', pWeb: m.website || '', pAvatar: m.avatar || '' })); };
   updatePBio = (e) => this.setState({ pBio: e.target.value });
   updatePHobbies = (e) => this.setState({ pHobbies: e.target.value });
   updatePBiz = (e) => this.setState({ pBiz: e.target.value });
   updatePAddr = (e) => this.setState({ pAddr: e.target.value });
+  updatePWeb = (e) => this.setState({ pWeb: e.target.value });
   onAvatarFile = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => { const img = new Image(); img.onload = () => { const S = 256; const c = document.createElement('canvas'); c.width = S; c.height = S; const ctx = c.getContext('2d'); const s = Math.min(img.width, img.height); ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, S, S); this.setState({ pAvatar: c.toDataURL('image/jpeg', 0.8) }); }; img.src = r.result; }; r.readAsDataURL(file); };
   saveProfile = () => {
     const me = this.state.name;
     const myPhone = this.state.phone;
-    const patch = { bio: this.state.pBio.trim(), hobbies: this.state.pHobbies.trim(), business: this.state.pBiz.trim(), address: this.state.pAddr.trim(), avatar: this.state.pAvatar || '' };
+    const patch = { bio: this.state.pBio.trim(), hobbies: this.state.pHobbies.trim(), business: this.state.pBiz.trim(), address: this.state.pAddr.trim(), website: this.state.pWeb.trim(), avatar: this.state.pAvatar || '' };
     const isMe = (m) => this.normPhone(m.phone) === this.normPhone(myPhone) || (m.name || '').toLowerCase() === (me || '').toLowerCase();
     const members = this.state.members.map((m) => isMe(m) ? { ...m, ...patch } : m);
     this.saveMembers(members);
@@ -866,9 +869,9 @@ class Component extends DCLogic {
       try {
         const r = await this.remote.from('members').select('*').eq('phone', phone);
         const prev = (r.data && r.data[0]) || null;
-        const merged = { phone, name, email: email || (prev && prev.email) || null, role, muted: prev ? !!prev.muted : false, bio: (prev && prev.bio) || null, hobbies: (prev && prev.hobbies) || null, business: (prev && prev.business) || null, address: (prev && prev.address) || null, avatar: (prev && prev.avatar) || null };
+        const merged = { phone, name, email: email || (prev && prev.email) || null, role, muted: prev ? !!prev.muted : false, bio: (prev && prev.bio) || null, hobbies: (prev && prev.hobbies) || null, business: (prev && prev.business) || null, address: (prev && prev.address) || null, website: (prev && prev.website) || null, avatar: (prev && prev.avatar) || null };
         await this.remote.from('members').upsert(merged);
-        applyLocal({ role, bio: merged.bio || '', hobbies: merged.hobbies || '', business: merged.business || '', address: merged.address || '', avatar: merged.avatar || '', email: merged.email || '' });
+        applyLocal({ role, bio: merged.bio || '', hobbies: merged.hobbies || '', business: merged.business || '', address: merged.address || '', website: merged.website || '', avatar: merged.avatar || '', email: merged.email || '' });
         this.reloadTable('members');
         return true;
       } catch (e) { return false; }
@@ -897,7 +900,7 @@ class Component extends DCLogic {
   remoteDelete(table, col, val) { if (this.remote) { try { this.remote.from(table).delete().eq(col, val).then(() => {}, () => {}); } catch (e) {} } }
   syncPost(p) { this.remoteUpsert('posts', this.mapPostOut(p)); }
   syncDM(d) { this.remoteUpsert('dms', this.mapDMOut(d)); }
-  syncMember(m) { this.remoteUpsert('members', { phone: m.phone, name: m.name, email: m.email || null, role: m.role, muted: !!m.muted, bio: m.bio || null, hobbies: m.hobbies || null, business: m.business || null, address: m.address || null, avatar: m.avatar || null }); }
+  syncMember(m) { this.remoteUpsert('members', { phone: m.phone, name: m.name, email: m.email || null, role: m.role, muted: !!m.muted, bio: m.bio || null, hobbies: m.hobbies || null, business: m.business || null, address: m.address || null, website: m.website || null, avatar: m.avatar || null }); }
   async loadRemote() {
     const [mp, pp, dp, sp] = await Promise.all([
       this.remote.from('members').select('*'),
@@ -905,11 +908,11 @@ class Component extends DCLogic {
       this.remote.from('dms').select('*'),
       this.remote.from('settings').select('*'),
     ]);
-    let members = (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', avatar: m.avatar || '' }));
+    let members = (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' }));
     // Self-heal: guarantee my own membership is in the shared roster (recovers anyone whose sign-in didn't sync).
     const myPhone = this.state.phone, myName = this.state.name;
     if (myName && myPhone && !members.some((m) => this.normPhone(m.phone) === this.normPhone(myPhone))) {
-      const meRow = { name: myName, phone: myPhone, email: this.state.email || '', role: this.isModPhone(myPhone) ? 'mod' : 'member', muted: false, bio: '', hobbies: '', business: '', address: '', avatar: '' };
+      const meRow = { name: myName, phone: myPhone, email: this.state.email || '', role: this.isModPhone(myPhone) ? 'mod' : 'member', muted: false, bio: '', hobbies: '', business: '', address: '', website: '', avatar: '' };
       members = [...members, meRow];
       this.syncMember(meRow);
     }
@@ -937,7 +940,7 @@ class Component extends DCLogic {
   reloadTable(table) {
     if (!this.remote) return;
     if (table === 'posts') this.remote.from('posts').select('*').then((r) => { if (r.data) this.setState({ posts: r.data.map((x) => this.mapPostIn(x)) }); }, () => {});
-    else if (table === 'members') this.remote.from('members').select('*').then((r) => { if (r.data) this.setState({ members: r.data.map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', avatar: m.avatar || '' })) }); }, () => {});
+    else if (table === 'members') this.remote.from('members').select('*').then((r) => { if (r.data) this.setState({ members: r.data.map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' })) }); }, () => {});
     else if (table === 'dms') this.remote.from('dms').select('*').then((r) => { if (r.data) this.setState({ dms: r.data.map((x) => this.mapDMIn(x)) }); }, () => {});
   }
   subscribeRemote() {
@@ -1316,10 +1319,11 @@ class Component extends DCLogic {
       profileHobbies: (pm && pm.hobbies) || '', profileHasHobbies: !!(pm && pm.hobbies),
       profileBiz: (pm && pm.business) || '', profileHasBiz: !!(pm && pm.business),
       profileAddr: (pm && pm.address) || '', profileHasAddr: !!(pm && pm.address),
+      profileWeb: (pm && pm.website) || '', profileHasWeb: !!(pm && pm.website),
       profileEmail: (pm && pm.email) || '', profileHasEmail: !!(pm && pm.email),
-      pBio: this.state.pBio, pHobbies: this.state.pHobbies, pBiz: this.state.pBiz, pAddr: this.state.pAddr,
+      pBio: this.state.pBio, pHobbies: this.state.pHobbies, pBiz: this.state.pBiz, pAddr: this.state.pAddr, pWeb: this.state.pWeb,
       pAvatar: this.state.pAvatar || false, pNoAvatar: !this.state.pAvatar, pAvatarEl: this.mkAv(this.state.pAvatar || '', true),
-      updatePBio: this.updatePBio, updatePHobbies: this.updatePHobbies, updatePBiz: this.updatePBiz, updatePAddr: this.updatePAddr,
+      updatePBio: this.updatePBio, updatePHobbies: this.updatePHobbies, updatePBiz: this.updatePBiz, updatePAddr: this.updatePAddr, updatePWeb: this.updatePWeb,
       onAvatarFile: this.onAvatarFile, saveProfile: this.saveProfile,
       mapComposerLabel: room.id === 'neon' ? 'New Neon Nights walk' : 'New walk',
       pollQ: this.state.pollQ, updatePollQ: this.updatePollQ, addPollOption: this.addPollOption, createPoll: this.createPoll,
