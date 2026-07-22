@@ -50,6 +50,7 @@
             <button onClick="{{ openLounge }}" title="Lounge" style="cursor: pointer; border: none; border-radius: 999px; padding: 5px 11px; font-size: 14px; background: {{ loungeBtnBg }};">🍸</button>
             <button onClick="{{ openMessages }}" title="Messages" style="cursor: pointer; position: relative; border: none; border-radius: 999px; padding: 5px 11px; font-size: 14px; background: {{ msgBtnBg }};">✉️<sc-if value="{{ hasDMBadge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #d1495b; color: #fff; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px; line-height: 16px; text-align: center; border: 1.5px solid #000;">{{ dmBadge }}</span></sc-if></button>
           </div>
+          <button onClick="{{ toggleNotif }}" title="Notifications" style="cursor: pointer; position: relative; width: 32px; height: 32px; border-radius: 999px; border: 1.5px solid #2c2c2c; background: #141414; color: #fff; font-size: 14px;">🔔<sc-if value="{{ hasNotifBadge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #d1495b; color: #fff; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px; line-height: 16px; text-align: center; border: 1.5px solid #000;">{{ notifBadge }}</span></sc-if></button>
           <button onClick="{{ toggleMembers }}" title="Members" style="cursor: pointer; width: 32px; height: 32px; border-radius: 999px; border: 1.5px solid #2c2c2c; background: #141414; color: #fff; font-size: 14px;">👥</button>
           <sc-if value="{{ showRoleSwitch }}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; background: #141414; border: 1.5px solid #2c2c2c; border-radius: 999px; padding: 2px;">
@@ -92,7 +93,7 @@
           <div style="font-family: 'Anton', sans-serif; font-size: clamp(21px,2.6vw,30px); line-height: .95; color: var(--ink);">{{ currentIcon }} {{ currentName }}</div>
           <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">{{ currentSub }}</div>
         </div>
-        <div onClick="{{ milesTap }}" title="Total club miles — triple-tap to log this week" style="cursor: pointer; flex: 0 0 auto; display: flex; align-items: center; gap: 7px; background: #000; border: 2px solid var(--line); border-radius: 999px; padding: 6px 13px 6px 10px;">
+        <div onClick="{{ milesTap }}" style="cursor: default; -webkit-user-select: none; user-select: none; flex: 0 0 auto; display: flex; align-items: center; gap: 7px; background: #000; border: 2px solid var(--line); border-radius: 999px; padding: 6px 13px 6px 10px;">
           <span style="font-size: 16px; line-height: 1;">👟</span>
           <span style="font-family: 'Anton', sans-serif; font-size: 17px; line-height: 1; color: #00BF63;">{{ totalMiles }}<span style="font-size: .6em; color: #fff; margin-left: 3px;">mi</span></span>
         </div>
@@ -139,7 +140,10 @@
                 <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 14px;">{{ p.name }}</span>
                 <span style="font-size: 11px; color: var(--muted);">{{ p.time }}</span>
               </div>
-              <sc-if value="{{ p.canModerate }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ p.canEdit }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ p.onEdit }}" title="Edit" style="cursor: pointer; flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); font-size: 12px;">✏️</button>
+              </sc-if>
+              <sc-if value="{{ p.canDelete }}" hint-placeholder-val="{{ false }}">
                 <button onClick="{{ p.onDelete }}" title="Delete" style="cursor: pointer; flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--line); background: var(--card); color: #d1495b; font-size: 12px;">🗑</button>
               </sc-if>
             </div>
@@ -148,9 +152,19 @@
               <a href="{{ p.mapLink }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 6px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 13px; color: #00BF63; border: 1.5px solid #00BF63; border-radius: 999px; padding: 5px 11px; margin-bottom: 6px;">📍 {{ p.address }} <span style="opacity: .6; font-weight: 500;">· navigate</span></a>
             </sc-if>
 
+            <sc-if value="{{ p.editing }}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px;">
+                <textarea value="{{ p.editDraft }}" onInput="{{ p.onEditInput }}" rows="2" style="resize: none; font-size: 14px; line-height: 1.4; padding: 9px 11px; border: 2px solid #00BF63; border-radius: 10px; outline: none; background: var(--field); color: var(--ink);"></textarea>
+                <div style="display: flex; gap: 6px;">
+                  <button onClick="{{ p.onEditSave }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 9px; padding: 7px 13px;">Save</button>
+                  <button onClick="{{ p.onEditCancel }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: var(--chip); color: var(--ink); border: 1.5px solid var(--line); border-radius: 9px; padding: 7px 13px;">Cancel</button>
+                </div>
+              </div>
+            </sc-if>
             <sc-if value="{{ p.hasText }}" hint-placeholder-val="{{ true }}">
               <div style="font-size: 14px; line-height: 1.45; word-wrap: break-word; margin-bottom: 6px; color: var(--ink);">
                 <sc-for list="{{ p.segments }}" as="seg" hint-placeholder-count="1"><sc-if value="{{ seg.m }}" hint-placeholder-val="{{ false }}"><span style="color: #00BF63; font-weight: 700;">{{ seg.t }}</span></sc-if><sc-if value="{{ seg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ seg.t }}</span></sc-if></sc-for>
+                <sc-if value="{{ p.edited }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; color: var(--muted); font-style: italic;"> · edited</span></sc-if>
               </div>
             </sc-if>
 
@@ -199,11 +213,30 @@
                     <div style="flex: 1; min-width: 0;">
                       <span style="font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px;">{{ c.name }}</span>
                       <span style="font-size: 10px; color: var(--muted); margin-left: 5px;">{{ c.time }}</span>
-                      <div style="font-size: 13px; line-height: 1.4; word-wrap: break-word; color: var(--ink);">{{ c.text }}</div>
+                      <sc-if value="{{ c.editing }}" hint-placeholder-val="{{ false }}">
+                        <div style="display: flex; gap: 5px; margin-top: 3px;">
+                          <input value="{{ c.editDraft }}" onInput="{{ c.onEditInput }}" onKeyDown="{{ c.onEditKey }}" style="flex: 1; min-width: 0; font-size: 13px; padding: 6px 9px; border: 1.5px solid #00BF63; border-radius: 8px; outline: none; background: var(--field); color: var(--ink);" />
+                          <button onClick="{{ c.onEditSave }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 10px; text-transform: uppercase; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 8px; padding: 0 10px;">Save</button>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ c.notEditing }}" hint-placeholder-val="{{ true }}">
+                        <div style="font-size: 13px; line-height: 1.4; word-wrap: break-word; color: var(--ink);">{{ c.text }}<sc-if value="{{ c.edited }}" hint-placeholder-val="{{ false }}"><span style="font-size: 10px; color: var(--muted); font-style: italic;"> · edited</span></sc-if></div>
+                        <sc-if value="{{ c.canManage }}" hint-placeholder-val="{{ false }}">
+                          <div style="display: flex; gap: 10px; margin-top: 2px;">
+                            <sc-if value="{{ c.canEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.onEdit }}" style="cursor: pointer; background: none; border: none; padding: 0; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .04em; font-size: 10px; color: var(--muted);">Edit</button></sc-if>
+                            <button onClick="{{ c.onDelete }}" style="cursor: pointer; background: none; border: none; padding: 0; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .04em; font-size: 10px; color: #d1495b;">Delete</button>
+                          </div>
+                        </sc-if>
+                      </sc-if>
                     </div>
                   </div>
                 </sc-for>
                 <sc-if value="{{ p.canComment }}" hint-placeholder-val="{{ true }}">
+                  <sc-if value="{{ p.showMention }}" hint-placeholder-val="{{ false }}">
+                    <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px;">
+                      <sc-for list="{{ p.mentionList }}" as="mn" hint-placeholder-count="2"><button onClick="{{ mn.onPick }}" style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: var(--chip); border: 1.5px solid var(--line); border-radius: 999px; padding: 3px 9px 3px 3px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; color: var(--ink);"><span style="overflow: hidden; width: 19px; height: 19px; border-radius: 50%; background: {{ mn.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 9px;">{{ mn.avatarImgEl }}<sc-if value="{{ mn.noAvatar }}" hint-placeholder-val="{{ true }}"><span>{{ mn.initial }}</span></sc-if></span>{{ mn.name }}</button></sc-for>
+                    </div>
+                  </sc-if>
                   <div style="display: flex; gap: 6px;">
                     <input value="{{ p.commentDraft }}" onInput="{{ p.onCommentInput }}" onKeyDown="{{ p.onCommentKey }}" placeholder="Add a comment…" style="flex: 1; min-width: 0; font-size: 13px; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 999px; outline: none; background: var(--field);" />
                     <button onClick="{{ p.onComment }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: .05em; background: #00BF63; color: #fff; border: 1.5px solid var(--line); border-radius: 999px; padding: 0 13px;">Post</button>
@@ -254,6 +287,11 @@
       </sc-if>
 
       <sc-if value="{{ chatComposer }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ mentionDraft }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px;">
+            <sc-for list="{{ mentionDraftList }}" as="mn" hint-placeholder-count="2"><button onClick="{{ mn.onPick }}" style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: var(--chip); border: 1.5px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 3px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; color: var(--ink);"><span style="overflow: hidden; width: 20px; height: 20px; border-radius: 50%; background: {{ mn.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 10px;">{{ mn.avatarImgEl }}<sc-if value="{{ mn.noAvatar }}" hint-placeholder-val="{{ true }}"><span>{{ mn.initial }}</span></sc-if></span>{{ mn.name }}</button></sc-for>
+          </div>
+        </sc-if>
         <sc-if value="{{ pendingImg }}" hint-placeholder-val="{{ false }}">
           <div style="position: relative; display: inline-block; margin-bottom: 8px;">
             {{ pendingImgEl }}
@@ -338,6 +376,11 @@
         <sc-if value="{{ postError }}" hint-placeholder-val="{{ false }}">
           <div style="text-align: center; font-size: 12px; color: #fff; background: #d1495b; border-radius: 9px; font-family: 'Oswald', sans-serif; letter-spacing: .02em; padding: 8px 10px; margin-bottom: 8px;">{{ postError }}</div>
         </sc-if>
+        <sc-if value="{{ mentionDM }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px;">
+            <sc-for list="{{ mentionDMList }}" as="mn" hint-placeholder-count="2"><button onClick="{{ mn.onPick }}" style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: var(--chip); border: 1.5px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 3px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; color: var(--ink);"><span style="overflow: hidden; width: 20px; height: 20px; border-radius: 50%; background: {{ mn.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 10px;">{{ mn.avatarImgEl }}<sc-if value="{{ mn.noAvatar }}" hint-placeholder-val="{{ true }}"><span>{{ mn.initial }}</span></sc-if></span>{{ mn.name }}</button></sc-for>
+          </div>
+        </sc-if>
         <div style="display: flex; gap: 7px; align-items: flex-end;">
           <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ sendDM }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
@@ -371,6 +414,32 @@
   </div>
   </sc-if>
 
+  <!-- ===== NOTIFICATIONS ===== -->
+  <sc-if value="{{ showNotif }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ toggleNotif }}" style="position: fixed; inset: 0; z-index: 44; background: rgba(0,0,0,.5); display: flex; align-items: flex-start; justify-content: center; padding-top: 54px;">
+    <div onClick="{{ stop }}" style="width: 100%; max-width: 460px; max-height: 78svh; overflow-y: auto; background: var(--card); border: 3px solid var(--line); border-radius: 16px; box-shadow: 5px 5px 0 var(--line); margin: 0 12px; padding: 16px 16px 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="font-family: 'Anton', sans-serif; font-size: 22px; color: var(--ink);">🔔 Notifications</div>
+        <button onClick="{{ toggleNotif }}" style="cursor: pointer; width: 30px; height: 30px; border-radius: 9px; border: 2px solid var(--line); background: var(--card); color: var(--ink); font-size: 14px;">✕</button>
+      </div>
+      <sc-if value="{{ noNotifs }}" hint-placeholder-val="{{ true }}">
+        <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0;">You're all caught up. 🎉</div>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="3">
+          <button onClick="{{ n.onClick }}" style="cursor: pointer; text-align: left; display: flex; align-items: flex-start; gap: 10px; background: {{ n.bg }}; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px;">
+            <span style="font-size: 18px; line-height: 1.2; flex-shrink: 0;">{{ n.icon }}</span>
+            <div style="flex: 1; min-width: 0;">
+              <div style="font-size: 13.5px; line-height: 1.4; color: var(--ink);">{{ n.text }}</div>
+              <div style="font-size: 11px; color: var(--muted); margin-top: 1px;">{{ n.time }}</div>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
   <!-- ===== MEMBERS PANEL ===== -->
   <sc-if value="{{ showMembers }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ toggleMembers }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center;">
@@ -387,6 +456,13 @@
           <button onClick="{{ pickDark }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 12px; background: {{ darkBtnBg }}; color: {{ darkBtnColor }};">🌙 Dark</button>
         </div>
       </div>
+
+      <sc-if value="{{ pushSupported }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <div style="min-width: 0;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; color: var(--ink);">Push notifications</div><div style="font-size: 11px; color: var(--muted);">{{ pushHint }}</div></div>
+        <button onClick="{{ enablePush }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 13px; background: {{ pushBtnBg }}; color: {{ pushBtnColor }};">{{ pushBtnLabel }}</button>
+      </div>
+      </sc-if>
 
       <sc-if value="{{ isMod }}" hint-placeholder-val="{{ false }}">
       <div style="border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
@@ -520,7 +596,28 @@ class Component extends DCLogic {
     bannedInput: '', flags: [], postError: '',
     profileName: null, profileEdit: false, pBio: '', pHobbies: '', pBiz: '', pAddr: '', pAvatar: '',
     totalMiles: 0, milesAdding: false, milesInput: '', milesClicks: 0,
+    showNotif: false, seenAlerts: 0,
+    editingPost: null, editPostDraft: '', editingComment: null, editCommentDraft: '',
+    mentionField: null, mentionMatches: [],
+    pushOn: false,
   };
+
+  firstNameOf(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
+  handleMention(field, value) {
+    const m = /@([A-Za-z]*)$/.exec(value || '');
+    let matches = [];
+    if (m) { const q = m[1].toLowerCase(); matches = this.state.members.map((x) => x.name).filter((n) => this.firstNameOf(n).toLowerCase().startsWith(q) || n.toLowerCase().startsWith(q)).slice(0, 6); }
+    this.setState({ mentionField: (m && matches.length) ? field : null, mentionMatches: matches });
+  }
+  applyMention(text, name) { return (text || '').replace(/@([A-Za-z]*)$/, '@' + this.firstNameOf(name) + ' '); }
+  pickMentionDraft = (name) => this.setState((s) => ({ draft: this.applyMention(s.draft, name), mentionField: null, mentionMatches: [] }));
+  pickMentionDM = (name) => this.setState((s) => ({ dmDraft: this.applyMention(s.dmDraft, name), mentionField: null, mentionMatches: [] }));
+  pickMentionComment = (id, name) => this.setState((s) => ({ commentDrafts: { ...s.commentDrafts, [id]: this.applyMention(s.commentDrafts[id] || '', name) }, mentionField: null, mentionMatches: [] }));
+
+  EDIT_WINDOW = 30 * 60 * 1000;
+  canEditWindow(t) { return (Date.now() - (t || 0)) < this.EDIT_WINDOW; }
+
+  SEEN_ALERTS_KEY = 'wclv_seen_alerts';
 
   MILES_KEY = 'wclv_miles';
   fmtMiles(n) { return (Math.round((Number(n) || 0) * 10) / 10).toFixed(1); }
@@ -561,10 +658,12 @@ class Component extends DCLogic {
   onAvatarFile = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => { const img = new Image(); img.onload = () => { const S = 256; const c = document.createElement('canvas'); c.width = S; c.height = S; const ctx = c.getContext('2d'); const s = Math.min(img.width, img.height); ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, S, S); this.setState({ pAvatar: c.toDataURL('image/jpeg', 0.8) }); }; img.src = r.result; }; r.readAsDataURL(file); };
   saveProfile = () => {
     const me = this.state.name;
+    const myPhone = this.state.phone;
     const patch = { bio: this.state.pBio.trim(), hobbies: this.state.pHobbies.trim(), business: this.state.pBiz.trim(), address: this.state.pAddr.trim(), avatar: this.state.pAvatar || '' };
-    const members = this.state.members.map((m) => (m.name || '').toLowerCase() === (me || '').toLowerCase() ? { ...m, ...patch } : m);
+    const isMe = (m) => this.normPhone(m.phone) === this.normPhone(myPhone) || (m.name || '').toLowerCase() === (me || '').toLowerCase();
+    const members = this.state.members.map((m) => isMe(m) ? { ...m, ...patch } : m);
     this.saveMembers(members);
-    const cm = members.find((m) => (m.name || '').toLowerCase() === (me || '').toLowerCase());
+    const cm = members.find(isMe);
     if (cm) this.syncMember(cm);
     this.setState({ members, profileEdit: false });
   };
@@ -575,7 +674,7 @@ class Component extends DCLogic {
   bannedList() { try { const v = localStorage.getItem(this.BANNED_KEY); if (v != null) return JSON.parse(v) || []; } catch (e) {} return this.DEFAULT_BANNED.slice(); }
   saveBannedList(arr) { try { localStorage.setItem(this.BANNED_KEY, JSON.stringify(arr)); } catch (e) {} this.remoteUpsert('settings', { key: 'banned_words', value: JSON.stringify(arr) }); }
   findBadWord(text) { const low = ' ' + (text || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ') + ' '; return this.bannedList().find((w) => w && (low.includes(' ' + w.toLowerCase() + ' ') || low.includes(w.toLowerCase()))) || null; }
-  screen(text, context) { const bad = this.findBadWord(text); if (!bad) return true; const flag = { id: 'fl' + Date.now() + Math.random().toString(36).slice(2, 6), who: this.state.name, where: context, word: bad, snippet: (text || '').slice(0, 140), t: Date.now() }; const flags = [flag, ...this.state.flags].slice(0, 200); try { localStorage.setItem(this.FLAGS_KEY, JSON.stringify(flags)); } catch (e) {} this.remoteUpsert('flags', { id: flag.id, who: flag.who, where_at: flag.where, word: flag.word, snippet: flag.snippet, t: flag.t }); this.setState({ flags, postError: '🚫 That message contains language that isn\'t allowed. A moderator has been notified.' }); clearTimeout(this._errT); this._errT = setTimeout(() => this.setState({ postError: '' }), 4200); return false; }
+  screen(text, context) { const bad = this.findBadWord(text); if (!bad) return true; const flag = { id: 'fl' + Date.now() + Math.random().toString(36).slice(2, 6), who: this.state.name, where: context, word: bad, snippet: (text || '').slice(0, 140), t: Date.now() }; const flags = [flag, ...this.state.flags].slice(0, 200); try { localStorage.setItem(this.FLAGS_KEY, JSON.stringify(flags)); } catch (e) {} this.remoteUpsert('flags', { id: flag.id, who: flag.who, where_at: flag.where, word: flag.word, snippet: flag.snippet, t: flag.t }); this.notifyPush(['*mods'], { title: '🚩 Blocked word attempt', body: (flag.who || 'Someone') + ' tried “' + bad + '” · ' + context, url: 'MembersLounge.dc.html', tag: 'flag' }); this.setState({ flags, postError: '🚫 That message contains language that isn\'t allowed. A moderator has been notified.' }); clearTimeout(this._errT); this._errT = setTimeout(() => this.setState({ postError: '' }), 4200); return false; }
   addBanned = () => { const w = (this.state.bannedInput || '').trim().toLowerCase(); if (!w) return; const list = this.bannedList(); if (!list.includes(w)) list.push(w); this.saveBannedList(list); this.setState({ bannedInput: '' }); };
   updateBanned = (e) => this.setState({ bannedInput: e.target.value });
   removeBanned = (w) => { const list = this.bannedList().filter((x) => x !== w); this.saveBannedList(list); this.forceUpdate(); };
@@ -636,6 +735,45 @@ class Component extends DCLogic {
   // ===== Supabase (multi-user backend) =====
   SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
   SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
+  VAPID_PUBLIC = 'BMEM2g86GAE8oqBvaHd923Z5lAdZjNOh6KJiSbmw0R0UE90NCqx-OtL2Olo4DYoYwCETWUuX2fysyHtqZJKQWss'; // VAPID public key — push enabled
+
+  urlB64ToUint8(base64) { const pad = '='.repeat((4 - base64.length % 4) % 4); const b = (base64 + pad).replace(/-/g, '+').replace(/_/g, '/'); const raw = atob(b); const out = new Uint8Array(raw.length); for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out; }
+  pushSupported() { return ('serviceWorker' in navigator) && ('PushManager' in window) && ('Notification' in window) && !!this.VAPID_PUBLIC; }
+  async registerSW() { try { if ('serviceWorker' in navigator) { this._swReg = await navigator.serviceWorker.register('sw.js'); return this._swReg; } } catch (e) {} return null; }
+  async enablePush() {
+    if (!this.pushSupported()) { return false; }
+    try {
+      const reg = this._swReg || await this.registerSW();
+      if (!reg) return false;
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') { this.setState({ pushOn: false }); return false; }
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: this.urlB64ToUint8(this.VAPID_PUBLIC) });
+      const j = sub.toJSON();
+      if (this.remote) { try { await this.remote.from('push_subscriptions').upsert({ endpoint: sub.endpoint, member: this.state.name, p256dh: j.keys.p256dh, auth: j.keys.auth, t: Date.now() }); } catch (e) {} }
+      try { localStorage.setItem('wclv_push', '1'); } catch (e) {}
+      this.setState({ pushOn: true });
+      return true;
+    } catch (e) { return false; }
+  }
+  notifyPush(to, payload, exclude) { if (this.remote && Array.isArray(to) && to.length) { try { this.remote.functions.invoke('push', { body: { to, exclude: exclude || this.state.name, ...payload } }).then(() => {}, () => {}); } catch (e) {} } }
+  // Merge identity into the remote member row WITHOUT wiping saved profile fields.
+  async mergeRemoteProfile(phone, name, email, role) {
+    const applyLocal = (row) => { const members = this.state.members.map((m) => (this.normPhone(m.phone) === this.normPhone(phone) || m.name.toLowerCase() === name.toLowerCase()) ? { ...m, ...row } : m); this.saveMembers(members); this.setState({ members }); };
+    const tryRemote = async () => {
+      if (!this.remote) return false;
+      try {
+        const r = await this.remote.from('members').select('*').eq('phone', phone);
+        const prev = (r.data && r.data[0]) || null;
+        const merged = { phone, name, email: email || (prev && prev.email) || null, role, muted: prev ? !!prev.muted : false, bio: (prev && prev.bio) || null, hobbies: (prev && prev.hobbies) || null, business: (prev && prev.business) || null, address: (prev && prev.address) || null, avatar: (prev && prev.avatar) || null };
+        await this.remote.from('members').upsert(merged);
+        applyLocal({ bio: merged.bio || '', hobbies: merged.hobbies || '', business: merged.business || '', address: merged.address || '', avatar: merged.avatar || '', email: merged.email || '' });
+        return true;
+      } catch (e) { return false; }
+    };
+    if (!(await tryRemote())) { let tries = 0; const iv = setInterval(async () => { tries++; if (await tryRemote() || tries > 20) clearInterval(iv); }, 500); }
+  }
+  mentionedMembers(text) { const low = (text || '').toLowerCase(); return this.state.members.map((m) => m.name).filter((n) => n !== this.state.name && low.includes('@' + this.firstNameOf(n).toLowerCase())); }
   remote = null;
 
   loadScript(src) { return new Promise((res, rej) => { if (window.supabase) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); setTimeout(rej, 6000); }); }
@@ -675,8 +813,17 @@ class Component extends DCLogic {
     const bw = (sp.data || []).find((x) => x.key === 'banned_words'); if (bw && bw.value) { try { localStorage.setItem(this.BANNED_KEY, bw.value); } catch (e) {} }
     const tm = (sp.data || []).find((x) => x.key === 'total_miles'); if (tm && tm.value != null) { const v = parseFloat(tm.value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); }
     try { const fr = await this.remote.from('flags').select('*').order('t', { ascending: false }); if (fr.data) this.setState({ flags: fr.data.map((f) => ({ id: f.id, who: f.who, where: f.where_at, word: f.word, snippet: f.snippet, t: Number(f.t) || 0 })).slice(0, 200) }); } catch (e) {}
-    const role = this.isModPhone(this.state.phone) ? 'mod' : this.state.role;
-    this.setState({ members, posts, dms, role }, () => this.scrollFeed());
+    const role = this.state.role;
+    // Merge seen-state from my member row so read status survives across sessions/devices.
+    const mine = (mp.data || []).find((m) => this.normPhone(m.phone) === this.normPhone(this.state.phone));
+    let seenRooms = this.state.seenRooms, seenDMs = this.state.seenDMs;
+    if (mine) {
+      const mergeMax = (a, b) => { const out = { ...(a || {}) }; Object.keys(b || {}).forEach((k) => { out[k] = Math.max(out[k] || 0, b[k] || 0); }); return out; };
+      seenRooms = mergeMax(this.state.seenRooms, mine.seen_rooms || {});
+      seenDMs = mergeMax(this.state.seenDMs, mine.seen_dms || {});
+      try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(seenRooms)); localStorage.setItem(this.SEEND_KEY, JSON.stringify(seenDMs)); } catch (e) {}
+    }
+    this.setState({ members, posts, dms, role, seenRooms, seenDMs }, () => this.scrollFeed());
   }
   reloadTable(table) {
     if (!this.remote) return;
@@ -705,6 +852,7 @@ class Component extends DCLogic {
     try { seenD = JSON.parse(localStorage.getItem(this.SEEND_KEY) || '{}') || {}; } catch (e) {}
     let flags = []; try { flags = JSON.parse(localStorage.getItem(this.FLAGS_KEY) || '[]') || []; } catch (e) {}
     let totalMiles = 0; try { totalMiles = parseFloat(localStorage.getItem(this.MILES_KEY) || '0') || 0; } catch (e) {}
+    let seenAlerts = 0; try { seenAlerts = parseInt(localStorage.getItem(this.SEEN_ALERTS_KEY) || '0', 10) || 0; } catch (e) {}
     if (!Array.isArray(posts) || !posts.length) posts = this.seedPosts();
     if (!Array.isArray(members) || !members.length) members = this.seedMembers();
     if (!Array.isArray(dms)) dms = [];
@@ -712,10 +860,10 @@ class Component extends DCLogic {
     const phone = localStorage.getItem(this.PHONE_KEY) || '';
     const email = localStorage.getItem(this.EMAIL_KEY) || '';
     const theme = localStorage.getItem(this.THEME_KEY) || 'light';
-    const role = this.isModPhone(phone) ? 'mod' : 'member';
+    const role = 'member';
     let welcome = false;
     try { if (!!name && localStorage.getItem('wclv_justEntered') === '1') { welcome = true; localStorage.removeItem('wclv_justEntered'); } } catch (e) {}
-    this.setState({ posts, members, dms, name, phone, email, theme, role, joined: !!name, seenRooms: seenR, seenDMs: seenD, flags, totalMiles, showWelcome: welcome }, () => { this.applyTheme(theme); this.scrollFeed(); this.initSupabase(); });
+    this.setState({ posts, members, dms, name, phone, email, theme, role, joined: !!name, seenRooms: seenR, seenDMs: seenD, flags, totalMiles, seenAlerts, showWelcome: welcome, pushOn: (localStorage.getItem('wclv_push') === '1') }, () => { this.applyTheme(theme); this.scrollFeed(); this.initSupabase(); if (!!name) this.registerSW(); });
   }
 
   applyTheme(theme) { const el = this.rootRef.current; if (!el) return; const set = theme === 'dark' ? this.DARK : this.LIGHT; Object.keys(set).forEach((k) => el.style.setProperty(k, set[k])); }
@@ -740,8 +888,9 @@ class Component extends DCLogic {
   savePosts(p) { try { localStorage.setItem(this.POSTS_KEY, JSON.stringify(p)); } catch (e) {} }
   saveMembers(m) { try { localStorage.setItem(this.MEM_KEY, JSON.stringify(m)); } catch (e) {} }
   saveDMs(d) { try { localStorage.setItem(this.DM_KEY, JSON.stringify(d)); } catch (e) {} }
-  saveSeenR(s) { try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(s)); } catch (e) {} }
-  saveSeenD(s) { try { localStorage.setItem(this.SEEND_KEY, JSON.stringify(s)); } catch (e) {} }
+  saveSeenR(s) { try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(s)); } catch (e) {} this.syncSeen({ seen_rooms: s }); }
+  saveSeenD(s) { try { localStorage.setItem(this.SEEND_KEY, JSON.stringify(s)); } catch (e) {} this.syncSeen({ seen_dms: s }); }
+  syncSeen(patch) { if (!this.remote || !this.state.phone) return; this._seenPatch = { ...(this._seenPatch || {}), ...patch }; clearTimeout(this._seenT); this._seenT = setTimeout(() => { const p = this._seenPatch; this._seenPatch = null; try { this.remote.from('members').update(p).eq('phone', this.state.phone).then(() => {}, () => {}); } catch (e) {} }, 500); }
   scrollFeed() { const f = this.feedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
   scrollDM() { const f = this.dmFeedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
 
@@ -754,13 +903,14 @@ class Component extends DCLogic {
     const phone = this.formatPhone(this.state.phoneDraft || '');
     const email = (this.state.emailDraft || '').trim();
     if (!name || this.normPhone(phone).length !== 10 || !/^\S+@\S+\.\S+$/.test(email)) return;
-    const role = this.isModPhone(phone) ? 'mod' : 'member';
+    const role = 'member';
     try { localStorage.setItem(this.NAME_KEY, name); localStorage.setItem(this.PHONE_KEY, phone); localStorage.setItem(this.EMAIL_KEY, email); localStorage.setItem('wclv_member', '1'); } catch (e) {}
     let members = this.state.members.slice();
-    const existing = members.find((m) => m.name.toLowerCase() === name.toLowerCase());
-    const meRow = { ...(existing || {}), name, phone, email, role, muted: existing ? !!existing.muted : false };
-    if (!members.some((m) => m.name.toLowerCase() === name.toLowerCase())) { members = [...members, meRow]; this.saveMembers(members); }
-    this.syncMember(meRow);
+    const dbRole = this.isModPhone(phone) ? 'mod' : 'member';
+    const existing = members.find((m) => this.normPhone(m.phone) === this.normPhone(phone) || m.name.toLowerCase() === name.toLowerCase());
+    const meRow = { ...(existing || {}), name, phone, email, role: dbRole, muted: existing ? !!existing.muted : false };
+    if (!members.some((m) => this.normPhone(m.phone) === this.normPhone(phone) || m.name.toLowerCase() === name.toLowerCase())) { members = [...members, meRow]; this.saveMembers(members); }
+    this.mergeRemoteProfile(phone, name, email, dbRole);
     // welcome DM so notifications + messaging can be demoed
     let dms = this.state.dms.slice();
     if (!dms.some((d) => d.members.includes(name))) { const wdm = { id: 'dmw' + Date.now(), members: [name, 'Jenn K.'], group: false, messages: [{ author: 'Jenn K.', text: 'Welcome to the Lounge! 👋 Ping me anytime.', t: Date.now() }] }; dms = [...dms, wdm]; this.saveDMs(dms); this.syncDM(wdm); }
@@ -768,7 +918,7 @@ class Component extends DCLogic {
     this.setState({ name, phone, email, role, joined: true, members, dms, nameDraft: '', phoneDraft: '', emailDraft: '', showWelcome: true }, () => this.scrollFeed());
   };
 
-  dismissWelcome = () => { try { localStorage.setItem('wclv_welcomed', '1'); } catch (e) {} this.setState({ showWelcome: false }); };
+  dismissWelcome = () => { try { localStorage.setItem('wclv_welcomed', '1'); } catch (e) {} this.setState({ showWelcome: false }); if (this.pushSupported() && !this.state.pushOn && localStorage.getItem('wclv_push_asked') !== '1') { try { localStorage.setItem('wclv_push_asked', '1'); } catch (e) {} setTimeout(() => this.enablePush(), 400); } };
   setMember = () => this.setState({ role: 'member' });
   setMod = () => this.setState({ role: 'mod' });
   isMuted() { const me = this.state.members.find((m) => m.name.toLowerCase() === (this.state.name || '').toLowerCase()); return !!(me && me.muted); }
@@ -780,7 +930,7 @@ class Component extends DCLogic {
   toggleRoomMenu = () => this.setState((s) => ({ roomMenuOpen: !s.roomMenuOpen }));
   closeRoomMenu = () => this.setState({ roomMenuOpen: false });
 
-  updateDraft = (e) => this.setState({ draft: e.target.value });
+  updateDraft = (e) => { const v = e.target.value; this.setState({ draft: v }); this.handleMention('draft', v); };
   updateAddr = (e) => this.setState({ addrDraft: e.target.value });
   onDraftKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.post(); } };
   onFile = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => this.setState({ pendingImg: r.result }); r.readAsDataURL(file); };
@@ -797,6 +947,8 @@ class Component extends DCLogic {
     const posts = [...this.state.posts, msg];
     const seenRooms = { ...this.state.seenRooms, [this.state.room]: Date.now() };
     this.savePosts(posts); this.saveSeenR(seenRooms); this.syncPost(msg);
+    { const tagged = this.mentionedMembers(text); if (tagged.length) this.notifyPush(tagged, { title: '👋 ' + this.firstNameOf(this.state.name) + ' tagged you', body: (text || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'tag-' + msg.id }); }
+    if (this.state.room === 'trailhead' || this.state.room === 'neon' || this.state.room === 'marquee') { this.notifyPush(this.state.members.map((m) => m.name), { title: (room.icon || '📣') + ' ' + room.name, body: (text || addr || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'room-' + this.state.room }); }
     if (this.fileRef.current) this.fileRef.current.value = '';
     this.setState({ posts, draft: '', pendingImg: null, addrDraft: '', seenRooms }, () => this.scrollFeed());
   };
@@ -818,15 +970,35 @@ class Component extends DCLogic {
   updatePassSet = (e) => this.setState({ passSetDraft: e.target.value, passSaved: false });
   setSpeakPass = () => { const v = (this.state.passSetDraft || '').trim(); if (!v) return; try { localStorage.setItem('wclv_speak_pass', v); } catch (e) {} this.remoteUpsert('settings', { key: 'speak_pass', value: v }); this.setState({ passSetDraft: '', passSaved: true }); };
   toggleComments = (id) => this.setState((s) => ({ openComments: { ...s.openComments, [id]: !s.openComments[id] } }));
-  updateComment = (id, e) => { const v = e.target.value; this.setState((s) => ({ commentDrafts: { ...s.commentDrafts, [id]: v } })); };
+  updateComment = (id, e) => { const v = e.target.value; this.setState((s) => ({ commentDrafts: { ...s.commentDrafts, [id]: v } })); this.handleMention('comment:' + id, v); };
   onCommentKey = (id, e) => { if (e.key === 'Enter') { e.preventDefault(); this.addComment(id); } };
   addComment = (id) => { if (this.isMuted()) return; const text = (this.state.commentDrafts[id] || '').trim(); if (!text) return; const room = this.ROOMS.find((r) => r.id === this.state.room); if (!this.screen(text, 'Comment in ' + (room ? room.name : 'a room'))) return; const posts = this.state.posts.map((p) => p.id === id ? { ...p, comments: [...(p.comments || []), { author: this.state.name, text, t: Date.now() }] } : p); this.savePosts(posts); { const cp = posts.find((p) => p.id === id); if (cp) this.syncPost(cp); } this.setState((s) => ({ posts, commentDrafts: { ...s.commentDrafts, [id]: '' }, openComments: { ...s.openComments, [id]: true } })); };
 
   deletePost = (id) => { const posts = this.state.posts.filter((p) => p.id !== id); this.savePosts(posts); this.remoteDelete('posts', 'id', id); this.setState({ posts }); };
+  editPost = (id) => { const p = this.state.posts.find((x) => x.id === id); this.setState({ editingPost: id, editPostDraft: p ? (p.text || '') : '' }); };
+  updateEditPost = (e) => this.setState({ editPostDraft: e.target.value });
+  cancelEditPost = () => this.setState({ editingPost: null, editPostDraft: '' });
+  saveEditPost = (id) => { const text = (this.state.editPostDraft || '').trim(); if (!this.screen(text, 'Edited post')) return; const posts = this.state.posts.map((p) => p.id === id ? { ...p, text, edited: true } : p); this.savePosts(posts); { const cp = posts.find((p) => p.id === id); if (cp) this.syncPost(cp); } this.setState({ posts, editingPost: null, editPostDraft: '' }); };
+  deleteComment = (postId, idx) => { const posts = this.state.posts.map((p) => { if (p.id !== postId) return p; const comments = (p.comments || []).filter((c, i) => i !== idx); return { ...p, comments }; }); this.savePosts(posts); { const cp = posts.find((p) => p.id === postId); if (cp) this.syncPost(cp); } this.setState({ posts }); };
+  editComment = (postId, idx) => { const p = this.state.posts.find((x) => x.id === postId); const c = p && p.comments[idx]; this.setState({ editingComment: postId + ':' + idx, editCommentDraft: c ? c.text : '' }); };
+  updateEditComment = (e) => this.setState({ editCommentDraft: e.target.value });
+  saveEditComment = (postId, idx) => { const text = (this.state.editCommentDraft || '').trim(); if (!text) return; if (!this.screen(text, 'Edited comment')) return; const posts = this.state.posts.map((p) => { if (p.id !== postId) return p; const comments = (p.comments || []).map((c, i) => i === idx ? { ...c, text, edited: true } : c); return { ...p, comments }; }); this.savePosts(posts); { const cp = posts.find((p) => p.id === postId); if (cp) this.syncPost(cp); } this.setState({ posts, editingComment: null, editCommentDraft: '' }); };
   toggleMembers = () => this.setState((s) => ({ showMembers: !s.showMembers }));
   stop = (e) => e.stopPropagation();
-  muteMember = (name) => { const members = this.state.members.map((m) => m.name === name ? { ...m, muted: !m.muted } : m); this.saveMembers(members); { const cm = members.find((m) => m.name === name); if (cm) this.syncMember(cm); } this.setState({ members }); };
-  removeMember = (name) => { const gone = this.state.members.find((m) => m.name === name); const members = this.state.members.filter((m) => m.name !== name); this.saveMembers(members); if (gone) this.remoteDelete('members', 'phone', gone.phone); this.setState({ members }); };
+  muteMember = (name) => { const target = this.state.members.find((m) => m.name === name); const willMute = !(target && target.muted); const members = this.state.members.map((m) => m.name === name ? { ...m, muted: !m.muted } : m); this.saveMembers(members); { const cm = members.find((m) => m.name === name); if (cm) this.syncMember(cm); } this.logAlert(willMute ? 'mute' : 'unmute', name); this.setState({ members }); };
+  removeMember = (name) => { const gone = this.state.members.find((m) => m.name === name); const members = this.state.members.filter((m) => m.name !== name); this.saveMembers(members); if (gone) this.remoteDelete('members', 'phone', gone.phone); this.logAlert('remove', name); this.setState({ members }); };
+
+  logAlert(kind, target, extra) {
+    const alert = { id: 'al' + Date.now() + Math.random().toString(36).slice(2, 6), who: this.state.name, where_at: kind, word: '__' + kind, snippet: extra || target || '', t: Date.now() };
+    const flags = [{ id: alert.id, who: alert.who, where: alert.where_at, word: alert.word, snippet: alert.snippet, t: alert.t }, ...this.state.flags].slice(0, 200);
+    try { localStorage.setItem(this.FLAGS_KEY, JSON.stringify(flags)); } catch (e) {}
+    this.remoteUpsert('flags', alert);
+    const label = kind === 'remove' ? (this.firstNameOf(this.state.name) + ' removed ' + (extra || target)) : kind === 'mute' ? (this.firstNameOf(this.state.name) + ' muted ' + (extra || target)) : kind === 'unmute' ? (this.firstNameOf(this.state.name) + ' unmuted ' + (extra || target)) : (this.firstNameOf(this.state.name) + ' — ' + (extra || target));
+    this.notifyPush(['*mods'], { title: '🛡️ Moderator action', body: label, url: 'MembersLounge.dc.html', tag: 'modaction' });
+    this.setState({ flags });
+  }
+  toggleNotif = () => { const opening = !this.state.showNotif; if (opening) { const now = Date.now(); try { localStorage.setItem(this.SEEN_ALERTS_KEY, String(now)); } catch (e) {} this.setState({ showNotif: true, seenAlerts: now }); } else { this.setState({ showNotif: false }); } };
+  gotoDM = (id) => { this.setState({ view: 'messages', showNotif: false }, () => this.openDM(id)); };
 
   updatePollQ = (e) => this.setState({ pollQ: e.target.value });
   updatePollOpt = (i, e) => { const v = e.target.value; this.setState((s) => { const o = s.pollOpts.slice(); o[i] = v; return { pollOpts: o }; }); };
@@ -849,9 +1021,9 @@ class Component extends DCLogic {
     this.saveDMs(dms); this.syncDM(dm);
     this.setState({ dms, dmView: 'thread', activeDM: dm.id, newSel: [] }, () => this.scrollDM());
   };
-  updateDmDraft = (e) => this.setState({ dmDraft: e.target.value });
+  updateDmDraft = (e) => { const v = e.target.value; this.setState({ dmDraft: v }); this.handleMention('dm', v); };
   onDmKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendDM(); } };
-  sendDM = () => { const text = (this.state.dmDraft || '').trim(); if (!text || !this.state.activeDM) return; if (!this.screen(text, 'Direct message')) return; const dms = this.state.dms.map((d) => d.id === this.state.activeDM ? { ...d, messages: [...d.messages, { author: this.state.name, text, t: Date.now() }] } : d); const seenDMs = { ...this.state.seenDMs, [this.state.activeDM]: Date.now() }; this.saveDMs(dms); this.saveSeenD(seenDMs); { const cd = dms.find((d) => d.id === this.state.activeDM); if (cd) this.syncDM(cd); } this.setState({ dms, dmDraft: '', seenDMs }, () => this.scrollDM()); };
+  sendDM = () => { const text = (this.state.dmDraft || '').trim(); if (!text || !this.state.activeDM) return; if (!this.screen(text, 'Direct message')) return; const dms = this.state.dms.map((d) => d.id === this.state.activeDM ? { ...d, messages: [...d.messages, { author: this.state.name, text, t: Date.now() }] } : d); const seenDMs = { ...this.state.seenDMs, [this.state.activeDM]: Date.now() }; this.saveDMs(dms); this.saveSeenD(seenDMs); { const cd = dms.find((d) => d.id === this.state.activeDM); if (cd) { this.syncDM(cd); const others = cd.members.filter((n) => n !== this.state.name); this.notifyPush(others, { title: cd.group ? ('💬 ' + this.firstNameOf(this.state.name) + ' in a group') : ('💬 ' + this.firstNameOf(this.state.name)), body: text.slice(0, 120), url: 'MembersLounge.dc.html', tag: 'dm-' + cd.id }); } } this.setState({ dms, dmDraft: '', seenDMs }, () => this.scrollDM()); };
 
   colorFor(name) { let h = 0; const s = name || '?'; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return this.PALETTE[h % this.PALETTE.length]; }
   segmentsOf(text) { return (text || '').split(/(@\w+|https?:\/\/\S+)/).filter((s) => s !== '').map((s) => { const m = /^@\w+$/.test(s); return { t: s, m, plain: !m }; }); }
@@ -863,12 +1035,13 @@ class Component extends DCLogic {
   dmUnreadCount(d) { const me = this.state.name; const seen = this.state.seenDMs[d.id] || 0; return d.messages.filter((m) => m.author !== me && m.t > seen).length; }
   roomNote(roomId) {
     const me = (this.state.name || '').toLowerCase();
+    const meFirst = this.firstNameOf(this.state.name).toLowerCase();
     const seen = this.state.seenRooms[roomId] || 0;
     let unread = false, mention = false;
     this.state.posts.filter((p) => p.room === roomId).forEach((p) => {
       if (p.author !== this.state.name && p.t > seen) unread = true;
-      if (p.t > seen && (p.text || '').toLowerCase().includes('@' + me)) mention = true;
-      (p.comments || []).forEach((c) => { if (c.t > seen && (c.text || '').toLowerCase().includes('@' + me)) mention = true; });
+      if (p.t > seen && (p.text || '').toLowerCase().includes('@' + meFirst)) mention = true;
+      (p.comments || []).forEach((c) => { if (c.t > seen && (c.text || '').toLowerCase().includes('@' + meFirst)) mention = true; });
     });
     return { unread, mention };
   }
@@ -909,12 +1082,16 @@ class Component extends DCLogic {
         galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', maxHeight: '460px', objectFit: 'cover' } }) : null,
         inlineImgEl: isChatImg ? React.createElement('img', { src: p.img, alt: 'shared', style: { display: 'block', marginBottom: '6px', maxWidth: '100%', borderRadius: '10px', border: '2px solid var(--line)' } }) : null,
         address: p.address, mapSrc: isMap ? ('https://www.google.com/maps?q=' + encodeURIComponent(p.address) + '&z=15&output=embed') : '', mapLink: isMap ? ('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address)) : '',
-        hasText: !!(p.text && p.text.trim()), segments: this.segmentsOf(p.text),
+        hasText: !!(p.text && p.text.trim()), segments: this.segmentsOf(p.text), edited: !!p.edited,
+        editing: this.state.editingPost === p.id, editDraft: this.state.editPostDraft,
+        onEdit: () => this.editPost(p.id), onEditInput: this.updateEditPost, onEditSave: () => this.saveEditPost(p.id), onEditCancel: this.cancelEditPost,
+        showMention: this.state.mentionField === ('comment:' + p.id),
+        mentionList: this.state.mentionField === ('comment:' + p.id) ? this.state.mentionMatches.map((n) => ({ name: n, initial: this.initialOf(n), color: this.colorFor(n), avatarImgEl: this.mkAv(this.avatarOf(n), false), noAvatar: !this.avatarOf(n), onPick: () => this.pickMentionComment(p.id, n) })) : [],
         reactions, picker, showPicker: !!this.state.openPicker[p.id], onTogglePicker: () => this.togglePicker(p.id),
         commentCount: (p.comments || []).length, showComments: !!this.state.openComments[p.id],
-        canModerate: isMod, onDelete: () => this.deletePost(p.id),
+        canModerate: isMod, canDelete: isMod || (p.author === me && this.canEditWindow(p.t)), canEdit: p.author === me && this.canEditWindow(p.t) && !this.state.editingPost, onDelete: () => this.deletePost(p.id),
         onToggleComments: () => this.toggleComments(p.id),
-        comments: (p.comments || []).map((c) => ({ name: c.author, initial: this.initialOf(c.author), color: this.colorFor(c.author), time: this.fmtTime(c.t), text: c.text, avatar: this.avatarOf(c.author) || false, noAvatar: !this.avatarOf(c.author), avatarImgEl: this.mkAv(this.avatarOf(c.author), false), onProfile: () => this.openProfile(c.author) })),
+        comments: (p.comments || []).map((c, ci) => { const mine = c.author === me; const inWin = this.canEditWindow(c.t); const editing = this.state.editingComment === (p.id + ':' + ci); return { name: c.author, initial: this.initialOf(c.author), color: this.colorFor(c.author), time: this.fmtTime(c.t), text: c.text, edited: !!c.edited, avatar: this.avatarOf(c.author) || false, noAvatar: !this.avatarOf(c.author), avatarImgEl: this.mkAv(this.avatarOf(c.author), false), onProfile: () => this.openProfile(c.author), canManage: isMod || (mine && inWin), canEdit: mine && inWin, editing, notEditing: !editing, editDraft: this.state.editCommentDraft, onEdit: () => this.editComment(p.id, ci), onEditInput: this.updateEditComment, onEditKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.saveEditComment(p.id, ci); } }, onEditSave: () => this.saveEditComment(p.id, ci), onDelete: () => this.deleteComment(p.id, ci) }; }),
         canComment: !muted, commentDraft: this.state.commentDrafts[p.id] || '',
         onCommentInput: (e) => this.updateComment(p.id, e), onCommentKey: (e) => this.onCommentKey(p.id, e), onComment: () => this.addComment(p.id),
         ...pollFields,
@@ -938,6 +1115,12 @@ class Component extends DCLogic {
     const myDMs = this.myDMs();
     const conversations = myDMs.map((d) => { const last = d.messages[d.messages.length - 1]; const title = this.dmTitle(d); const un = this.dmUnreadCount(d); const av = d.group ? '' : this.avatarOf(title); return { id: d.id, title: d.group ? ('👥 ' + title) : title, initial: this.initialOf(title), color: this.colorFor(title), avatar: av || false, noAvatar: !av, avatarImgEl: this.mkAv(av, true), preview: last ? ((last.author === me ? 'You: ' : (last.author + ': ')) + last.text) : 'No messages yet', time: last ? this.fmtTime(last.t) : '', unread: un > 0, onOpen: () => this.openDM(d.id) }; });
     const dmBadgeTotal = myDMs.reduce((s, d) => s + this.dmUnreadCount(d), 0);
+    const dmNotifs = myDMs.map((d) => { const un = this.dmUnreadCount(d); if (!un) return null; const title = this.dmTitle(d); const last = d.messages[d.messages.length - 1]; return { id: 'dm-' + d.id, icon: d.group ? '👥' : '✉️', text: d.group ? ('New message in “' + title + '”') : ('New message from ' + title), time: this.fmtTime(last ? last.t : Date.now()), t: last ? last.t : 0, bg: 'rgba(0,191,99,.1)', onClick: () => this.gotoDM(d.id) }; }).filter(Boolean);
+    let alertNotifs = [];
+    if (isMod) { alertNotifs = this.state.flags.map((f) => { const isAct = (f.word || '').startsWith('__'); let icon = '🚫', text; if (isAct) { const kind = f.word.slice(2); const tgt = f.snippet || ''; if (kind === 'remove') { icon = '🚷'; text = f.who + ' removed ' + tgt; } else if (kind === 'mute') { icon = '🔇'; text = f.who + ' muted ' + tgt; } else if (kind === 'unmute') { icon = '🔊'; text = f.who + ' unmuted ' + tgt; } else { text = f.who + ' — ' + tgt; } } else { text = (f.who || 'Someone') + ' tried a blocked word (“' + f.word + '”) · ' + (f.where || ''); } return { id: 'al-' + f.id, icon, text, time: this.fmtTime(f.t), t: f.t, bg: isAct ? 'var(--card)' : 'rgba(209,73,91,.1)', onClick: () => {} }; }); }
+    const notifs = [...dmNotifs, ...alertNotifs].sort((a, b) => b.t - a.t);
+    const unseenAlerts = isMod ? this.state.flags.filter((f) => f.t > (this.state.seenAlerts || 0)).length : 0;
+    const notifTotal = dmBadgeTotal + unseenAlerts;
     const active = this.state.dms.find((d) => d.id === this.state.activeDM);
     const threadMsgs = active ? active.messages.map((m, i, arr) => { const mine = m.author === me; const prev = arr[i - 1]; const showName = active.group && !mine && (!prev || prev.author !== m.author); return { text: m.text, time: this.fmtTime(m.t), name: m.author, dir: mine ? 'row-reverse' : 'row', align: mine ? 'right' : 'left', showName, bubbleBg: mine ? '#00BF63' : 'var(--card)', bubbleColor: mine ? '#fff' : 'var(--ink)', radius: mine ? '14px 14px 4px 14px' : '14px 14px 14px 4px' }; }) : [];
     const pickable = this.state.members.filter((m) => m.name.toLowerCase() !== (me || '').toLowerCase()).map((m) => { const sel = this.state.newSel.includes(m.name); return { name: m.name, initial: this.initialOf(m.name), color: this.colorFor(m.name), avatar: m.avatar || false, noAvatar: !m.avatar, avatarImgEl: this.mkAv(m.avatar, false), check: sel ? '✅' : '⚪', bg: sel ? 'rgba(0,191,99,.18)' : 'var(--card)', onToggle: () => this.toggleSel(m.name) }; });
@@ -960,6 +1143,14 @@ class Component extends DCLogic {
       openLounge: this.openLounge, openMessages: this.openMessages,
       loungeBtnBg: this.state.view === 'lounge' ? '#00BF63' : 'transparent', msgBtnBg: this.state.view === 'messages' ? '#00BF63' : 'transparent',
       hasDMBadge: dmBadgeTotal > 0, dmBadge: dmBadgeTotal > 9 ? '9+' : ('' + dmBadgeTotal),
+      mentionDraft: this.state.mentionField === 'draft', mentionDM: this.state.mentionField === 'dm',
+      mentionDraftList: this.state.mentionField === 'draft' ? this.state.mentionMatches.map((n) => ({ name: n, initial: this.initialOf(n), color: this.colorFor(n), avatarImgEl: this.mkAv(this.avatarOf(n), false), noAvatar: !this.avatarOf(n), onPick: () => this.pickMentionDraft(n) })) : [],
+      mentionDMList: this.state.mentionField === 'dm' ? this.state.mentionMatches.map((n) => ({ name: n, initial: this.initialOf(n), color: this.colorFor(n), avatarImgEl: this.mkAv(this.avatarOf(n), false), noAvatar: !this.avatarOf(n), onPick: () => this.pickMentionDM(n) })) : [],
+      toggleNotif: this.toggleNotif, showNotif: this.state.showNotif, notifs, noNotifs: notifs.length === 0,
+      pushSupported: this.pushSupported(), enablePush: this.enablePush,
+      pushBtnLabel: this.state.pushOn ? 'On' : 'Enable', pushBtnBg: this.state.pushOn ? '#00BF63' : 'var(--card)', pushBtnColor: this.state.pushOn ? '#fff' : 'var(--ink)',
+      pushHint: this.state.pushOn ? 'You\'ll get banners for messages & alerts.' : 'Get a banner for DMs, @mentions & alerts.',
+      hasNotifBadge: notifTotal > 0, notifBadge: notifTotal > 9 ? '9+' : ('' + notifTotal),
       memberTabBg: isMod ? 'transparent' : '#00BF63', memberTabColor: isMod ? '#888' : '#fff',
       modTabBg: isMod ? '#FF914D' : 'transparent', modTabColor: isMod ? '#000' : '#888',
       setMember: this.setMember, setMod: this.setMod, showRoleSwitch: this.isModPhone(this.state.phone),
@@ -979,8 +1170,8 @@ class Component extends DCLogic {
       postError: this.state.postError,
       bannedInput: this.state.bannedInput, updateBanned: this.updateBanned, addBanned: this.addBanned,
       bannedWords: this.bannedList().map((w) => ({ word: w, onRemove: () => this.removeBanned(w) })),
-      flags: this.state.flags.map((f) => ({ who: f.who || 'Someone', where: f.where || '', word: f.word, snippet: f.snippet || '', time: this.fmtTime(f.t) })),
-      flagCount: this.state.flags.length, hasFlags: this.state.flags.length > 0, clearFlags: this.clearFlags,
+      flags: this.state.flags.filter((f) => !(f.word || '').startsWith('__')).map((f) => ({ who: f.who || 'Someone', where: f.where || '', word: f.word, snippet: f.snippet || '', time: this.fmtTime(f.t) })),
+      flagCount: this.state.flags.filter((f) => !(f.word || '').startsWith('__')).length, hasFlags: this.state.flags.filter((f) => !(f.word || '').startsWith('__')).length > 0, clearFlags: this.clearFlags,
       showProfile: !!this.state.profileName, closeProfile: this.closeProfile,
       isLobby: this.state.room === 'lobby',
       totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap, milesAdding: this.state.milesAdding,
