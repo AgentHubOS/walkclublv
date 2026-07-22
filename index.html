@@ -107,7 +107,7 @@
         <div data-parallax="0.16" style="position: absolute; bottom: -12%; right: -11%; width: 34vw; height: 34vw; max-width: 420px; max-height: 420px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .9; animation: drift2 18s ease-in-out infinite;"></div></div>
         <div data-parallax="0.18" style="position: absolute; top: 58%; left: 3%; width: 60px; height: 60px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
       </div>
-      <div style="position: relative; z-index: 2; width: 100%; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(66px,10vh,120px); text-align: center; padding: clamp(96px,14vh,140px) 20px clamp(44px,7vh,74px);">
+      <div style="position: relative; z-index: 2; width: 100%; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(66px,10vh,120px); text-align: center; padding: clamp(66px,10vh,120px) 20px clamp(44px,7vh,74px);">
         <div style="position: relative; display: inline-block; margin: 0 auto; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.28)) drop-shadow(0 0 2px rgba(0,0,0,0.35)); animation: wc-float 5s ease-in-out infinite;">
             <div style="display: inline-flex; flex-direction: column; align-items: center; font-family: 'Anton', sans-serif; font-size: clamp(150px,27vw,330px); line-height: .9; letter-spacing: -.035em; text-transform: uppercase; transform: scaleX(.66); transform-origin: center;">
               <div style="color: #FF914D;">W<span style="margin-left: -.055em;">A</span>LK</div>
@@ -117,7 +117,7 @@
         <div style="width: 100%;">
           <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 0 0 24px; color: #000;">Come for the walk. Stay for the community.</p>
           <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-            <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
+            <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@
           <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(150px,34vw,380px); width: auto; display: block; margin: 0 auto;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 28px 0 26px; color: #fff; text-shadow: 2px 2px 0 #000;">Walk together. Connect. Grow.</p>
-        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
+        <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
       </div>
     </sc-if>
 
@@ -149,7 +149,7 @@
           <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(160px,33vw,350px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #fff;">Come for the walk. Stay for the community.</p>
-        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
+        <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
       </div>
     </sc-if>
 
@@ -370,12 +370,51 @@
   </div>
   </sc-if>
 
+  <div onClick="{{ milesTap }}" title="Total club miles — triple-tap to log this week" style="position: fixed; z-index: 90; right: clamp(14px,3vw,26px); bottom: clamp(14px,3vw,26px); cursor: pointer; width: clamp(104px,15vw,132px); height: clamp(104px,15vw,132px); border-radius: 50%; background: #00BF63; border: 4px solid #000; box-shadow: 5px 5px 0 #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: wc-floatB 3.4s ease-in-out infinite;">
+    <div style="font-size: clamp(22px,3vw,26px); line-height: 1;">👟</div>
+    <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3.4vw,30px); line-height: .95; color: #000; margin-top: 2px;">{{ totalMiles }}</div>
+    <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: 9px; color: #000;">Miles walked</div>
+  </div>
+
   <canvas ref="{{ confettiRef }}" style="position: fixed; inset: 0; z-index: 100; pointer-events: none; width: 100%; height: 100%;"></canvas>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
 class Component extends DCLogic {
-  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false };
+  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false, totalMiles: 0, milesClicks: 0 };
+
+  SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
+  SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
+  MILES_KEY = 'wclv_miles';
+  fmtMiles(n) { return (Math.round((Number(n) || 0) * 10) / 10).toFixed(1); }
+  loadScript(src) { return new Promise((res, rej) => { if (window.supabase) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); setTimeout(rej, 6000); }); }
+  async loadMiles() {
+    try { const v = parseFloat(localStorage.getItem(this.MILES_KEY) || '0'); if (isFinite(v)) this.setState({ totalMiles: v }); } catch (e) {}
+    try {
+      await this.loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+      if (!window.supabase) return;
+      this._sb = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
+      const r = await this._sb.from('settings').select('*').eq('key', 'total_miles');
+      if (r.data && r.data[0] && r.data[0].value != null) { const v = parseFloat(r.data[0].value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); }
+      this._sb.channel('miles').on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, (p) => { const row = p.new; if (row && row.key === 'total_miles' && row.value != null) { const v = parseFloat(row.value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); } }).subscribe();
+    } catch (e) {}
+  }
+  milesTap = () => {
+    this.setState((s) => ({ milesClicks: s.milesClicks + 1 }), () => {
+      clearTimeout(this._milesT);
+      if (this.state.milesClicks >= 3) {
+        this.setState({ milesClicks: 0 });
+        const input = window.prompt("Add this week's miles (XX.X):", '');
+        if (input == null) return;
+        const add = parseFloat(String(input).replace(/[^0-9.]/g, ''));
+        if (!isFinite(add) || add <= 0) return;
+        const total = (Number(this.state.totalMiles) || 0) + add;
+        try { localStorage.setItem(this.MILES_KEY, String(total)); } catch (e) {}
+        if (this._sb) { try { this._sb.from('settings').upsert({ key: 'total_miles', value: String(total) }).then(() => {}, () => {}); } catch (e) {} }
+        this.setState({ totalMiles: total });
+      } else { this._milesT = setTimeout(() => this.setState({ milesClicks: 0 }), 900); }
+    });
+  };
 
   rootRef = React.createRef();
   marqueeRef = React.createRef();
@@ -395,6 +434,7 @@ class Component extends DCLogic {
     this._onResize = () => { const m = window.innerWidth < 820; if (m !== this.state.isMobile) this.setState({ isMobile: m, menuOpen: false }); };
     window.addEventListener('resize', this._onResize, { passive: true });
     this.handleScroll();
+    this.loadMiles();
 
     this._io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
@@ -623,6 +663,7 @@ class Component extends DCLogic {
       showRoute: this.props.showRouteLine ?? true,
       handleJoin: this.handleJoin,
       membershipUrl: this.membershipUrl,
+      totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap,
       isStack: hero === 'stack', isSplit: hero === 'split', isDark: hero === 'dark',
       scrollHintColor: hero === 'dark' ? '#fff' : '#000',
       heroOptions,
