@@ -104,7 +104,7 @@
           </button>
           <sc-if value="{{ roomMenuOpen }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ closeRoomMenu }}" style="position: fixed; inset: 0; z-index: 35;"></div>
-            <div style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; min-width: 236px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 5px 5px 0 var(--line); overflow: hidden;">
+            <div style="position: absolute; left: 0; top: calc(100% + 8px); z-index: 40; min-width: 236px; max-width: min(236px, calc(100vw - 32px)); background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 5px 5px 0 var(--line); overflow: hidden;">
               <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="7">
                 <button onClick="{{ room.onClick }}" style="cursor: pointer; display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; border: none; border-bottom: 1px solid var(--dash); padding: 11px 14px; background: {{ room.bg }}; color: {{ room.color }}; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; white-space: nowrap;">
                   <span style="font-size: 16px;">{{ room.icon }}</span>{{ room.name }}<span style="flex: 1;"></span><sc-if value="{{ room.hasDot }}" hint-placeholder-val="{{ false }}"><span style="width: 9px; height: 9px; border-radius: 50%; background: {{ room.dotColor }};"></span></sc-if>
