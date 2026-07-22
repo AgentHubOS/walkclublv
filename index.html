@@ -631,7 +631,6 @@ class Component extends DCLogic {
   }
 
   knock = () => {
-    if (this.isKnownMember()) { window.location.href = 'MembersLounge.dc.html'; return; }
     this.setState((s) => ({ knocks: s.knocks + 1 }), () => {
       clearTimeout(this._knockT);
       if (this.state.knocks >= 3) { this.setState({ showSpeak: true, knocks: 0, denied: false, passDraft: '' }); }

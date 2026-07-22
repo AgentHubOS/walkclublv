@@ -124,7 +124,9 @@
         <div style="width: 100%; max-width: 720px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
 
           <sc-if value="{{ p.isGallery }}" hint-placeholder-val="{{ false }}">
-            {{ p.galleryImgEl }}
+            <div onPointerDown="{{ p.onPhotoPressStart }}" onPointerUp="{{ p.onPhotoPressEnd }}" onPointerLeave="{{ p.onPhotoPressEnd }}" onContextMenu="{{ p.onPhotoContext }}" style="position: relative; -webkit-touch-callout: default;">
+              {{ p.galleryImgEl }}
+            </div>
           </sc-if>
 
           <sc-if value="{{ p.isMap }}" hint-placeholder-val="{{ false }}">
@@ -647,6 +649,7 @@ class Component extends DCLogic {
 
   memberByName(name) { return this.state.members.find((m) => (m.name || '').toLowerCase() === (name || '').toLowerCase()) || null; }
   avatarOf(name) { const m = this.memberByName(name); return (m && m.avatar) || ''; }
+  downloadImg(src) { if (!src) return; try { const a = document.createElement('a'); a.href = src; a.download = 'walkclublv-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) {} }
   mkAv(url, absolute) { if (!url) return null; const style = absolute ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } : { width: '100%', height: '100%', objectFit: 'cover' }; return React.createElement('img', { src: url, alt: '', style }); }
   openProfile = (name) => { const mine = (name || '').toLowerCase() === (this.state.name || '').toLowerCase(); this.setState({ profileName: name, profileEdit: false, showMembers: false }); };
   closeProfile = () => this.setState({ profileName: null, profileEdit: false });
@@ -1079,7 +1082,10 @@ class Component extends DCLogic {
       return {
         id: p.id, name: p.author, initial: this.initialOf(p.author), color: this.colorFor(p.author), time: this.fmtTime(p.t),
         avatar: this.avatarOf(p.author) || false, noAvatar: !this.avatarOf(p.author), avatarImgEl: this.mkAv(this.avatarOf(p.author), false), onProfile: () => this.openProfile(p.author),
-        isGallery, isMap, isChatImg,
+        isGallery, isMap, isChatImg, img: p.img || '',
+        onPhotoPressStart: () => { this._pressT = setTimeout(() => this.downloadImg(p.img), 550); },
+        onPhotoPressEnd: () => { clearTimeout(this._pressT); },
+        onPhotoContext: (e) => { e.preventDefault(); this.downloadImg(p.img); },
         galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', maxHeight: '460px', objectFit: 'cover' } }) : null,
         inlineImgEl: isChatImg ? React.createElement('img', { src: p.img, alt: 'shared', style: { display: 'block', marginBottom: '6px', maxWidth: '100%', borderRadius: '10px', border: '2px solid var(--line)' } }) : null,
         address: p.address, mapSrc: isMap ? ('https://www.google.com/maps?q=' + encodeURIComponent(p.address) + '&z=15&output=embed') : '', mapLink: isMap ? ('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address)) : '',
