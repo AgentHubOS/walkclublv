@@ -668,6 +668,7 @@ class Component extends DCLogic {
       heroOptions,
       navLinks: [
         { label: 'The Walk', href: '#walk' },
+        { label: 'Neon Nights', href: 'NeonNights.dc.html' },
         { label: 'Follow', href: '#social' },
         { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
@@ -680,7 +681,7 @@ class Component extends DCLogic {
       knock: this.knock, showSpeak: this.state.showSpeak, closeSpeak: this.closeSpeak, stopSpeak: this.stopSpeak,
       passDraft: this.state.passDraft, updatePass: this.updatePass, onPassKey: this.onPassKey, submitPass: this.submitPass,
       denied: this.state.denied, passBorder: this.state.denied ? '#d1495b' : '#00BF63',
-      showNeon: this.props.showNeonNights ?? false,
+      showNeon: this.props.showNeonNights ?? true,
       showEvents: this.props.showEvents ?? false,
       showMerch: this.props.showMerch ?? false,
       socials: [
