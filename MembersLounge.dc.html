@@ -116,7 +116,15 @@
       </div>
     </div>
 
+    <sc-if value="{{ isGalleryRoom }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; justify-content: center; gap: 8px; padding: 10px 12px 2px; background: var(--bg);">
+        <button onClick="{{ setGalleryFeed }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; border: 2px solid var(--line); border-radius: 999px; padding: 7px 18px; background: {{ feedTabBg }}; color: {{ feedTabColor }};">📸 Feed</button>
+        <button onClick="{{ setGalleryAlbums }}" style="cursor: pointer; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; border: 2px solid var(--line); border-radius: 999px; padding: 7px 18px; background: {{ albumsTabBg }}; color: {{ albumsTabColor }};">📚 Albums</button>
+      </div>
+    </sc-if>
+
     <div ref="{{ feedRef }}" style="flex: 1; overflow-y: auto; padding: 12px clamp(12px,4vw,18px) 16px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+      <sc-if value="{{ showStream }}" hint-placeholder-val="{{ true }}">
       <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
         <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">Nothing here yet — be the first.</div>
       </sc-if>
@@ -249,6 +257,37 @@
           </div>
         </div>
       </sc-for>
+      </sc-if>
+
+      <sc-if value="{{ galleryShelf }}" hint-placeholder-val="{{ false }}">
+        <div style="width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 14px;">
+          <sc-if value="{{ noAlbums }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">No albums yet. Photos posted on walk days get sorted into the walk's park automatically. 📚</div>
+          </sc-if>
+          <sc-for list="{{ albums }}" as="al" hint-placeholder-count="3">
+            <button onClick="{{ al.onOpen }}" style="cursor: pointer; text-align: left; display: flex; align-items: center; gap: 16px; width: 100%; background: var(--card); border: 2px solid var(--line); border-radius: 16px; box-shadow: 4px 4px 0 var(--line); padding: 14px 16px;">
+              {{ al.pileEl }}
+              <div style="flex: 1; min-width: 0;">
+                <div style="width: 34px; height: 6px; border-radius: 3px; background: {{ al.accent }}; margin-bottom: 8px;"></div>
+                <div style="font-family: 'Anton', sans-serif; font-size: clamp(20px,3.4vw,26px); line-height: .95; color: var(--ink); word-break: break-word;">{{ al.park }}</div>
+                <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 11px; color: var(--muted); margin-top: 5px;">{{ al.walkLabel }} · {{ al.countLabel }}</div>
+              </div>
+              <span style="flex-shrink: 0; font-size: 20px; color: var(--muted);">›</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ galleryDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="width: 100%; max-width: 720px;">
+          <button onClick="{{ backToAlbums }}" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; background: var(--card); color: var(--ink); border: 2px solid var(--line); border-radius: 999px; padding: 7px 14px; margin-bottom: 12px;">‹ All albums</button>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+            <div style="width: 8px; height: 34px; border-radius: 4px; background: {{ openAlbumAccent }};"></div>
+            <div style="font-family: 'Anton', sans-serif; font-size: clamp(26px,5vw,38px); line-height: .9; color: var(--ink);">{{ openAlbumName }}</div>
+          </div>
+          {{ galleryDetailEl }}
+        </div>
+      </sc-if>
     </div>
 
     <div style="border-top: 3px solid var(--line); background: var(--card); padding: 10px calc(16px + env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left)); position: sticky; bottom: 0;">
@@ -602,6 +641,7 @@ class Component extends DCLogic {
     editingPost: null, editPostDraft: '', editingComment: null, editCommentDraft: '',
     mentionField: null, mentionMatches: [],
     pushOn: false,
+    galleryView: 'feed', openAlbum: null,
   };
 
   firstNameOf(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
@@ -650,6 +690,49 @@ class Component extends DCLogic {
   memberByName(name) { return this.state.members.find((m) => (m.name || '').toLowerCase() === (name || '').toLowerCase()) || null; }
   avatarOf(name) { const m = this.memberByName(name); return (m && m.avatar) || ''; }
   downloadImg(src) { if (!src) return; try { const a = document.createElement('a'); a.href = src; a.download = 'walkclublv-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); } catch (e) {} }
+
+  // ===== Gallery albums (auto-sorted by the current Trailhead park) =====
+  currentPark() {
+    const th = this.state.posts.filter((p) => p.room === 'trailhead' && p.address).sort((a, b) => b.t - a.t)[0];
+    if (!th) return 'Unsorted';
+    return (th.address.split(',')[0] || 'Unsorted').trim();
+  }
+  setGalleryFeed = () => this.setState({ galleryView: 'feed', openAlbum: null });
+  setGalleryAlbums = () => this.setState({ galleryView: 'albums', openAlbum: null });
+  openAlbumView = (park) => this.setState({ openAlbum: park });
+  backToAlbums = () => this.setState({ openAlbum: null });
+  dayLabel(t) { try { return new Date(t).toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }); } catch (e) { return ''; } }
+  albumParkColor(park) { const c = ['#FF914D', '#00BF63', '#0ea5a3', '#7c3aed', '#d1495b', '#2563eb']; let h = 0; for (let i = 0; i < park.length; i++) h = (h * 31 + park.charCodeAt(i)) >>> 0; return c[h % c.length]; }
+  albumsData() {
+    const gp = this.state.posts.filter((p) => p.room === 'gallery' && p.img).sort((a, b) => b.t - a.t);
+    const byPark = {};
+    gp.forEach((p) => { const park = p.park || 'Unsorted'; (byPark[park] = byPark[park] || []).push(p); });
+    return Object.keys(byPark).map((park) => { const photos = byPark[park]; const dates = {}; photos.forEach((p) => { const k = new Date(p.t).toDateString(); dates[k] = true; }); return { park, photos, walks: Object.keys(dates).length, count: photos.length, lastT: photos[0].t }; }).sort((a, b) => b.lastT - a.lastT);
+  }
+  makePile(photos, accent) {
+    const shots = photos.slice(0, 5).reverse(); // oldest first (bottom), newest drawn last (top)
+    const n = shots.length; const mid = (n - 1) / 2;
+    return React.createElement('div', { style: { position: 'relative', width: '128px', height: '128px', flexShrink: 0 } },
+      shots.map((p, i) => {
+        const rot = (i - mid) * 8; const isTop = i === n - 1;
+        return React.createElement('div', { key: p.id, style: { position: 'absolute', top: '50%', left: '50%', width: '100px', height: '100px', marginLeft: '-50px', marginTop: '-50px', background: '#fff', padding: '5px 5px 16px', borderRadius: '3px', border: '1px solid rgba(0,0,0,.15)', boxShadow: '2px 3px 7px rgba(0,0,0,.28)', transform: 'rotate(' + rot + 'deg)', zIndex: i, transformOrigin: 'center' } },
+          React.createElement('div', { style: { width: '100%', height: '100%', backgroundImage: 'url(' + p.img + ')', backgroundSize: 'cover', backgroundPosition: 'center', border: isTop ? ('2px solid ' + accent) : '1px solid #0002' } }));
+      }));
+  }
+  makeAlbumDetail(park) {
+    const photos = this.state.posts.filter((p) => p.room === 'gallery' && p.img && (p.park || 'Unsorted') === park).sort((a, b) => b.t - a.t);
+    const groups = []; let cur = null;
+    photos.forEach((p) => { const k = new Date(p.t).toDateString(); if (!cur || cur.key !== k) { cur = { key: k, label: this.dayLabel(p.t), items: [] }; groups.push(cur); } cur.items.push(p); });
+    return React.createElement('div', { style: { width: '100%', maxWidth: '720px', display: 'flex', flexDirection: 'column', gap: '18px' } },
+      groups.map((g) => React.createElement('div', { key: g.key },
+        React.createElement('div', { style: { fontFamily: "'Oswald', sans-serif", fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', fontSize: '12px', color: '#FF914D', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' } },
+          React.createElement('span', null, g.label),
+          React.createElement('span', { style: { flex: 1, height: '2px', background: 'var(--dash)' } }),
+          React.createElement('span', { style: { color: 'var(--muted)' } }, g.items.length)),
+        React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' } },
+          g.items.map((p) => React.createElement('div', { key: p.id, onPointerDown: () => { this._pressT = setTimeout(() => this.downloadImg(p.img), 550); }, onPointerUp: () => clearTimeout(this._pressT), onPointerLeave: () => clearTimeout(this._pressT), onContextMenu: (e) => { e.preventDefault(); this.downloadImg(p.img); }, style: { position: 'relative', paddingBottom: '100%', backgroundImage: 'url(' + p.img + ')', backgroundSize: 'cover', backgroundPosition: 'center', border: '2px solid var(--line)', borderRadius: '8px' } })))
+      )));
+  }
   mkAv(url, absolute) { if (!url) return null; const style = absolute ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } : { width: '100%', height: '100%', objectFit: 'cover' }; return React.createElement('img', { src: url, alt: '', style }); }
   openProfile = (name) => { const mine = (name || '').toLowerCase() === (this.state.name || '').toLowerCase(); this.setState({ profileName: name, profileEdit: false, showMembers: false }); };
   closeProfile = () => this.setState({ profileName: null, profileEdit: false });
@@ -791,8 +874,8 @@ class Component extends DCLogic {
       this.subscribeRemote();
     } catch (e) { this.remote = null; }
   }
-  mapPostOut(p) { return { id: p.id, room: p.room, author: p.author, role: p.role, body: p.text || '', img: p.img || null, address: p.address || null, t: p.t, reactions: p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {}), comments: p.comments || [], poll: p.poll || null }; }
-  mapPostIn(r) { return { id: r.id, room: r.room, author: r.author, role: r.role, text: r.body || '', img: r.img || null, address: r.address || null, t: Number(r.t) || 0, reactions: r.reactions || {}, comments: r.comments || [], poll: r.poll || null }; }
+  mapPostOut(p) { const o = { id: p.id, room: p.room, author: p.author, role: p.role, body: p.text || '', img: p.img || null, address: p.address || null, park: p.park || null, t: p.t, reactions: p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {}), comments: p.comments || [], poll: p.poll || null }; return o; }
+  mapPostIn(r) { return { id: r.id, room: r.room, author: r.author, role: r.role, text: r.body || '', img: r.img || null, address: r.address || null, park: r.park || null, t: Number(r.t) || 0, reactions: r.reactions || {}, comments: r.comments || [], poll: r.poll || null }; }
   mapDMOut(d) { return { id: d.id, members: d.members || [], is_group: !!d.group, name: d.name || null, messages: d.messages || [] }; }
   mapDMIn(r) { return { id: r.id, members: r.members || [], group: !!r.is_group, name: r.name || null, messages: r.messages || [] }; }
   remoteUpsert(table, row) { if (this.remote) { try { this.remote.from(table).upsert(row).then(() => {}, () => {}); } catch (e) {} } }
@@ -895,7 +978,7 @@ class Component extends DCLogic {
   saveSeenR(s) { try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(s)); } catch (e) {} this.syncSeen({ seen_rooms: s }); }
   saveSeenD(s) { try { localStorage.setItem(this.SEEND_KEY, JSON.stringify(s)); } catch (e) {} this.syncSeen({ seen_dms: s }); }
   syncSeen(patch) { if (!this.remote || !this.state.phone) return; this._seenPatch = { ...(this._seenPatch || {}), ...patch }; clearTimeout(this._seenT); this._seenT = setTimeout(() => { const p = this._seenPatch; this._seenPatch = null; try { this.remote.from('members').update(p).eq('phone', this.state.phone).then(() => {}, () => {}); } catch (e) {} }, 500); }
-  scrollFeed() { const f = this.feedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
+  scrollFeed() { const f = this.feedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = (this.state.room === 'gallery') ? 0 : f.scrollHeight; }); }
   scrollDM() { const f = this.dmFeedRef.current; if (f) requestAnimationFrame(() => { f.scrollTop = f.scrollHeight; }); }
 
   updateName = (e) => this.setState({ nameDraft: e.target.value });
@@ -947,7 +1030,7 @@ class Component extends DCLogic {
     const addr = (this.state.addrDraft || '').trim();
     if (!this.screen(text + ' ' + addr, 'Room: ' + room.name)) return;
     if (room.layout === 'map') { if (!addr) return; } else if (!text && !this.state.pendingImg) return;
-    const msg = { id: 'm' + Date.now(), room: this.state.room, author: this.state.name, role: this.state.role, text, img: this.state.pendingImg || null, address: room.layout === 'map' ? addr : null, t: Date.now(), likes: [], comments: [] };
+    const msg = { id: 'm' + Date.now(), room: this.state.room, author: this.state.name, role: this.state.role, text, img: this.state.pendingImg || null, address: room.layout === 'map' ? addr : null, park: this.state.room === 'gallery' ? this.currentPark() : null, t: Date.now(), likes: [], comments: [] };
     const posts = [...this.state.posts, msg];
     const seenRooms = { ...this.state.seenRooms, [this.state.room]: Date.now() };
     this.savePosts(posts); this.saveSeenR(seenRooms); this.syncPost(msg);
@@ -1066,7 +1149,8 @@ class Component extends DCLogic {
     });
 
     const seedsGone = this.seedsGone();
-    const posts = this.state.posts.filter((p) => p.room === this.state.room && !(seedsGone && this.SEED_IDS.includes(p.id))).sort((a, b) => a.t - b.t).map((p) => {
+    const galleryDesc = this.state.room === 'gallery';
+    const posts = this.state.posts.filter((p) => p.room === this.state.room && !(seedsGone && this.SEED_IDS.includes(p.id))).sort((a, b) => galleryDesc ? (b.t - a.t) : (a.t - b.t)).map((p) => {
       const rxObj = p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {});
       const reactions = Object.keys(rxObj).filter((e) => rxObj[e].length).map((e) => ({ emoji: e, count: rxObj[e].length, bg: rxObj[e].includes(me) ? 'var(--accentSoft)' : 'var(--card)', onToggle: () => this.toggleReaction(p.id, e) }));
       const picker = this.REACTIONS.map((e) => ({ emoji: e, onPick: () => this.toggleReaction(p.id, e) }));
@@ -1181,6 +1265,18 @@ class Component extends DCLogic {
       flagCount: this.state.flags.filter((f) => !(f.word || '').startsWith('__')).length, hasFlags: this.state.flags.filter((f) => !(f.word || '').startsWith('__')).length > 0, clearFlags: this.clearFlags,
       showProfile: !!this.state.profileName, closeProfile: this.closeProfile,
       isLobby: this.state.room === 'lobby',
+      isGalleryRoom: room.id === 'gallery',
+      setGalleryFeed: this.setGalleryFeed, setGalleryAlbums: this.setGalleryAlbums, backToAlbums: this.backToAlbums,
+      showStream: room.id !== 'gallery' || this.state.galleryView === 'feed',
+      galleryShelf: room.id === 'gallery' && this.state.galleryView === 'albums' && !this.state.openAlbum,
+      galleryDetail: room.id === 'gallery' && this.state.galleryView === 'albums' && !!this.state.openAlbum,
+      feedTabBg: this.state.galleryView === 'feed' ? '#FF914D' : 'var(--card)', feedTabColor: this.state.galleryView === 'feed' ? '#000' : 'var(--ink)',
+      albumsTabBg: this.state.galleryView === 'albums' ? '#FF914D' : 'var(--card)', albumsTabColor: this.state.galleryView === 'albums' ? '#000' : 'var(--ink)',
+      albums: (room.id === 'gallery' ? this.albumsData() : []).map((a) => { const accent = this.albumParkColor(a.park); return { park: a.park, accent, pileEl: this.makePile(a.photos, accent), countLabel: a.count + (a.count === 1 ? ' photo' : ' photos'), walkLabel: a.walks + (a.walks === 1 ? ' walk' : ' walks'), onOpen: () => this.openAlbumView(a.park) }; }),
+      noAlbums: room.id === 'gallery' && this.albumsData().length === 0,
+      openAlbumName: this.state.openAlbum || '',
+      openAlbumAccent: this.state.openAlbum ? this.albumParkColor(this.state.openAlbum) : '#FF914D',
+      galleryDetailEl: (room.id === 'gallery' && this.state.openAlbum) ? this.makeAlbumDetail(this.state.openAlbum) : null,
       totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap, milesAdding: this.state.milesAdding,
       milesInput: this.state.milesInput, updateMiles: this.updateMiles, onMilesKey: this.onMilesKey, addMiles: this.addMiles,
       profileViewing: !!this.state.profileName && !this.state.profileEdit,
