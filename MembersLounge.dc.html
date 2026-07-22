@@ -129,17 +129,17 @@
         <div style="text-align: center; color: var(--muted); font-size: 13px; padding: 36px 0;">Nothing here yet — be the first.</div>
       </sc-if>
       <sc-for list="{{ posts }}" as="p" hint-placeholder-count="3">
-        <div style="width: 100%; max-width: 720px; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
-
-          <sc-if value="{{ p.isGallery }}" hint-placeholder-val="{{ false }}">
-            <div onPointerDown="{{ p.onPhotoPressStart }}" onPointerUp="{{ p.onPhotoPressEnd }}" onPointerLeave="{{ p.onPhotoPressEnd }}" onContextMenu="{{ p.onPhotoContext }}" style="position: relative; -webkit-touch-callout: default;">
-              {{ p.galleryImgEl }}
-            </div>
-          </sc-if>
+        <div style="width: 100%; max-width: 720px; flex-shrink: 0; background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 3px 3px 0 var(--line); overflow: hidden; animation: ml-pop .25s ease both;">
 
           <sc-if value="{{ p.isMap }}" hint-placeholder-val="{{ false }}">
             <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--chip);">
               <iframe src="{{ p.mapSrc }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width: 100%; height: 100%; border: 0; display: block;"></iframe>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ p.isGallery }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ p.onPhotoTap }}" onPointerDown="{{ p.onPhotoPressStart }}" onPointerUp="{{ p.onPhotoPressEnd }}" onPointerLeave="{{ p.onPhotoPressEnd }}" onContextMenu="{{ p.onPhotoContext }}" style="cursor: zoom-in; -webkit-touch-callout: default;">
+              {{ p.inlineImgEl }}
             </div>
           </sc-if>
 
@@ -179,7 +179,9 @@
             </sc-if>
 
             <sc-if value="{{ p.isChatImg }}" hint-placeholder-val="{{ false }}">
-              {{ p.inlineImgEl }}
+              <div onClick="{{ p.onPhotoTap }}" onPointerDown="{{ p.onPhotoPressStart }}" onPointerUp="{{ p.onPhotoPressEnd }}" onPointerLeave="{{ p.onPhotoPressEnd }}" onContextMenu="{{ p.onPhotoContext }}" style="cursor: zoom-in; -webkit-touch-callout: default;">
+                {{ p.inlineImgEl }}
+              </div>
             </sc-if>
 
             <sc-if value="{{ p.hasPoll }}" hint-placeholder-val="{{ false }}">
@@ -481,6 +483,15 @@
   </div>
   </sc-if>
 
+  <!-- ===== PHOTO LIGHTBOX ===== -->
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 90; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; padding: 20px;">
+    {{ lightboxImgEl }}
+    <button onClick="{{ closeLightbox }}" title="Close" style="cursor: pointer; position: fixed; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: #000; color: #fff; border: 2px solid #fff; font-size: 18px; line-height: 1;">✕</button>
+    <button onClick="{{ lightboxDownload }}" title="Save photo" style="cursor: pointer; position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 13px; background: #00BF63; color: #fff; border: 2px solid #fff; border-radius: 999px; padding: 11px 22px;">⬇ Save photo</button>
+  </div>
+  </sc-if>
+
   <!-- ===== MEMBERS PANEL ===== -->
   <sc-if value="{{ showMembers }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ toggleMembers }}" style="position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.5); display: flex; align-items: flex-end; justify-content: center;">
@@ -641,8 +652,12 @@ class Component extends DCLogic {
     editingPost: null, editPostDraft: '', editingComment: null, editCommentDraft: '',
     mentionField: null, mentionMatches: [],
     pushOn: false,
-    galleryView: 'feed', openAlbum: null,
+    galleryView: 'feed', openAlbum: null, lightboxImg: null,
   };
+
+  openLightbox = (src) => { if (src) this.setState({ lightboxImg: src }); };
+  closeLightbox = () => this.setState({ lightboxImg: null });
+  lightboxDownload = () => this.downloadImg(this.state.lightboxImg);
 
   firstNameOf(n) { return (n || '').trim().split(/\s+/)[0] || ''; }
   handleMention(field, value) {
@@ -730,7 +745,7 @@ class Component extends DCLogic {
           React.createElement('span', { style: { flex: 1, height: '2px', background: 'var(--dash)' } }),
           React.createElement('span', { style: { color: 'var(--muted)' } }, g.items.length)),
         React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' } },
-          g.items.map((p) => React.createElement('div', { key: p.id, onPointerDown: () => { this._pressT = setTimeout(() => this.downloadImg(p.img), 550); }, onPointerUp: () => clearTimeout(this._pressT), onPointerLeave: () => clearTimeout(this._pressT), onContextMenu: (e) => { e.preventDefault(); this.downloadImg(p.img); }, style: { position: 'relative', paddingBottom: '100%', backgroundImage: 'url(' + p.img + ')', backgroundSize: 'cover', backgroundPosition: 'center', border: '2px solid var(--line)', borderRadius: '8px' } })))
+          g.items.map((p) => React.createElement('div', { key: p.id, onClick: () => { if (this._longFired) { this._longFired = false; return; } this.openLightbox(p.img); }, onPointerDown: () => { this._longFired = false; this._pressT = setTimeout(() => { this._longFired = true; this.downloadImg(p.img); }, 550); }, onPointerUp: () => clearTimeout(this._pressT), onPointerLeave: () => clearTimeout(this._pressT), onContextMenu: (e) => { e.preventDefault(); this.downloadImg(p.img); }, style: { position: 'relative', paddingBottom: '100%', backgroundImage: 'url(' + p.img + ')', backgroundSize: 'cover', backgroundPosition: 'center', border: '2px solid var(--line)', borderRadius: '8px', cursor: 'zoom-in' } })))
       )));
   }
   mkAv(url, absolute) { if (!url) return null; const style = absolute ? { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } : { width: '100%', height: '100%', objectFit: 'cover' }; return React.createElement('img', { src: url, alt: '', style }); }
@@ -891,6 +906,13 @@ class Component extends DCLogic {
       this.remote.from('settings').select('*'),
     ]);
     let members = (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', avatar: m.avatar || '' }));
+    // Self-heal: guarantee my own membership is in the shared roster (recovers anyone whose sign-in didn't sync).
+    const myPhone = this.state.phone, myName = this.state.name;
+    if (myName && myPhone && !members.some((m) => this.normPhone(m.phone) === this.normPhone(myPhone))) {
+      const meRow = { name: myName, phone: myPhone, email: this.state.email || '', role: this.isModPhone(myPhone) ? 'mod' : 'member', muted: false, bio: '', hobbies: '', business: '', address: '', avatar: '' };
+      members = [...members, meRow];
+      this.syncMember(meRow);
+    }
     let posts = (pp.data || []).map((r) => this.mapPostIn(r));
     let dms = (dp.data || []).map((r) => this.mapDMIn(r));
     if (!members.length) { members = this.seedMembers(); members.forEach((m) => this.syncMember(m)); }
@@ -1166,12 +1188,13 @@ class Component extends DCLogic {
       return {
         id: p.id, name: p.author, initial: this.initialOf(p.author), color: this.colorFor(p.author), time: this.fmtTime(p.t),
         avatar: this.avatarOf(p.author) || false, noAvatar: !this.avatarOf(p.author), avatarImgEl: this.mkAv(this.avatarOf(p.author), false), onProfile: () => this.openProfile(p.author),
-        isGallery, isMap, isChatImg, img: p.img || '',
-        onPhotoPressStart: () => { this._pressT = setTimeout(() => this.downloadImg(p.img), 550); },
+        isGallery, isMap, isChatImg, notGallery: true, showPhoto: (isChatImg || isGallery), img: p.img || '',
+        onPhotoPressStart: () => { this._longFired = false; this._pressT = setTimeout(() => { this._longFired = true; this.downloadImg(p.img); }, 550); },
         onPhotoPressEnd: () => { clearTimeout(this._pressT); },
+        onPhotoTap: () => { if (this._longFired) { this._longFired = false; return; } this.openLightbox(p.img); },
         onPhotoContext: (e) => { e.preventDefault(); this.downloadImg(p.img); },
-        galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', maxHeight: '460px', objectFit: 'cover' } }) : null,
-        inlineImgEl: isChatImg ? React.createElement('img', { src: p.img, alt: 'shared', style: { display: 'block', marginBottom: '6px', maxWidth: '100%', borderRadius: '10px', border: '2px solid var(--line)' } }) : null,
+        galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', height: 'auto', maxHeight: 'none', objectFit: 'fill' } }) : null,
+        inlineImgEl: (isChatImg || isGallery) ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', height: 'auto', borderRadius: '10px', border: '2px solid var(--line)', marginBottom: '6px' } }) : null,
         address: p.address, mapSrc: isMap ? ('https://www.google.com/maps?q=' + encodeURIComponent(p.address) + '&z=15&output=embed') : '', mapLink: isMap ? ('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address)) : '',
         hasText: !!(p.text && p.text.trim()), segments: this.segmentsOf(p.text), edited: !!p.edited,
         editing: this.state.editingPost === p.id, editDraft: this.state.editPostDraft,
@@ -1277,6 +1300,8 @@ class Component extends DCLogic {
       openAlbumName: this.state.openAlbum || '',
       openAlbumAccent: this.state.openAlbum ? this.albumParkColor(this.state.openAlbum) : '#FF914D',
       galleryDetailEl: (room.id === 'gallery' && this.state.openAlbum) ? this.makeAlbumDetail(this.state.openAlbum) : null,
+      lightboxOpen: !!this.state.lightboxImg, closeLightbox: this.closeLightbox, lightboxDownload: this.lightboxDownload,
+      lightboxImgEl: this.state.lightboxImg ? React.createElement('img', { src: this.state.lightboxImg, alt: 'photo', onClick: (e) => e.stopPropagation(), style: { maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '6px' } }) : null,
       totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap, milesAdding: this.state.milesAdding,
       milesInput: this.state.milesInput, updateMiles: this.updateMiles, onMilesKey: this.onMilesKey, addMiles: this.addMiles,
       profileViewing: !!this.state.profileName && !this.state.profileEdit,
