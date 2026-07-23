@@ -21,6 +21,7 @@
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #f4f2ee; font-family: 'DM Sans', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
   a { color: #00BF63; text-decoration: none; }
   a:hover { color: #FF914D; }
   textarea, input { font-family: 'DM Sans', sans-serif; color: inherit; }
@@ -33,7 +34,7 @@
   @keyframes wc-neon { 0%,100% { text-shadow: 0 0 8px rgba(0,191,99,.9), 0 0 24px rgba(0,191,99,.55); } 47% { text-shadow: 0 0 6px rgba(0,191,99,.8); } 50% { text-shadow: none; } 53% { text-shadow: 0 0 10px rgba(0,191,99,.9); } }
 </style>
 </helmet>
-<div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; height: 100svh; height: 100dvh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink); overflow-x: hidden;">
+<div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; width: 100%; max-width: 100vw; height: 100svh; height: 100dvh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink); overflow-x: hidden;">
 
   <!-- ===== TOP BAR ===== -->
   <div style="width: 100%; background: #000; color: #fff; border-bottom: 3px solid #00BF63; position: sticky; top: 0; z-index: 30;">
@@ -323,7 +324,7 @@
           <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #FF914D;">{{ mapComposerLabel }}</div>
           <input value="{{ addrDraft }}" onInput="{{ updateAddr }}" placeholder="Address or place (e.g. Sunset Park, Las Vegas)" style="width: 100%; font-size: 14px; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; background: var(--field);" />
           <div style="display: flex; gap: 7px; align-items: flex-end;">
-            <textarea value="{{ draft }}" onInput="{{ updateDraft }}" rows="1" placeholder="Details — date, meet & walk times, notes…" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+            <textarea value="{{ draft }}" onInput="{{ updateDraft }}" rows="1" placeholder="Details — date, meet & walk times, notes…" style="flex: 1 1 0; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 10px 12px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
             <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Post</button>
           </div>
         </div>
@@ -345,7 +346,7 @@
           <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 42px; height: 42px; border: 2px solid var(--line); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 19px; background: var(--chip);">
             🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
           </label>
-          <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1 1 0; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
         </div>
       </sc-if>
@@ -425,7 +426,7 @@
           </div>
         </sc-if>
         <div style="display: flex; gap: 7px; align-items: flex-end;">
-          <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
+          <textarea value="{{ dmDraft }}" onInput="{{ updateDmDraft }}" onKeyDown="{{ onDmKey }}" rows="1" placeholder="Message…" style="flex: 1 1 0; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ sendDM }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
         </div>
       </div>
