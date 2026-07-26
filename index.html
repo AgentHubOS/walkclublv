@@ -570,7 +570,7 @@ class Component extends DCLogic {
     setTimeout(() => { window.open(this.membershipUrl, '_blank'); }, 900);
   };
 
-  get membershipUrl() { return 'https://sweatpals.com/host/WALKCLUBLV/membership?getMembership=true&membershipTierId=83835170-67a0-4247-b40d-db8bbc000e6d'; }
+  get membershipUrl() { return 'https://sweatpals.com/host/walkclublv'; }
 
   fireConfetti() {
     const canvas = this.confettiRef.current;
@@ -668,7 +668,6 @@ class Component extends DCLogic {
       heroOptions,
       navLinks: [
         { label: 'The Walk', href: '#walk' },
-        { label: 'Neon Nights', href: 'NeonNights.dc.html' },
         { label: 'Follow', href: '#social' },
         { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
@@ -681,7 +680,7 @@ class Component extends DCLogic {
       knock: this.knock, showSpeak: this.state.showSpeak, closeSpeak: this.closeSpeak, stopSpeak: this.stopSpeak,
       passDraft: this.state.passDraft, updatePass: this.updatePass, onPassKey: this.onPassKey, submitPass: this.submitPass,
       denied: this.state.denied, passBorder: this.state.denied ? '#d1495b' : '#00BF63',
-      showNeon: this.props.showNeonNights ?? true,
+      showNeon: this.props.showNeonNights ?? false,
       showEvents: this.props.showEvents ?? false,
       showMerch: this.props.showMerch ?? false,
       socials: [
