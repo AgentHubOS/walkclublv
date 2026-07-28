@@ -8,7 +8,7 @@
 <body>
 <x-dc>
 <helmet>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="apple-mobile-web-app-title" content="WCLV Lounge" />
@@ -22,7 +22,6 @@
   * { box-sizing: border-box; }
   body { margin: 0; background: #f4f2ee; font-family: 'DM Sans', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
   html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-  html, body { position: fixed; inset: 0; overflow: hidden; overscroll-behavior: none; }
   a { color: #00BF63; text-decoration: none; }
   a:hover { color: #FF914D; }
   textarea, input { font-family: 'DM Sans', sans-serif; color: inherit; }
@@ -968,10 +967,15 @@ class Component extends DCLogic {
       if (!r) return;
       const h = vv ? vv.height : window.innerHeight;
       const w = vv ? vv.width : window.innerWidth;
+      const top = vv ? vv.offsetTop : 0;
+      const left = vv ? vv.offsetLeft : 0;
+      r.style.position = 'fixed';
+      r.style.top = '0px';
+      r.style.left = '0px';
       r.style.height = h + 'px';
       r.style.width = w + 'px';
       r.style.maxWidth = w + 'px';
-      if (window.scrollX !== 0 || window.scrollY !== 0) window.scrollTo(0, 0);
+      r.style.transform = 'translate(' + left + 'px,' + top + 'px)';
     };
     this._vvApply = apply;
     apply();
