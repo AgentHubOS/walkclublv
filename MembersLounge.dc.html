@@ -21,7 +21,7 @@
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; background: #f4f2ee; font-family: 'DM Sans', system-ui, sans-serif; color: #111; -webkit-font-smoothing: antialiased; }
-  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; background-color: #f4f2ee; }
   a { color: #00BF63; text-decoration: none; }
   a:hover { color: #FF914D; }
   textarea, input { font-family: 'DM Sans', sans-serif; color: inherit; }
@@ -33,6 +33,18 @@
   @keyframes wc-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes wc-neon { 0%,100% { text-shadow: 0 0 8px rgba(0,191,99,.9), 0 0 24px rgba(0,191,99,.55); } 47% { text-shadow: 0 0 6px rgba(0,191,99,.8); } 50% { text-shadow: none; } 53% { text-shadow: 0 0 10px rgba(0,191,99,.9); } }
 </style>
+<script>
+  (function () {
+    try {
+      var dark = localStorage.getItem('wclv_theme') === 'dark';
+      var bg = dark ? '#15161a' : '#f4f2ee';
+      var d = document.documentElement;
+      d.style.background = bg;
+      d.style.colorScheme = dark ? 'dark' : 'light';
+      document.addEventListener('DOMContentLoaded', function () { document.body.style.background = bg; });
+    } catch (e) {}
+  })();
+</script>
 </helmet>
 <div ref="{{ rootRef }}" style="--bg: #f4f2ee; --card: #fff; --ink: #111; --line: #000; --muted: #999; --field: #fff; --chip: #f4f2ee; --dash: #ddd; --accentSoft: #ffe3d3; width: 100%; max-width: 100vw; height: 100svh; height: 100dvh; display: flex; flex-direction: column; align-items: center; background: var(--bg); color: var(--ink); overflow-x: hidden;">
 
@@ -87,6 +99,13 @@
   <!-- ===== LOUNGE (ROOMS) ===== -->
   <sc-if value="{{ isLoungeView }}" hint-placeholder-val="{{ false }}">
   <div style="flex: 1; width: 100%; max-width: min(1080px, 100%); margin: 0 auto; display: flex; flex-direction: column; min-height: 0;">
+    <sc-if value="{{ showInstall }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 10px; background: #000; color: #fff; padding: 10px clamp(12px,4vw,26px);">
+        <span style="font-size: 19px; line-height: 1;">📲</span>
+        <div style="flex: 1; min-width: 0; font-size: 12.5px; line-height: 1.4;">{{ installHint }}</div>
+        <button onClick="{{ dismissInstall }}" title="Dismiss" style="cursor: pointer; flex-shrink: 0; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid #333; background: #141414; color: #fff; font-size: 12px;">✕</button>
+      </div>
+    </sc-if>
 
     <div style="position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 2px solid var(--line); padding: 12px clamp(12px,4vw,26px);">
       <div style="display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px 12px;">
@@ -177,6 +196,10 @@
                 <sc-for list="{{ p.segments }}" as="seg" hint-placeholder-count="1"><sc-if value="{{ seg.m }}" hint-placeholder-val="{{ false }}"><span style="color: #00BF63; font-weight: 700;">{{ seg.t }}</span></sc-if><sc-if value="{{ seg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ seg.t }}</span></sc-if></sc-for>
                 <sc-if value="{{ p.edited }}" hint-placeholder-val="{{ false }}"><span style="font-size: 11px; color: var(--muted); font-style: italic;"> · edited</span></sc-if>
               </div>
+            </sc-if>
+
+            <sc-if value="{{ p.hasVideo }}" hint-placeholder-val="{{ false }}">
+              {{ p.videoEl }}
             </sc-if>
 
             <sc-if value="{{ p.isChatImg }}" hint-placeholder-val="{{ false }}">
@@ -340,6 +363,15 @@
             <sc-for list="{{ mentionDraftList }}" as="mn" hint-placeholder-count="2"><button onClick="{{ mn.onPick }}" style="cursor: pointer; display: flex; align-items: center; gap: 5px; background: var(--chip); border: 1.5px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 3px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; color: var(--ink);"><span style="overflow: hidden; width: 20px; height: 20px; border-radius: 50%; background: {{ mn.color }}; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Anton', sans-serif; font-size: 10px;">{{ mn.avatarImgEl }}<sc-if value="{{ mn.noAvatar }}" hint-placeholder-val="{{ true }}"><span>{{ mn.initial }}</span></sc-if></span>{{ mn.name }}</button></sc-for>
           </div>
         </sc-if>
+        <sc-if value="{{ uploading }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-bottom: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #FF914D;">🎥 Uploading video…</div>
+        </sc-if>
+        <sc-if value="{{ pendingVideo }}" hint-placeholder-val="{{ false }}">
+          <div style="position: relative; display: inline-block; margin-bottom: 8px;">
+            {{ pendingVideoEl }}
+            <button onClick="{{ clearImg }}" title="Remove" style="cursor: pointer; position: absolute; top: -8px; right: -8px; width: 22px; height: 22px; border-radius: 50%; background: #000; color: #fff; border: 2px solid #fff; font-size: 12px; line-height: 1; padding: 0;">✕</button>
+          </div>
+        </sc-if>
         <sc-if value="{{ pendingImg }}" hint-placeholder-val="{{ false }}">
           <div style="position: relative; display: inline-block; margin-bottom: 8px;">
             {{ pendingImgEl }}
@@ -348,7 +380,7 @@
         </sc-if>
         <div style="display: flex; gap: 7px; align-items: flex-end;">
           <label title="Add photo or GIF" style="cursor: pointer; flex-shrink: 0; width: 42px; height: 42px; border: 2px solid var(--line); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 19px; background: var(--chip);">
-            🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif" onChange="{{ onFile }}" style="display: none;" />
+            🖼️<input ref="{{ fileRef }}" type="file" accept="image/*,image/gif,video/*" onChange="{{ onFile }}" style="display: none;" />
           </label>
           <textarea value="{{ draft }}" onInput="{{ updateDraft }}" onKeyDown="{{ onDraftKey }}" rows="1" placeholder="{{ composerHint }}" style="flex: 1 1 0; min-width: 0; resize: none; font-size: 14px; line-height: 1.4; padding: 11px 13px; border: 2px solid var(--line); border-radius: 11px; outline: none; max-height: 110px; background: var(--field);"></textarea>
           <button onClick="{{ post }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; background: #FF914D; color: #000; border: 2px solid var(--line); border-radius: 11px; padding: 11px 15px; height: 42px;" style-hover="background: #00BF63; color: #fff;">Send</button>
@@ -661,7 +693,7 @@ class Component extends DCLogic {
     showNotif: false, seenAlerts: 0,
     editingPost: null, editPostDraft: '', editingComment: null, editCommentDraft: '',
     mentionField: null, mentionMatches: [],
-    pushOn: false, pushMsg: '', notifyAll: true,
+    pushOn: false, pushMsg: '', notifyAll: true, installDismissed: false, pendingVideo: null, uploading: false,
     galleryView: 'feed', openAlbum: null, lightboxImg: null,
   };
 
@@ -918,10 +950,25 @@ class Component extends DCLogic {
       this.remote = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
       await this.loadRemote();
       this.subscribeRemote();
+      clearInterval(this._pollT);
+      this._pollT = setInterval(() => { if (!document.hidden) this.pollNew(); }, 15000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) this.pollNew(); });
     } catch (e) { this.remote = null; }
   }
-  mapPostOut(p) { const o = { id: p.id, room: p.room, author: p.author, role: p.role, body: p.text || '', img: p.img || null, address: p.address || null, park: p.park || null, t: p.t, reactions: p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {}), comments: p.comments || [], poll: p.poll || null }; return o; }
-  mapPostIn(r) { return { id: r.id, room: r.room, author: r.author, role: r.role, text: r.body || '', img: r.img || null, address: r.address || null, park: r.park || null, t: Number(r.t) || 0, reactions: r.reactions || {}, comments: r.comments || [], poll: r.poll || null }; }
+  POST_COLS_BASE = 'id,room,author,role,body,address,park,t,reactions,comments,poll';
+  hasVideoCol = true;
+  postCols(withImg) { return (withImg ? 'id,room,author,role,body,img,address,park,t,reactions,comments,poll' : this.POST_COLS_BASE) + (this.hasVideoCol ? ',video' : ''); }
+  async selectPosts(withImg, build) {
+    let q = build(this.remote.from('posts').select(this.postCols(withImg)));
+    let r = await q;
+    if (r.error && this.hasVideoCol && /video/i.test(r.error.message || '')) {
+      this.hasVideoCol = false; // column not added yet — keep working without it
+      r = await build(this.remote.from('posts').select(this.postCols(withImg)));
+    }
+    return r;
+  }
+  mapPostOut(p) { const o = { id: p.id, room: p.room, author: p.author, role: p.role, body: p.text || '', img: p.img || null, address: p.address || null, park: p.park || null, t: p.t, reactions: p.reactions || (p.likes && p.likes.length ? { '❤️': p.likes } : {}), comments: p.comments || [], poll: p.poll || null }; if (this.hasVideoCol) o.video = p.video || null; return o; }
+  mapPostIn(r) { return { id: r.id, room: r.room, author: r.author, role: r.role, text: r.body || '', img: r.img || null, video: r.video || null, address: r.address || null, park: r.park || null, t: Number(r.t) || 0, reactions: r.reactions || {}, comments: r.comments || [], poll: r.poll || null }; }
   mapDMOut(d) { return { id: d.id, members: d.members || [], is_group: !!d.group, name: d.name || null, messages: d.messages || [] }; }
   mapDMIn(r) { return { id: r.id, members: r.members || [], group: !!r.is_group, name: r.name || null, messages: r.messages || [] }; }
   remoteUpsert(table, row) { if (this.remote) { try { this.remote.from(table).upsert(row).then(() => {}, () => {}); } catch (e) {} } }
@@ -932,11 +979,18 @@ class Component extends DCLogic {
   async loadRemote() {
     const [mp, pp, dp, sp] = await Promise.all([
       this.remote.from('members').select('*'),
-      this.remote.from('posts').select('*'),
+      this.selectPosts(false, (q) => q.order('t', { ascending: false }).limit(400)),
       this.remote.from('dms').select('*'),
       this.remote.from('settings').select('*'),
     ]);
-    let members = (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' }));
+    // Photos (base64) are heavy — fetch them right after the text so rooms paint immediately.
+    this._imgsPending = true;
+    this.remote.from('posts').select('id,img').not('img', 'is', null).order('t', { ascending: false }).limit(400).then((r) => {
+      if (!r.data) return;
+      const byId = {}; r.data.forEach((x) => { if (x.img) byId[x.id] = x.img; });
+      this.setState((s) => { const posts = s.posts.map((p) => (byId[p.id] && !p.img ? { ...p, img: byId[p.id] } : p)); this.savePosts(posts); return { posts }; });
+    }, () => {});
+    let members = mp.error ? (this.state.members || []) : (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' }));
     // Self-heal: guarantee my own membership is in the shared roster (recovers anyone whose sign-in didn't sync).
     const myPhone = this.state.phone, myName = this.state.name;
     if (myName && myPhone && !members.some((m) => this.normPhone(m.phone) === this.normPhone(myPhone))) {
@@ -944,10 +998,12 @@ class Component extends DCLogic {
       members = [...members, meRow];
       this.syncMember(meRow);
     }
-    let posts = (pp.data || []).map((r) => this.mapPostIn(r));
-    let dms = (dp.data || []).map((r) => this.mapDMIn(r));
-    if (!members.length) { members = this.seedMembers(); members.forEach((m) => this.syncMember(m)); }
-    if (!posts.length) { const seed = this.seedPosts(); seed.forEach((p) => this.syncPost(p)); posts = seed.map((p) => this.mapPostIn(this.mapPostOut(p))); }
+    const localImg = {}; (this.state.posts || []).forEach((p) => { if (p.img) localImg[p.id] = p.img; });
+    // A failed fetch must never look like an empty database (that would wipe the room and re-seed demo posts).
+    let posts = pp.error ? (this.state.posts || []) : (pp.data || []).map((r) => { const p = this.mapPostIn(r); if (!p.img && localImg[p.id]) p.img = localImg[p.id]; return p; });
+    let dms = dp.error ? (this.state.dms || []) : (dp.data || []).map((r) => this.mapDMIn(r));
+    if (!mp.error && !members.length) { members = this.seedMembers(); members.forEach((m) => this.syncMember(m)); }
+    if (!pp.error && !posts.length) { const seed = this.seedPosts(); seed.forEach((p) => this.syncPost(p)); posts = seed.map((p) => this.mapPostIn(this.mapPostOut(p))); }
     if (this.seedsGone()) { this.SEED_IDS.forEach((id) => this.remoteDelete('posts', 'id', id)); posts = posts.filter((p) => !this.SEED_IDS.includes(p.id)); }
     const pass = (sp.data || []).find((x) => x.key === 'speak_pass'); if (pass && pass.value) { try { localStorage.setItem('wclv_speak_pass', pass.value); } catch (e) {} }
     const bw = (sp.data || []).find((x) => x.key === 'banned_words'); if (bw && bw.value) { try { localStorage.setItem(this.BANNED_KEY, bw.value); } catch (e) {} }
@@ -971,12 +1027,42 @@ class Component extends DCLogic {
     else if (table === 'members') this.remote.from('members').select('*').then((r) => { if (r.data) this.setState({ members: r.data.map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' })) }); }, () => {});
     else if (table === 'dms') this.remote.from('dms').select('*').then((r) => { if (r.data) this.setState({ dms: r.data.map((x) => this.mapDMIn(x)) }); }, () => {});
   }
+  pollNew() {
+    if (!this.remote) return;
+    const since = (this.state.posts || []).reduce((m, p) => Math.max(m, p.t || 0), 0);
+    this.selectPosts(true, (q) => q.gt('t', since).order('t', { ascending: true }).limit(50))
+      .then((r) => {
+        if (!r || r.error || !r.data || !r.data.length) return;
+        this.setState((s) => {
+          let posts = s.posts.slice();
+          r.data.forEach((row) => { const inc = this.mapPostIn(row); const i = posts.findIndex((p) => p.id === inc.id); if (i >= 0) posts[i] = inc; else posts.push(inc); });
+          this.savePosts(posts); return { posts };
+        }, () => this.scrollFeed());
+      }, () => {});
+    this.remote.from('dms').select('*').then((r) => { if (r.data) { const dms = r.data.map((x) => this.mapDMIn(x)); this.saveDMs(dms); this.setState({ dms }); } }, () => {});
+  }
+  applyPostChange(payload) {
+    try {
+      if (payload.eventType === 'DELETE') { const id = payload.old && payload.old.id; if (id) this.setState((s) => { const posts = s.posts.filter((p) => p.id !== id); this.savePosts(posts); return { posts }; }); return; }
+      const row = payload.new; if (!row) return;
+      const inc = this.mapPostIn(row);
+      this.setState((s) => { const posts = s.posts.some((p) => p.id === inc.id) ? s.posts.map((p) => (p.id === inc.id ? inc : p)) : [...s.posts, inc]; this.savePosts(posts); return { posts }; }, () => this.scrollFeed());
+    } catch (e) { this.reloadTable('posts'); }
+  }
+  applyDMChange(payload) {
+    try {
+      if (payload.eventType === 'DELETE') { const id = payload.old && payload.old.id; if (id) this.setState((s) => { const dms = s.dms.filter((d) => d.id !== id); this.saveDMs(dms); return { dms }; }); return; }
+      const row = payload.new; if (!row) return;
+      const inc = this.mapDMIn(row);
+      this.setState((s) => { const dms = s.dms.some((d) => d.id === inc.id) ? s.dms.map((d) => (d.id === inc.id ? inc : d)) : [...s.dms, inc]; this.saveDMs(dms); return { dms }; });
+    } catch (e) { this.reloadTable('dms'); }
+  }
   subscribeRemote() {
     try {
       this.remote.channel('lounge')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => this.reloadTable('posts'))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, (payload) => this.applyPostChange(payload))
         .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => this.reloadTable('members'))
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'dms' }, () => this.reloadTable('dms'))
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'dms' }, (payload) => this.applyDMChange(payload))
         .on('postgres_changes', { event: '*', schema: 'public', table: 'flags' }, () => { this.remote.from('flags').select('*').order('t', { ascending: false }).then((r) => { if (r.data) this.setState({ flags: r.data.map((f) => ({ id: f.id, who: f.who, where: f.where_at, word: f.word, snippet: f.snippet, t: Number(f.t) || 0 })).slice(0, 200) }); }, () => {}); })
         .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => { this.remote.from('settings').select('*').then((r) => { if (!r.data) return; const tm = r.data.find((x) => x.key === 'total_miles'); if (tm && tm.value != null) { const v = parseFloat(tm.value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); } const bw = r.data.find((x) => x.key === 'banned_words'); if (bw && bw.value) { try { localStorage.setItem(this.BANNED_KEY, bw.value); } catch (e) {} } const pass = r.data.find((x) => x.key === 'speak_pass'); if (pass && pass.value) { try { localStorage.setItem('wclv_speak_pass', pass.value); } catch (e) {} } }, () => {}); })
         .subscribe();
@@ -993,16 +1079,15 @@ class Component extends DCLogic {
       const r = this.rootRef.current;
       if (!r) return;
       const h = vv ? vv.height : window.innerHeight;
-      const w = vv ? vv.width : window.innerWidth;
-      const top = vv ? vv.offsetTop : 0;
-      const left = vv ? vv.offsetLeft : 0;
       r.style.position = 'fixed';
       r.style.top = '0px';
       r.style.left = '0px';
+      r.style.right = '0px';
       r.style.height = h + 'px';
-      r.style.width = w + 'px';
-      r.style.maxWidth = w + 'px';
-      r.style.transform = 'translate(' + left + 'px,' + top + 'px)';
+      r.style.width = '100%';
+      r.style.maxWidth = '100%';
+      r.style.transform = 'none';
+      if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
     };
     this._vvApply = apply;
     apply();
@@ -1045,10 +1130,10 @@ class Component extends DCLogic {
     const role = 'member';
     let welcome = false;
     try { if (!!name && localStorage.getItem('wclv_justEntered') === '1') { welcome = true; localStorage.removeItem('wclv_justEntered'); } } catch (e) {}
-    this.setState({ posts, members, dms, name, phone, email, theme, role, joined: !!name, seenRooms: seenR, seenDMs: seenD, flags, totalMiles, seenAlerts, showWelcome: welcome, pushOn: (localStorage.getItem('wclv_push') === '1') }, () => { this.applyTheme(theme); this.scrollFeed(); this.initSupabase(); if (!!name) { this.registerSW(); this.verifyPush(); } });
+    this.setState({ posts, members, dms, name, phone, email, theme, role, joined: !!name, seenRooms: seenR, seenDMs: seenD, flags, totalMiles, seenAlerts, showWelcome: welcome, installDismissed: (localStorage.getItem('wclv_install_hint') === '1'), pushOn: (localStorage.getItem('wclv_push') === '1') }, () => { this.applyTheme(theme); this.scrollFeed(); this.initSupabase(); if (!!name) { this.registerSW(); this.verifyPush(); } });
   }
 
-  applyTheme(theme) { const el = this.rootRef.current; if (!el) return; const set = theme === 'dark' ? this.DARK : this.LIGHT; Object.keys(set).forEach((k) => el.style.setProperty(k, set[k])); }
+  applyTheme(theme) { const el = this.rootRef.current; const set = theme === 'dark' ? this.DARK : this.LIGHT; if (el) Object.keys(set).forEach((k) => el.style.setProperty(k, set[k])); try { document.documentElement.style.background = set['--bg']; document.body.style.background = set['--bg']; document.documentElement.style.colorScheme = theme === 'dark' ? 'dark' : 'light'; const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', theme === 'dark' ? '#15161a' : '#f4f2ee'); } catch (e) {} }
   pickLight = () => { try { localStorage.setItem(this.THEME_KEY, 'light'); } catch (e) {} this.setState({ theme: 'light' }, () => this.applyTheme('light')); };
   pickDark = () => { try { localStorage.setItem(this.THEME_KEY, 'dark'); } catch (e) {} this.setState({ theme: 'dark' }, () => this.applyTheme('dark')); };
 
@@ -1111,13 +1196,37 @@ class Component extends DCLogic {
   switchRoom = (id) => { const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms, roomMenuOpen: false }, () => this.scrollFeed()); };
   toggleRoomMenu = () => this.setState((s) => ({ roomMenuOpen: !s.roomMenuOpen }));
   toggleNotifyAll = () => this.setState((s) => ({ notifyAll: !s.notifyAll }));
+  isStandalone() { try { return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true; } catch (e) { return false; } }
+  isIOSDevice() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  dismissInstall = () => { try { localStorage.setItem('wclv_install_hint', '1'); } catch (e) {} this.setState({ installDismissed: true }); };
   closeRoomMenu = () => this.setState({ roomMenuOpen: false });
 
   updateDraft = (e) => { const v = e.target.value; this.setState({ draft: v }); this.handleMention('draft', v); };
   updateAddr = (e) => this.setState({ addrDraft: e.target.value });
   onDraftKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.post(); } };
-  onFile = (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = () => this.setState({ pendingImg: r.result }); r.readAsDataURL(file); };
-  clearImg = () => { this.setState({ pendingImg: null }); if (this.fileRef.current) this.fileRef.current.value = ''; };
+  onFile = (e) => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    if (/^video\//.test(file.type)) return this.uploadVideo(file);
+    const r = new FileReader(); r.onload = () => this.setState({ pendingImg: r.result }); r.readAsDataURL(file);
+  };
+  async uploadVideo(file) {
+    const MAX = 100 * 1024 * 1024;
+    if (file.size > MAX) { this.setState({ postError: '🎥 That video is over 100 MB — trim it or lower the quality and try again.' }); clearTimeout(this._errT); this._errT = setTimeout(() => this.setState({ postError: '' }), 6000); return; }
+    if (!this.remote) { this.setState({ postError: '⚠️ Can’t upload video while offline.' }); return; }
+    this.setState({ uploading: true, uploadPct: 0, postError: '' });
+    try {
+      const ext = (file.name.split('.').pop() || 'mp4').toLowerCase();
+      const path = 'videos/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+      const { error } = await this.remote.storage.from('media').upload(path, file, { contentType: file.type, upsert: false });
+      if (error) throw error;
+      const { data } = this.remote.storage.from('media').getPublicUrl(path);
+      this.setState({ pendingVideo: data.publicUrl, uploading: false });
+    } catch (err) {
+      this.setState({ uploading: false, postError: '⚠️ Video upload failed' + ((err && err.message) ? ' — ' + err.message : '') + '.' });
+      clearTimeout(this._errT); this._errT = setTimeout(() => this.setState({ postError: '' }), 8000);
+    }
+  }
+  clearImg = () => { this.setState({ pendingImg: null, pendingVideo: null }); if (this.fileRef.current) this.fileRef.current.value = ''; };
 
   post = () => {
     if (this.isMuted()) return;
@@ -1125,15 +1234,15 @@ class Component extends DCLogic {
     const text = (this.state.draft || '').trim();
     const addr = (this.state.addrDraft || '').trim();
     if (!this.screen(text + ' ' + addr, 'Room: ' + room.name)) return;
-    if (room.layout === 'map') { if (!addr) return; } else if (!text && !this.state.pendingImg) return;
-    const msg = { id: 'm' + Date.now(), room: this.state.room, author: this.state.name, role: this.state.role, text, img: this.state.pendingImg || null, address: room.layout === 'map' ? addr : null, park: this.state.room === 'gallery' ? this.currentPark() : null, t: Date.now(), likes: [], comments: [] };
+    if (room.layout === 'map') { if (!addr) return; } else if (!text && !this.state.pendingImg && !this.state.pendingVideo) return;
+    const msg = { id: 'm' + Date.now(), room: this.state.room, author: this.state.name, role: this.state.role, text, img: this.state.pendingImg || null, video: this.state.pendingVideo || null, address: room.layout === 'map' ? addr : null, park: this.state.room === 'gallery' ? this.currentPark() : null, t: Date.now(), likes: [], comments: [] };
     const posts = [...this.state.posts, msg];
     const seenRooms = { ...this.state.seenRooms, [this.state.room]: Date.now() };
     this.savePosts(posts); this.saveSeenR(seenRooms); this.syncPost(msg);
     { const tagged = this.mentionedMembers(text); if (tagged.length) this.notifyPush(tagged, { title: '👋 ' + this.firstNameOf(this.state.name) + ' tagged you', body: (text || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'tag-' + msg.id }); }
     if (this.state.room === 'trailhead' || this.state.room === 'neon' || this.state.room === 'marquee') { if (this.state.notifyAll) this.notifyPush(this.state.members.map((m) => m.name), { title: (room.icon || '📣') + ' ' + room.name, body: (text || addr || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'room-' + this.state.room }); }
     if (this.fileRef.current) this.fileRef.current.value = '';
-    this.setState({ posts, draft: '', pendingImg: null, addrDraft: '', seenRooms }, () => this.scrollFeed());
+    this.setState({ posts, draft: '', pendingImg: null, pendingVideo: null, addrDraft: '', seenRooms }, () => this.scrollFeed());
   };
 
   toggleReaction = (id, emoji) => {
@@ -1269,6 +1378,8 @@ class Component extends DCLogic {
         onPhotoContext: (e) => { e.preventDefault(); this.downloadImg(p.img); },
         galleryImgEl: isGallery ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', height: 'auto', maxHeight: 'none', objectFit: 'fill' } }) : null,
         inlineImgEl: (isChatImg || isGallery) ? React.createElement('img', { src: p.img, alt: 'photo', style: { display: 'block', width: '100%', height: 'auto', borderRadius: '10px', border: '2px solid var(--line)', marginBottom: '6px' } }) : null,
+        hasVideo: !!p.video,
+        videoEl: p.video ? React.createElement('video', { src: p.video, controls: true, playsInline: true, preload: 'metadata', style: { display: 'block', width: '100%', height: 'auto', maxHeight: '70vh', borderRadius: '10px', border: '2px solid var(--line)', marginBottom: '6px', background: '#000' } }) : null,
         address: p.address, mapSrc: isMap ? ('https://www.google.com/maps?q=' + encodeURIComponent(p.address) + '&z=15&output=embed') : '', mapLink: isMap ? ('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(p.address)) : '',
         hasText: !!(p.text && p.text.trim()), segments: this.segmentsOf(p.text), edited: !!p.edited,
         editing: this.state.editingPost === p.id, editDraft: this.state.editPostDraft,
@@ -1353,6 +1464,8 @@ class Component extends DCLogic {
       draft: this.state.draft, addrDraft: this.state.addrDraft, updateDraft: this.updateDraft, updateAddr: this.updateAddr, onDraftKey: this.onDraftKey, post: this.post,
       composerHint: room.id === 'gallery' ? 'Add a photo + caption…' : 'Message the crew…',
       onFile: this.onFile, clearImg: this.clearImg, pendingImg: this.state.pendingImg || false,
+      uploading: this.state.uploading, pendingVideo: this.state.pendingVideo || false,
+      pendingVideoEl: this.state.pendingVideo ? React.createElement('video', { src: this.state.pendingVideo, controls: true, playsInline: true, style: { maxHeight: '110px', maxWidth: '100%', borderRadius: '9px', border: '2px solid var(--line)', display: 'block', background: '#000' } }) : null,
       pendingImgEl: this.state.pendingImg ? React.createElement('img', { src: this.state.pendingImg, alt: 'preview', style: { maxHeight: '84px', maxWidth: '100%', borderRadius: '9px', border: '2px solid var(--line)', display: 'block' } }) : null,
       chatComposer, mapComposer, pollCreator, lockedNotice, lockedText, muted,
       postError: this.state.postError,
@@ -1397,6 +1510,9 @@ class Component extends DCLogic {
       updatePBio: this.updatePBio, updatePHobbies: this.updatePHobbies, updatePBiz: this.updatePBiz, updatePAddr: this.updatePAddr, updatePWeb: this.updatePWeb,
       onAvatarFile: this.onAvatarFile, saveProfile: this.saveProfile,
       mapComposerLabel: room.id === 'neon' ? 'New Neon Nights walk' : 'New walk',
+      showInstall: !this.isStandalone() && !this.state.installDismissed,
+      installHint: (this.isIOSDevice() && /CriOS|FxiOS|EdgiOS/.test(navigator.userAgent)) ? 'On iPhone, full-screen mode only works when the app is added from Safari. Open walkclublv.com in Safari → Share ⬆︎ → “Add to Home Screen”, then launch it from that icon.' : (this.isIOSDevice() ? 'Install the app: tap Share ⬆︎ then “Add to Home Screen” — full screen, no browser bars, and push notifications.' : 'Install the app: open your browser menu ⋮ then “Install app” / “Add to Home screen” — full screen, no browser bars.'),
+      dismissInstall: this.dismissInstall,
       toggleNotifyAll: this.toggleNotifyAll,
       notifyAllCheck: this.state.notifyAll ? '✓' : '',
       notifyAllBoxBg: this.state.notifyAll ? '#00BF63' : 'var(--field)',
