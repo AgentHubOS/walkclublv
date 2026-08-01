@@ -232,34 +232,36 @@
   </section>
   </sc-if>
 
+  <sc-if value="{{ hasExperiences }}" hint-placeholder-val="{{ false }}">
   <!-- ============ EXPERIENCES (white) ============ -->
-  <section id="experiences" style="position: relative; z-index: 4; background: #fff; color: #000; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
+  <section id="experiences" style="position: relative; z-index: 4; background: #fff; color: #000; padding: clamp(44px,6vw,72px) clamp(20px,5vw,80px); overflow: hidden;">
     <div data-parallax="0.15" style="position: absolute; top: -70px; left: -50px; width: 300px; height: 300px; background: #00BF63; opacity: .14; border-radius: 50%;"></div>
-    <div style="max-width: 1150px; margin: 0 auto; position: relative;">
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 44px;">
-        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #FF914D; margin-bottom: 10px;">Where we've been</div>
-        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0;">Experiences</h2>
+    <div style="max-width: 900px; margin: 0 auto; position: relative;">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 26px;">
+        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 12px; color: #FF914D; margin-bottom: 8px;">What's next</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(28px,4.4vw,52px); line-height: .95; margin: 0;">Experiences</h2>
       </div>
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 26px;">
-        <sc-for list="{{ pastEvents }}" as="ev" hint-placeholder-count="2">
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 345px)); justify-content: center; gap: 18px; max-width: 720px; margin: 0 auto;">
+        <sc-for list="{{ upcomingEvents }}" as="ev" hint-placeholder-count="2">
           <a href="{{ ev.url }}" target="_blank" rel="noopener" style="display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: #000; transition: transform .2s ease;" style-hover="transform: translateY(-6px);">
-            <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; border-radius: 26px; overflow: hidden; border: 3px solid #000; box-shadow: 6px 6px 0 #000;">
-              <img src="{{ ev.img }}" alt="{{ ev.title }}" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;" />
-              <span style="position: absolute; left: 14px; top: 12px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; font-weight: 700; background: rgba(0,0,0,.62); color: #fff; padding: 5px 11px; border-radius: 999px; backdrop-filter: blur(8px);">Past walk</span>
+            <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden; border: 3px solid #000; box-shadow: 5px 5px 0 #000;">
+              <img src="{{ ev.img }}" alt="{{ ev.title }}" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #f2f2f2;" />
+              <span style="position: absolute; left: 14px; top: 12px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; font-weight: 700; background: #00BF63; color: #fff; padding: 5px 11px; border-radius: 999px;">{{ ev.badge }}</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 4px;">
               <span style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: #00BF63;">{{ ev.date }}</span>
-              <span style="font-family: 'Anton', sans-serif; font-size: 19px; line-height: 1.15; text-transform: uppercase;">{{ ev.title }}</span>
-              <span style="font-family: 'DM Sans', sans-serif; font-size: 14px; color: #777;">{{ ev.meta }}</span>
+              <span style="font-family: 'Anton', sans-serif; font-size: 17px; line-height: 1.15; text-transform: uppercase;">{{ ev.title }}</span>
+              <span style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: #777;">{{ ev.meta }}</span>
             </div>
           </a>
         </sc-for>
       </div>
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-top: 40px;">
-        <a href="{{ membershipUrl }}" target="_blank" rel="noopener" style="display: inline-block; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 16px; background: #000; color: #fff; padding: 15px 32px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #000; transform: scale(1.05);">See all experiences →</a>
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-top: 24px;">
+        <a href="{{ membershipUrl }}" target="_blank" rel="noopener" style="display: inline-block; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; background: #000; color: #fff; padding: 12px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #000; transform: scale(1.05);">See all experiences →</a>
       </div>
     </div>
   </section>
+  </sc-if>
 
   <!-- ============ JOIN / MEMBERSHIP (orange) ============ -->
   <section id="join" style="position: relative; z-index: 4; background: #FF914D; color: #000; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
@@ -676,7 +678,18 @@ class Component extends DCLogic {
     else { this.setState({ denied: true }); }
   };
 
+  // Upcoming experiences. Add a row per SweatPals event; it disappears automatically after `iso` passes.
+  EXPERIENCES = [
+    { iso: '2026-08-01T08:00:00-07:00', url: 'https://sweatpals.com/event/8126-peccole-ranch-trail/2026-08-01', img: 'https://ilove.sweatpals.com/api/files/11800739-2e5a-4690-ba19-e2b8ce34b66a?variant=m', title: '8.1.26 | Peccole Ranch Trail', date: 'Sat, Aug 1 · 8:00–10:30 AM', meta: 'Peccole Ranch Trail, Las Vegas · Free' },
+  ];
+
   renderVals() {
+    const now = Date.now();
+    const upcoming = this.EXPERIENCES
+      .filter((e) => { const t = Date.parse(e.iso); return !isNaN(t) && t + 6 * 3600000 > now; })
+      .sort((a, b) => Date.parse(a.iso) - Date.parse(b.iso))
+      .slice(0, 1)
+      .map((e) => ({ ...e, badge: 'Next walk' }));
     const hero = this.state.hero;
     const heroOptions = [
       { num: '1', title: 'Stack on white', bg: hero === 'stack' ? '#000' : '#fff', fg: hero === 'stack' ? '#fff' : '#000', select: () => this.setHero('stack') },
@@ -691,10 +704,8 @@ class Component extends DCLogic {
       showRoute: this.props.showRouteLine ?? true,
       handleJoin: this.handleJoin,
       membershipUrl: this.membershipUrl,
-      pastEvents: [
-        { url: 'https://sweatpals.com/event/72526-cornerstone-park-henderson-makers-finders/2026-07-25', img: 'https://ilove.sweatpals.com/api/files/f9f641dc-6f76-4f45-9776-cb17e628ed84?variant=m', title: 'Cornerstone Park + Makers & Finders', date: 'July 25, 2026', meta: 'Henderson · 11 walkers' },
-        { url: 'https://sweatpals.com/event/71826-tree-top-park-summerlin/2026-07-18', img: 'https://ilove.sweatpals.com/api/files/9cc35fdd-d8e2-48d4-a752-b38359caa636?variant=m', title: 'Tree Top Park Summerlin + Snooze', date: 'July 18, 2026', meta: 'Summerlin' },
-      ],
+      upcomingEvents: upcoming,
+      hasExperiences: upcoming.length > 0,
       totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap,
       isStack: hero === 'stack', isSplit: hero === 'split', isDark: hero === 'dark',
       scrollHintColor: hero === 'dark' ? '#fff' : '#000',

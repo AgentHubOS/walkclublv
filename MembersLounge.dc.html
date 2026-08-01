@@ -89,12 +89,12 @@
   <div style="flex: 1; width: 100%; max-width: min(1080px, 100%); margin: 0 auto; display: flex; flex-direction: column; min-height: 0;">
 
     <div style="position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 2px solid var(--line); padding: 12px clamp(12px,4vw,26px);">
-      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 18px;">
-        <div style="flex: 1 1 160px; min-width: 0;">
-          <div style="font-family: 'Anton', sans-serif; font-size: clamp(21px,2.6vw,30px); line-height: .95; color: var(--ink);">{{ currentIcon }} {{ currentName }}</div>
-          <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">{{ currentSub }}</div>
+      <div style="display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 8px 12px;">
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <div style="font-family: 'Anton', sans-serif; font-size: clamp(19px,2.6vw,30px); line-height: .95; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ currentIcon }} {{ currentName }}</div>
+          <div style="font-size: 13px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ currentSub }}</div>
         </div>
-        <div onClick="{{ milesTap }}" style="cursor: default; -webkit-user-select: none; user-select: none; flex: 0 0 auto; display: flex; align-items: center; gap: 7px; background: #000; border: 2px solid var(--line); border-radius: 999px; padding: 6px 13px 6px 10px;">
+        <div onClick="{{ milesTap }}" style="cursor: default; -webkit-user-select: none; user-select: none; flex: 0 0 auto; display: flex; align-items: center; gap: 6px; background: #000; border: 2px solid var(--line); border-radius: 999px; padding: 6px 11px 6px 9px;">
           <span style="font-size: 16px; line-height: 1;">👟</span>
           <span style="font-family: 'Anton', sans-serif; font-size: 17px; line-height: 1; color: #00BF63;">{{ totalMiles }}<span style="font-size: .6em; color: #fff; margin-left: 3px;">mi</span></span>
         </div>
@@ -105,7 +105,7 @@
           </button>
           <sc-if value="{{ roomMenuOpen }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ closeRoomMenu }}" style="position: fixed; inset: 0; z-index: 35;"></div>
-            <div style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: max-content; max-width: calc(100vw - 24px); background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 5px 5px 0 var(--line); overflow: hidden;">
+            <div style="position: absolute; right: 0; top: calc(100% + 8px); z-index: 40; width: max-content; max-width: min(320px, calc(100vw - 28px)); background: var(--card); border: 2px solid var(--line); border-radius: 14px; box-shadow: 5px 5px 0 var(--line); overflow: hidden;">
               <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="7">
                 <button onClick="{{ room.onClick }}" style="cursor: pointer; display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; border: none; border-bottom: 1px solid var(--dash); padding: 11px 14px; background: {{ room.bg }}; color: {{ room.color }}; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 13px; white-space: nowrap;">
                   <span style="font-size: 16px;">{{ room.icon }}</span>{{ room.name }}<span style="flex: 1;"></span><sc-if value="{{ room.hasDot }}" hint-placeholder-val="{{ false }}"><span style="width: 9px; height: 9px; border-radius: 50%; background: {{ room.dotColor }};"></span></sc-if>
