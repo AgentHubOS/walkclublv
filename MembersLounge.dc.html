@@ -551,6 +551,9 @@
           <div style="min-width: 0;"><div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 12px; color: var(--ink);">Push notifications</div><div style="font-size: 11px; color: var(--muted);">{{ pushHint }}</div></div>
           <button onClick="{{ enablePush }}" style="cursor: pointer; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 12px; text-transform: uppercase; border: 1.5px solid var(--line); border-radius: 8px; padding: 7px 13px; background: {{ pushBtnBg }}; color: {{ pushBtnColor }};">{{ pushBtnLabel }}</button>
         </div>
+        <sc-if value="{{ pushOn }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ testPush }}" style="cursor: pointer; margin-top: 9px; width: 100%; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; border: 1.5px solid var(--line); border-radius: 8px; padding: 8px; background: var(--chip); color: var(--ink);">Send me a test notification</button>
+        </sc-if>
         <sc-if value="{{ pushMsg }}" hint-placeholder-val="{{ false }}">
           <div style="margin-top: 9px; font-size: 12px; line-height: 1.45; color: var(--ink); background: var(--chip); border-radius: 9px; padding: 9px 11px;">{{ pushMsg }}</div>
         </sc-if>
@@ -891,7 +894,11 @@ class Component extends DCLogic {
       const reg = this._swReg || await this.registerSW();
       const sub = reg && await reg.pushManager.getSubscription();
       if (!sub) { try { localStorage.removeItem('wclv_push'); } catch (e) {} this.setState({ pushOn: false }); }
-      else this.setState({ pushOn: true });
+      else {
+        this.setState({ pushOn: true });
+        // Keep the subscription attached to my CURRENT display name (names change; stale rows never get pushed).
+        try { const j = sub.toJSON(); if (this.remote && this.state.name) await this.remote.from('push_subscriptions').upsert({ endpoint: sub.endpoint, member: this.state.name, p256dh: j.keys.p256dh, auth: j.keys.auth, t: Date.now() }); } catch (e) {}
+      }
     } catch (e) {}
   }
 
@@ -920,6 +927,12 @@ class Component extends DCLogic {
       return true;
     } catch (e) { say('⚠️ ' + ((e && e.message) || 'Something went wrong turning on notifications.')); return false; }
   }
+  testPush = () => {
+    if (!this.state.pushOn) { this.setState({ pushMsg: 'Turn notifications on first.' }); return; }
+    this.notifyPush([this.state.name], { title: '👟 Walk Club LV', body: 'Test notification — you’re all set!', url: 'MembersLounge.dc.html', tag: 'test-' + Date.now() }, '__none__');
+    this.setState({ pushMsg: '📨 Test sent. Lock your phone — it should appear within a few seconds.' });
+    clearTimeout(this._pushT); this._pushT = setTimeout(() => this.setState({ pushMsg: '' }), 9000);
+  };
   notifyPush(to, payload, exclude) { if (this.remote && Array.isArray(to) && to.length) { try { this.remote.functions.invoke('push', { body: { to, exclude: exclude || this.state.name, ...payload } }).then(() => {}, () => {}); } catch (e) {} } }
   // Merge identity into the remote member row WITHOUT wiping saved profile fields.
   async mergeRemoteProfile(phone, name, email, role) {
@@ -991,6 +1004,8 @@ class Component extends DCLogic {
       this.setState((s) => { const posts = s.posts.map((p) => (byId[p.id] && !p.img ? { ...p, img: byId[p.id] } : p)); this.savePosts(posts); return { posts }; });
     }, () => {});
     let members = mp.error ? (this.state.members || []) : (mp.data || []).map((m) => ({ name: m.name, phone: m.phone, email: m.email || '', role: m.role, muted: !!m.muted, bio: m.bio || '', hobbies: m.hobbies || '', business: m.business || '', address: m.address || '', website: m.website || '', avatar: m.avatar || '' }));
+    // One person per phone number — collapse any legacy duplicates (same number, different spellings).
+    { const byPhone = {}; members.forEach((m) => { const k = this.normPhone(m.phone) || ('name:' + (m.name || '').toLowerCase()); const prev = byPhone[k]; byPhone[k] = prev ? { ...prev, ...m, avatar: m.avatar || prev.avatar, bio: m.bio || prev.bio, hobbies: m.hobbies || prev.hobbies, business: m.business || prev.business, website: m.website || prev.website } : m; }); members = Object.keys(byPhone).map((k) => byPhone[k]); }
     // Self-heal: guarantee my own membership is in the shared roster (recovers anyone whose sign-in didn't sync).
     const myPhone = this.state.phone, myName = this.state.name;
     if (myName && myPhone && !members.some((m) => this.normPhone(m.phone) === this.normPhone(myPhone))) {
@@ -1018,6 +1033,15 @@ class Component extends DCLogic {
       seenRooms = mergeMax(this.state.seenRooms, mine.seen_rooms || {});
       seenDMs = mergeMax(this.state.seenDMs, mine.seen_dms || {});
       try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(seenRooms)); localStorage.setItem(this.SEEND_KEY, JSON.stringify(seenDMs)); } catch (e) {}
+    }
+    // A room we've never recorded shouldn't scream "new" just because it has history.
+    // Mark any unrecorded room as read up to its newest existing post.
+    {
+      let changed = false;
+      const newest = {};
+      posts.forEach((p) => { if (!newest[p.room] || p.t > newest[p.room]) newest[p.room] = p.t; });
+      this.ROOMS.forEach((r) => { if (seenRooms[r.id] == null) { seenRooms = { ...seenRooms, [r.id]: newest[r.id] || Date.now() }; changed = true; } });
+      if (changed) { try { localStorage.setItem(this.SEENR_KEY, JSON.stringify(seenRooms)); } catch (e) {} this.syncSeen({ seen_rooms: seenRooms }); }
     }
     this.setState({ members, posts, dms, role, seenRooms, seenDMs }, () => this.scrollFeed());
   }
@@ -1174,16 +1198,51 @@ class Component extends DCLogic {
     try { localStorage.setItem(this.NAME_KEY, name); localStorage.setItem(this.PHONE_KEY, phone); localStorage.setItem(this.EMAIL_KEY, email); localStorage.setItem('wclv_member', '1'); } catch (e) {}
     let members = this.state.members.slice();
     const dbRole = this.isModPhone(phone) ? 'mod' : 'member';
-    const existing = members.find((m) => this.normPhone(m.phone) === this.normPhone(phone) || m.name.toLowerCase() === name.toLowerCase());
+    // Phone number is the identity. Same number = same person, even if the name is typed differently.
+    const existing = members.find((m) => this.normPhone(m.phone) === this.normPhone(phone));
+    const oldName = existing && existing.name && existing.name !== name ? existing.name : null;
     const meRow = { ...(existing || {}), name, phone, email, role: dbRole, muted: existing ? !!existing.muted : false };
-    if (!members.some((m) => this.normPhone(m.phone) === this.normPhone(phone) || m.name.toLowerCase() === name.toLowerCase())) { members = [...members, meRow]; this.saveMembers(members); }
+    members = existing
+      ? members.map((m) => (this.normPhone(m.phone) === this.normPhone(phone) ? meRow : m))
+      : [...members.filter((m) => m.name.toLowerCase() !== name.toLowerCase()), meRow];
+    this.saveMembers(members);
+    if (oldName) this.renameEverywhere(oldName, name);
     this.mergeRemoteProfile(phone, name, email, dbRole);
-    // welcome DM so notifications + messaging can be demoed
+    // Welcome DM from the club itself (not from a real member).
     let dms = this.state.dms.slice();
-    if (!dms.some((d) => d.members.includes(name))) { const wdm = { id: 'dmw' + Date.now(), members: [name, 'Jenn K.'], group: false, messages: [{ author: 'Jenn K.', text: 'Welcome to the Lounge! 👋 Ping me anytime.', t: Date.now() }] }; dms = [...dms, wdm]; this.saveDMs(dms); this.syncDM(wdm); }
+    if (!dms.some((d) => d.members.includes(name))) { const wdm = { id: 'dmw' + Date.now(), members: [name, 'Walk Club LV'], group: false, messages: [{ author: 'Walk Club LV', text: 'Welcome to the Lounge! 👋 Say hi in The Lobby, check The Trailhead for this week’s walk, and post your photos in The Gallery.', t: Date.now() }] }; dms = [...dms, wdm]; this.saveDMs(dms); this.syncDM(wdm); }
     try { localStorage.removeItem('wclv_justEntered'); } catch (e) {}
     this.setState({ name, phone, email, role, joined: true, members, dms, nameDraft: '', phoneDraft: '', emailDraft: '', showWelcome: true }, () => this.scrollFeed());
   };
+
+  // When someone re-enters with a different spelling of their name, carry their history over
+  // instead of leaving a second identity behind. Phone number is the anchor.
+  renameEverywhere(oldName, newName) {
+    if (!oldName || !newName || oldName === newName) return;
+    const same = (a) => (a || '').toLowerCase() === oldName.toLowerCase();
+    this.setState((s) => {
+      const posts = s.posts.map((p) => {
+        let np = p;
+        if (same(p.author)) np = { ...np, author: newName };
+        if (Array.isArray(p.comments) && p.comments.some((c) => same(c.author))) np = { ...np, comments: p.comments.map((c) => (same(c.author) ? { ...c, author: newName } : c)) };
+        if (p.reactions) { const rx = {}; let touched = false; Object.keys(p.reactions).forEach((e) => { rx[e] = (p.reactions[e] || []).map((n) => { if (same(n)) { touched = true; return newName; } return n; }); }); if (touched) np = { ...np, reactions: rx }; }
+        if (np !== p) this.syncPost(np);
+        return np;
+      });
+      const dms = s.dms.map((d) => {
+        if (!d.members.some(same) && !d.messages.some((m) => same(m.author))) return d;
+        const nd = { ...d, members: d.members.map((n) => (same(n) ? newName : n)), messages: d.messages.map((m) => (same(m.author) ? { ...m, author: newName } : m)) };
+        this.syncDM(nd);
+        return nd;
+      });
+      this.savePosts(posts); this.saveDMs(dms);
+      return { posts, dms };
+    });
+    if (this.remote) {
+      try { this.remote.from('push_subscriptions').update({ member: newName }).eq('member', oldName).then(() => {}, () => {}); } catch (e) {}
+      try { this.remote.from('members').delete().eq('name', oldName).then(() => {}, () => {}); } catch (e) {}
+    }
+  }
 
   dismissWelcome = () => { try { localStorage.setItem('wclv_welcomed', '1'); } catch (e) {} this.setState({ showWelcome: false }); if (this.pushSupported() && !this.state.pushOn && localStorage.getItem('wclv_push_asked') !== '1') { try { localStorage.setItem('wclv_push_asked', '1'); } catch (e) {} setTimeout(() => this.enablePush(), 400); } };
   setMember = () => this.setState({ role: 'member' });
@@ -1240,6 +1299,7 @@ class Component extends DCLogic {
     const seenRooms = { ...this.state.seenRooms, [this.state.room]: Date.now() };
     this.savePosts(posts); this.saveSeenR(seenRooms); this.syncPost(msg);
     { const tagged = this.mentionedMembers(text); if (tagged.length) this.notifyPush(tagged, { title: '👋 ' + this.firstNameOf(this.state.name) + ' tagged you', body: (text || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'tag-' + msg.id }); }
+    if (/@everyone\b/i.test(text)) { this.notifyPush(this.state.members.map((m) => m.name), { title: '📣 ' + this.firstNameOf(this.state.name) + ' tagged @everyone', body: (text || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'everyone-' + msg.id }); }
     if (this.state.room === 'trailhead' || this.state.room === 'neon' || this.state.room === 'marquee') { if (this.state.notifyAll) this.notifyPush(this.state.members.map((m) => m.name), { title: (room.icon || '📣') + ' ' + room.name, body: (text || addr || '').slice(0, 120), url: 'MembersLounge.dc.html', tag: 'room-' + this.state.room }); }
     if (this.fileRef.current) this.fileRef.current.value = '';
     this.setState({ posts, draft: '', pendingImg: null, pendingVideo: null, addrDraft: '', seenRooms }, () => this.scrollFeed());
@@ -1446,7 +1506,7 @@ class Component extends DCLogic {
       mentionDraftList: this.state.mentionField === 'draft' ? this.state.mentionMatches.map((n) => ({ name: n, initial: this.initialOf(n), color: this.colorFor(n), avatarImgEl: this.mkAv(this.avatarOf(n), false), noAvatar: !this.avatarOf(n), onPick: () => this.pickMentionDraft(n) })) : [],
       mentionDMList: this.state.mentionField === 'dm' ? this.state.mentionMatches.map((n) => ({ name: n, initial: this.initialOf(n), color: this.colorFor(n), avatarImgEl: this.mkAv(this.avatarOf(n), false), noAvatar: !this.avatarOf(n), onPick: () => this.pickMentionDM(n) })) : [],
       toggleNotif: this.toggleNotif, showNotif: this.state.showNotif, notifs, noNotifs: notifs.length === 0,
-      pushSupported: this.pushSupported(), enablePush: this.enablePush, pushMsg: this.state.pushMsg || false,
+      pushSupported: this.pushSupported(), enablePush: this.enablePush, pushMsg: this.state.pushMsg || false, pushOn: this.state.pushOn, testPush: this.testPush,
       pushBtnLabel: this.state.pushOn ? 'On' : 'Enable', pushBtnBg: this.state.pushOn ? '#00BF63' : 'var(--card)', pushBtnColor: this.state.pushOn ? '#fff' : 'var(--ink)',
       pushHint: this.state.pushOn ? 'You\'ll get banners for messages & alerts.' : 'Get a banner for DMs, @mentions & alerts.',
       hasNotifBadge: notifTotal > 0, notifBadge: notifTotal > 9 ? '9+' : ('' + notifTotal),
