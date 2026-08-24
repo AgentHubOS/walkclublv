@@ -85,6 +85,40 @@
     </div>
   </section>
 
+  <!-- ============ EVENTS & RSVPs (flyer) ============ -->
+  <section style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(20px,5vw,60px) clamp(56px,8vw,110px);">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #FF914D; margin-bottom: 10px;">Upcoming</div>
+      <h2 onClick="{{ flyerPlaceholderTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0;"><span style="color: #FF914D; text-shadow: 0 0 10px #FF914D, 0 0 26px rgba(255,145,77,.7), 0 0 50px rgba(255,122,41,.45);">Events</span> <span style="color: #fff; text-shadow: 0 0 10px #fff, 0 0 22px #cfe8ff;">&amp;</span> <span style="color: #00BF63; text-shadow: 0 0 10px #00BF63, 0 0 26px rgba(0,191,99,.7), 0 0 50px rgba(0,212,110,.45);">RSVPs</span></h2>
+      <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #bbb; max-width: 46ch; margin: 16px auto 0;">Grab your spot for the next walk. Signups &amp; RSVPs run through SweatPals below.</p>
+      <p style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .08em; font-size: 15px; color: #fff; margin: 14px auto 0;">Select your event below!</p>
+    </div>
+    <div style="background: #000; border-radius: 24px; border: 4px solid #00BF63; padding: 8px; position: relative; display: flex; justify-content: center;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px; width: 100%; max-width: 900px; margin: 0 auto;">
+        <sc-if value="{{ hasFlyers }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ flyer1 }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ flyerImageTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: 100%; aspect-ratio: 4/5; border: 3px solid #FF914D; border-radius: 12px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img ref="{{ flyer1Ref }}" alt="Event flyer" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            </div>
+          </sc-if>
+          <sc-if value="{{ flyer2 }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ flyerImageTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: 100%; aspect-ratio: 4/5; border: 3px solid #FF914D; border-radius: 12px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img ref="{{ flyer2Ref }}" alt="Event flyer" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ !hasFlyers }}" hint-placeholder-val="{{ true }}">
+          <div onClick="{{ flyerPlaceholderTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: 100%; max-width: 560px; border-radius: 12px; background: #000; display: flex; align-items: center; justify-content: center; padding: 48px 24px; grid-column: 1 / -1; margin: 0 auto;">
+            <div style="text-align: center;">
+              <div style="font-family: 'Anton', sans-serif; font-size: clamp(40px,7vw,64px); color: #00BF63; line-height: 1.05;">LOCATION DROPS<br />1 WEEK IN ADVANCE!</div>
+            </div>
+          </div>
+        </sc-if>
+        <input ref="{{ flyerFileRef }}" type="file" accept="image/*" onChange="{{ onFlyerFile }}" style="display: none;" />
+      </div>
+    </div>
+  </section>
+
   <footer style="background: #000; color: #fff; text-align: center; padding: clamp(56px,8vw,100px) 20px 44px; border-top: 1px solid #1a1a1a;">
     <div style="font-family: 'Anton', sans-serif; font-size: clamp(40px,11vw,120px); line-height: .84;"><span style="color: #FF914D; text-shadow: 0 0 20px rgba(255,145,77,.6);">SEE YOU</span><br /><span style="color: #00BF63; text-shadow: 0 0 20px rgba(0,191,99,.6);">AFTER DARK.</span></div>
     <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
@@ -104,10 +138,72 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
   rootRef = React.createRef();
+  flyerFileRef = React.createRef();
+  flyer1Ref = React.createRef();
+  flyer2Ref = React.createRef();
+  state = { flyerImgs: [] };
+  SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
+  SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
+  FLYER_KEY = 'neon_flyer_imgs';
+  componentDidMount() { this.initFlyer(); }
+  componentDidUpdate() { this.syncFlyerRefs(); }
+  async initFlyer() {
+    try {
+      if (!window.supabase) { await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+      this.flyerDb = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
+      const r = await this.flyerDb.from('settings').select('*').eq('key', this.FLYER_KEY);
+      const row = (r.data || [])[0];
+      let items = [];
+      if (row && row.value) { try { items = JSON.parse(row.value); } catch (e) { items = []; } }
+      this.setState({ flyerImgs: items }, () => this.syncFlyerRefs());
+    } catch (e) {}
+  }
+  mostRecentSaturdayCutoff(now) {
+    const d = new Date(now); const day = d.getDay(); let diff = (day - 6 + 7) % 7;
+    const cutoff = new Date(d); cutoff.setDate(d.getDate() - diff); cutoff.setHours(23, 59, 59, 999);
+    if (cutoff.getTime() > now) cutoff.setDate(cutoff.getDate() - 7);
+    return cutoff.getTime();
+  }
+  activeFlyers() { const cutoff = this.mostRecentSaturdayCutoff(Date.now()); return (this.state.flyerImgs || []).filter((x) => x.t > cutoff); }
+  syncFlyerRefs() {
+    const items = this.activeFlyers();
+    const a = items[0] ? items[0].img : ''; const b = items[1] ? items[1].img : '';
+    if (this.flyer1Ref.current && this.flyer1Ref.current.src !== a) this.flyer1Ref.current.src = a;
+    if (this.flyer2Ref.current && this.flyer2Ref.current.src !== b) this.flyer2Ref.current.src = b;
+  }
+  flyerImageTap = () => {
+    const day = new Date().getDay();
+    if (day >= 3 && day <= 6) window.open(this.membershipUrl, '_blank');
+  };
+  flyerPlaceholderTap = () => {
+    this._flyerTaps = (this._flyerTaps || 0) + 1;
+    clearTimeout(this._flyerTapT);
+    this._flyerTapT = setTimeout(() => { this._flyerTaps = 0; }, 900);
+    if (this._flyerTaps >= 3) { this._flyerTaps = 0; if (this.flyerFileRef.current) this.flyerFileRef.current.click(); }
+  };
+  onFlyerFile = (e) => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result; const t = Date.now();
+      const cutoff = this.mostRecentSaturdayCutoff(t);
+      let items = (this.state.flyerImgs || []).filter((x) => x.t > cutoff);
+      items.push({ img: dataUrl, t });
+      if (items.length > 2) items = items.slice(items.length - 2);
+      this.setState({ flyerImgs: items }, () => this.syncFlyerRefs());
+      if (this.flyerDb) this.flyerDb.from('settings').upsert({ key: this.FLYER_KEY, value: JSON.stringify(items) }).then(() => {}, () => {});
+    };
+    reader.readAsDataURL(file);
+    if (this.flyerFileRef.current) this.flyerFileRef.current.value = '';
+  };
   get membershipUrl() { return 'https://sweatpals.com/host/walkclublv'; }
   renderVals() {
+    const activeItems = this.activeFlyers();
     return {
       rootRef: this.rootRef,
+      flyerFileRef: this.flyerFileRef, flyer1Ref: this.flyer1Ref, flyer2Ref: this.flyer2Ref,
+      flyerImageTap: this.flyerImageTap, flyerPlaceholderTap: this.flyerPlaceholderTap, onFlyerFile: this.onFlyerFile,
+      flyer1: activeItems[0] || null, flyer2: activeItems[1] || null, hasFlyers: activeItems.length > 0,
       membershipUrl: this.membershipUrl,
       ticker: Array.from({ length: 8 }),
       facts: [
