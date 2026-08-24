@@ -8,32 +8,11 @@
 <body>
 <x-dc>
 <helmet>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="Walk Club LV" />
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="theme-color" content="#00BF63" />
-<link rel="manifest" href="lounge.webmanifest" />
-<link rel="apple-touch-icon" href="lounge-icon-180.png" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="Walk Club LV" />
-<meta property="og:title" content="Walk Club LV" />
-<meta property="og:description" content="Come for the walk. Stay for the community. A Las Vegas social walking club." />
-<meta property="og:url" content="https://walkclublv.com/" />
-<meta property="og:image" content="https://walkclublv.com/og-image.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Walk Club LV" />
-<meta name="twitter:description" content="Come for the walk. Stay for the community." />
-<meta name="twitter:image" content="https://walkclublv.com/og-image.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script src="https://sweatpals.com/static/embed/community/calendar/events/script.js?communityUsername=WALKCLUBLV&primaryColorHex=00BF63&popupBackgroundColorHex=FFFFFF&headerFontColorHex=000000&fontFamily=Oswald"></script>
 <script async src="https://www.instagram.com/embed.js"></script>
-<script async src="https://www.tiktok.com/embed.js"></script>
 <style>
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -58,6 +37,7 @@
 </style>
 </helmet>
 <div ref="{{ rootRef }}" style="position: relative; width: 100%; overflow: hidden;">
+  <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><text x="50" y="44" font-family="Arial Black, sans-serif" font-size="26" font-weight="900" fill="#FF914D" text-anchor="middle">WALK</text><text x="50" y="70" font-family="Arial Black, sans-serif" font-size="26" font-weight="900" fill="#00BF63" text-anchor="middle">CLUB</text></svg></template>
 
   <sc-if value="{{ showRoute }}" hint-placeholder-val="{{ true }}">
   <svg data-route ref="{{ routeRef }}" viewBox="0 0 100 1200" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none;">
@@ -69,11 +49,11 @@
   <!-- NAV -->
   <nav ref="{{ navRef }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(16px,4vw,48px); background: rgba(255,255,255,0); transition: background .35s ease, box-shadow .35s ease, padding .35s ease;">
     <a href="#top" style="display: flex; align-items: flex-start; line-height: .72; font-family: 'Anton', sans-serif; font-size: 26px; letter-spacing: .01em; position: relative;">
-      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
+      <img src="assets/logo-light.png" alt="Walk Club LV" style="height: 44px; width: auto; display: block;" />
     </a>
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
-      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="6">
+    <div style="display: flex; align-items: center; gap: clamp(10px,2vw,30px); font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 600; font-size: 14px; letter-spacing: .08em;">
+      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="4">
         <a href="{{ link.href }}" style="color: #000; padding: 4px 0; background-image: linear-gradient(#00BF63,#00BF63); background-repeat: no-repeat; background-position: left bottom; background-size: 0% 3px; transition: background-size .3s ease, color .2s ease;" style-hover="background-size: 100% 3px; color: #00BF63;">{{ link.label }}</a>
       </sc-for>
     </div>
@@ -90,7 +70,7 @@
     </div>
     <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position: absolute; top: 100%; left: 0; right: 0; background: #fff; border-top: 3px solid #000; border-bottom: 4px solid #00BF63; box-shadow: 0 14px 26px rgba(0,0,0,.16); display: flex; flex-direction: column; padding: 4px clamp(16px,4vw,48px) 14px;">
-      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="6">
+      <sc-for list="{{ navLinks }}" as="link" hint-placeholder-count="4">
         <a href="{{ link.href }}" onClick="{{ closeMenu }}" style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 18px; letter-spacing: .06em; color: #000; padding: 15px 4px; border-bottom: 1px solid #eee;">{{ link.label }}</a>
       </sc-for>
     </div>
@@ -103,22 +83,15 @@
     <!-- HERO 01: STACK on white -->
     <sc-if value="{{ isStack }}" hint-placeholder-val="{{ true }}">
       <div style="position: absolute; inset: 0; background: #FFFFFF;">
-        <div data-parallax="0.14" style="position: absolute; top: 3%; left: -11%; width: 28vw; height: 28vw; max-width: 360px; max-height: 360px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 50%; opacity: .8; animation: drift1 14s ease-in-out infinite;"></div></div>
-        <div data-parallax="0.16" style="position: absolute; bottom: -12%; right: -11%; width: 34vw; height: 34vw; max-width: 420px; max-height: 420px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .9; animation: drift2 18s ease-in-out infinite;"></div></div>
-        <div data-parallax="0.18" style="position: absolute; top: 58%; left: 3%; width: 60px; height: 60px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.18" style="position: absolute; top: 12%; left: -6%; width: 42vw; height: 42vw; max-width: 560px; max-height: 560px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 14s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.32" style="position: absolute; bottom: -14%; right: -16%; width: 40vw; height: 40vw; max-width: 500px; max-height: 500px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 48% 52% 55% 45% / 55% 45% 55% 45%; opacity: .92; animation: drift2 18s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.5" style="position: absolute; top: 22%; right: 16%; width: 90px; height: 90px;"><div style="width: 100%; height: 100%; background: #000; border-radius: 50%; animation: drift3 9s ease-in-out infinite;"></div></div>
       </div>
-      <div style="position: relative; z-index: 2; width: 100%; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(66px,10vh,120px); text-align: center; padding: clamp(20px,3vh,44px) 20px clamp(44px,7vh,74px);">
-        <div style="position: relative; display: inline-block; margin: 0 auto; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.28)) drop-shadow(0 0 2px rgba(0,0,0,0.35)); animation: wc-float 5s ease-in-out infinite;">
-            <div style="display: inline-flex; flex-direction: column; align-items: center; font-family: 'Anton', sans-serif; font-size: clamp(150px,27vw,330px); line-height: .9; letter-spacing: -.035em; text-transform: uppercase; transform: scaleX(.66); transform-origin: center;">
-              <div style="color: #FF914D;">W<span style="margin-left: -.055em;">A</span>LK</div>
-              <div style="position: relative; color: #00BF63;">CLUB<img src="assets/lv-mark.png" alt="LV" onClick="{{ knock }}" style="position: absolute; right: -.55em; bottom: -.12em; height: .44em; width: auto; transform: scaleX(1.515); transform-origin: bottom right; cursor: default;" /></div>
-            </div>
-        </div>
-        <div style="width: 100%;">
-          <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 0 0 24px; color: #000;">Come for the walk. Stay for the community.</p>
-          <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-            <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
-          </div>
+      <div style="position: relative; text-align: center; padding: 0 20px;">
+        <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(240px,48vw,540px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
+        <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #000;">Come for the walk. Stay for the community.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #000; box-shadow: 5px 5px 0 #000; transition: transform .18s ease, background .3s ease, box-shadow .18s ease;" style-hover="background: #00BF63; transform: translate(-2px,-2px); box-shadow: 8px 8px 0 #000;">Join the walk →</a>
         </div>
       </div>
     </sc-if>
@@ -134,25 +107,26 @@
           <img src="assets/logo-light.png" alt="Walk Club LV" style="height: clamp(150px,34vw,380px); width: auto; display: block; margin: 0 auto;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; font-size: clamp(15px,2.4vw,24px); margin: 28px 0 26px; color: #fff; text-shadow: 2px 2px 0 #000;">Walk together. Connect. Grow.</p>
-        <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
+        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #000; color: #fff; padding: 16px 34px; border-radius: 999px; border: 3px solid #fff; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #fff; color: #000; transform: scale(1.05);">Join the walk →</a>
       </div>
     </sc-if>
 
     <!-- HERO 03: DARK kinetic -->
     <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
       <div style="position: absolute; inset: 0; background: #000; overflow: hidden;">
-        <div data-parallax="0.1" style="position: absolute; top: 5%; left: -10%; width: 28vw; height: 28vw; max-width: 340px; max-height: 340px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 15s ease-in-out infinite;"></div></div>
-        <div data-parallax="0.12" style="position: absolute; bottom: 4%; right: -10%; width: 32vw; height: 32vw; max-width: 400px; max-height: 400px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 50%; opacity: .85; animation: drift2 19s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.2" style="position: absolute; top: 8%; left: 4%; width: 30vw; height: 30vw; max-width: 380px; max-height: 380px;"><div style="width: 100%; height: 100%; background: #FF914D; border-radius: 50%; opacity: .9; animation: drift1 15s ease-in-out infinite;"></div></div>
+        <div data-parallax="0.45" style="position: absolute; bottom: 6%; right: 6%; width: 34vw; height: 34vw; max-width: 440px; max-height: 440px;"><div style="width: 100%; height: 100%; background: #00BF63; border-radius: 50%; opacity: .85; animation: drift2 19s ease-in-out infinite;"></div></div>
       </div>
       <div style="position: relative; text-align: center; padding: 0 20px;">
         <div style="display: inline-block; line-height: .74; position: relative;">
           <img src="assets/logo-ondark.png" alt="Walk Club LV" style="height: clamp(160px,33vw,350px); width: auto; display: block; margin: 0 auto; animation: wc-float 5s ease-in-out infinite;" />
         </div>
         <p style="font-family: 'Oswald', sans-serif; font-weight: 500; text-transform: uppercase; letter-spacing: .14em; font-size: clamp(15px,2.4vw,24px); margin: 26px 0 30px; color: #fff;">Come for the walk. Stay for the community.</p>
-        <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
+        <a href="#walk" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: clamp(16px,2vw,20px); background: #FF914D; color: #000; padding: 16px 34px; border-radius: 999px; transition: transform .18s ease, background .3s ease, color .3s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">Join the walk →</a>
       </div>
     </sc-if>
 
+    <div data-scrollhint style="position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-size: 11px; color: {{ scrollHintColor }}; display: flex; flex-direction: column; align-items: center; gap: 6px;">Scroll<span style="font-size: 16px; animation: wc-float 1.8s ease-in-out infinite;">↓</span></div>
   </header>
 
   <!-- ============ MARQUEE ============ -->
@@ -227,37 +201,6 @@
             <div style="font-family: 'DM Sans', sans-serif; color: #777; font-size: 14px; margin-top: 8px;">Live events widget for @walkclublv appears here.</div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-  </sc-if>
-
-  <sc-if value="{{ hasExperiences }}" hint-placeholder-val="{{ false }}">
-  <!-- ============ EXPERIENCES (white) ============ -->
-  <section id="experiences" style="position: relative; z-index: 4; background: #fff; color: #000; padding: clamp(44px,6vw,72px) clamp(20px,5vw,80px); overflow: hidden;">
-    <div data-parallax="0.15" style="position: absolute; top: -70px; left: -50px; width: 300px; height: 300px; background: #00BF63; opacity: .14; border-radius: 50%;"></div>
-    <div style="max-width: 900px; margin: 0 auto; position: relative;">
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 26px;">
-        <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 12px; color: #FF914D; margin-bottom: 8px;">What's next</div>
-        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(28px,4.4vw,52px); line-height: .95; margin: 0;">Experiences</h2>
-      </div>
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 345px)); justify-content: center; gap: 18px; max-width: 720px; margin: 0 auto;">
-        <sc-for list="{{ upcomingEvents }}" as="ev" hint-placeholder-count="2">
-          <a href="{{ ev.url }}" target="_blank" rel="noopener" style="display: flex; flex-direction: column; gap: 12px; text-decoration: none; color: #000; transition: transform .2s ease;" style-hover="transform: translateY(-6px);">
-            <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden; border: 3px solid #000; box-shadow: 5px 5px 0 #000;">
-              <img src="{{ ev.img }}" alt="{{ ev.title }}" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #f2f2f2;" />
-              <span style="position: absolute; left: 14px; top: 12px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; font-weight: 700; background: #00BF63; color: #fff; padding: 5px 11px; border-radius: 999px;">{{ ev.badge }}</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 4px; padding: 0 4px;">
-              <span style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 13px; color: #00BF63;">{{ ev.date }}</span>
-              <span style="font-family: 'Anton', sans-serif; font-size: 17px; line-height: 1.15; text-transform: uppercase;">{{ ev.title }}</span>
-              <span style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: #777;">{{ ev.meta }}</span>
-            </div>
-          </a>
-        </sc-for>
-      </div>
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-top: 24px;">
-        <a href="{{ membershipUrl }}" target="_blank" rel="noopener" style="display: inline-block; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; background: #000; color: #fff; padding: 12px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; color: #000; transform: scale(1.05);">See all experiences →</a>
       </div>
     </div>
   </section>
@@ -372,11 +315,11 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor" stroke="none"></circle></svg>
             @walkclublv
           </a>
-          <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #00BF63; color: #fff; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
           <a href="https://www.tiktok.com/@walkclublv" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #fff; color: #000; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, color .3s ease, transform .2s ease;" style-hover="background: #00BF63; color: #fff; transform: scale(1.05);">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.4 2.3 1.9 4 4.1 4.3v3c-1.5.1-2.9-.3-4.1-1v6.4c0 3.4-2.6 5.6-5.6 5.6-3.1 0-5.4-2.4-5.4-5.4 0-3.1 2.5-5.4 5.6-5.3.3 0 .6 0 .9.1v3.1c-.3-.1-.6-.2-.9-.2-1.4 0-2.5 1.1-2.5 2.4 0 1.4 1.1 2.4 2.4 2.4 1.4 0 2.5-1 2.5-2.6V3h2.5z"></path></svg>
             @walkclublv
           </a>
+          <a href="{{ membershipUrl }}" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 18px; background: #00BF63; color: #fff; padding: 14px 26px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">Join on SweatPals</a>
         </div>
       </div>
       <div style="display: flex; justify-content: center; margin: 30px 0;">
@@ -388,69 +331,12 @@
     </div>
   </footer>
 
-  <sc-if value="{{ showSpeak }}" hint-placeholder-val="{{ false }}">
-  <div onClick="{{ closeSpeak }}" style="position: fixed; inset: 0; z-index: 120; background: rgba(0,0,0,.85); display: flex; align-items: center; justify-content: center; padding: 20px;">
-    <div onClick="{{ stopSpeak }}" style="max-width: 360px; width: 100%; background: #0d0d0d; border: 2px solid #00BF63; border-radius: 16px; padding: 28px 22px; text-align: center; box-shadow: 0 0 44px rgba(0,191,99,.35);">
-      <div style="font-family: 'Anton', sans-serif; font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: #00BF63;">Members only</div>
-      <div style="font-family: 'Anton', sans-serif; font-size: 30px; color: #fff; margin: 8px 0 4px; line-height: 1;">WHAT'S THE PASSWORD?</div>
-      <p style="font-size: 13px; color: #888; margin: 0 0 16px;">If you know, you know.</p>
-      <input value="{{ passDraft }}" onInput="{{ updatePass }}" onKeyDown="{{ onPassKey }}" placeholder="Whisper it…" style="width: 100%; text-align: center; font-size: 16px; padding: 12px; border: 2px solid {{ passBorder }}; border-radius: 10px; background: #000; color: #fff; outline: none;" />
-      <sc-if value="{{ denied }}" hint-placeholder-val="{{ false }}"><div style="color: #d1495b; font-size: 12px; margin-top: 8px; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .1em;">🚪 Not tonight.</div></sc-if>
-      <button onClick="{{ submitPass }}" style="cursor: pointer; width: 100%; margin-top: 14px; font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; background: #00BF63; color: #000; border: none; border-radius: 10px; padding: 12px;">Knock knock →</button>
-    </div>
-  </div>
-  </sc-if>
-
-  <a href="Partners.dc.html" style="position: fixed; z-index: 89; right: clamp(10px,2.6vw,30px); top: clamp(84px,12vh,120px); width: clamp(150px,20vw,210px); display: flex; flex-direction: column; align-items: center; text-decoration: none; animation: wc-floatB 4.5s ease-in-out infinite;">
-    <img src="assets/walk-club-approved.png" alt="Walk Club Approved" style="width: 100%; height: auto; display: block; filter: drop-shadow(0 12px 16px rgba(0,0,0,.4));" />
-    <span style="margin-top: 8px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; color: #000; background: #fff; padding: 4px 14px; border-radius: 999px; border: 1.5px solid #000;">Click here</span>
-  </a>
-
-  <div onClick="{{ milesTap }}" style="position: fixed; z-index: 90; right: clamp(14px,3vw,26px); bottom: clamp(14px,3vw,26px); cursor: default; -webkit-user-select: none; user-select: none; width: clamp(104px,15vw,132px); height: clamp(104px,15vw,132px); border-radius: 50%; background: #00BF63; border: 4px solid #000; box-shadow: 5px 5px 0 #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; animation: wc-floatB 3.4s ease-in-out infinite;">
-    <div style="font-size: clamp(22px,3vw,26px); line-height: 1;">👟</div>
-    <div style="font-family: 'Anton', sans-serif; font-size: clamp(22px,3.4vw,30px); line-height: .95; color: #000; margin-top: 2px;">{{ totalMiles }}</div>
-    <div style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: 9px; color: #000;">Miles walked</div>
-  </div>
-
   <canvas ref="{{ confettiRef }}" style="position: fixed; inset: 0; z-index: 100; pointer-events: none; width: 100%; height: 100%;"></canvas>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
 class Component extends DCLogic {
-  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false, totalMiles: 0, milesClicks: 0 };
-
-  SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
-  SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
-  MILES_KEY = 'wclv_miles';
-  fmtMiles(n) { return (Math.round((Number(n) || 0) * 10) / 10).toFixed(1); }
-  loadScript(src) { return new Promise((res, rej) => { if (window.supabase) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); setTimeout(rej, 6000); }); }
-  async loadMiles() {
-    try { const v = parseFloat(localStorage.getItem(this.MILES_KEY) || '0'); if (isFinite(v)) this.setState({ totalMiles: v }); } catch (e) {}
-    try {
-      await this.loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-      if (!window.supabase) return;
-      this._sb = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
-      const r = await this._sb.from('settings').select('*').eq('key', 'total_miles');
-      if (r.data && r.data[0] && r.data[0].value != null) { const v = parseFloat(r.data[0].value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); }
-      this._sb.channel('miles').on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, (p) => { const row = p.new; if (row && row.key === 'total_miles' && row.value != null) { const v = parseFloat(row.value) || 0; try { localStorage.setItem(this.MILES_KEY, String(v)); } catch (e) {} this.setState({ totalMiles: v }); } }).subscribe();
-    } catch (e) {}
-  }
-  milesTap = () => {
-    this.setState((s) => ({ milesClicks: s.milesClicks + 1 }), () => {
-      clearTimeout(this._milesT);
-      if (this.state.milesClicks >= 3) {
-        this.setState({ milesClicks: 0 });
-        const input = window.prompt("Add this week's miles (XX.X):", '');
-        if (input == null) return;
-        const add = parseFloat(String(input).replace(/[^0-9.]/g, ''));
-        if (!isFinite(add) || add <= 0) return;
-        const total = (Number(this.state.totalMiles) || 0) + add;
-        try { localStorage.setItem(this.MILES_KEY, String(total)); } catch (e) {}
-        if (this._sb) { try { this._sb.from('settings').upsert({ key: 'total_miles', value: String(total) }).then(() => {}, () => {}); } catch (e) {} }
-        this.setState({ totalMiles: total });
-      } else { this._milesT = setTimeout(() => this.setState({ milesClicks: 0 }), 900); }
-    });
-  };
+  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false };
 
   rootRef = React.createRef();
   marqueeRef = React.createRef();
@@ -470,7 +356,6 @@ class Component extends DCLogic {
     this._onResize = () => { const m = window.innerWidth < 820; if (m !== this.state.isMobile) this.setState({ isMobile: m, menuOpen: false }); };
     window.addEventListener('resize', this._onResize, { passive: true });
     this.handleScroll();
-    this.loadMiles();
 
     this._io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
@@ -657,44 +542,7 @@ class Component extends DCLogic {
   toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
   closeMenu = () => this.setState({ menuOpen: false });
 
-  SPEAK_DEFAULT = 'kick it';
-  speakPass() { try { return (localStorage.getItem('wclv_speak_pass') || this.SPEAK_DEFAULT).toLowerCase(); } catch (e) { return this.SPEAK_DEFAULT; } }
-  isKnownMember() {
-    try {
-      const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
-      return standalone || localStorage.getItem('wclv_member') === '1' || !!localStorage.getItem('wclv_lounge_name');
-    } catch (e) { return false; }
-  }
-
-  knock = () => {
-    this.setState((s) => ({ knocks: s.knocks + 1 }), () => {
-      clearTimeout(this._knockT);
-      if (this.state.knocks >= 3) { this.setState({ showSpeak: true, knocks: 0, denied: false, passDraft: '' }); }
-      else { this._knockT = setTimeout(() => this.setState({ knocks: 0 }), 1200); }
-    });
-  };
-  closeSpeak = () => this.setState({ showSpeak: false, denied: false, passDraft: '' });
-  stopSpeak = (e) => e.stopPropagation();
-  updatePass = (e) => this.setState({ passDraft: e.target.value, denied: false });
-  onPassKey = (e) => { if (e.key === 'Enter') { e.preventDefault(); this.submitPass(); } };
-  submitPass = () => {
-    const v = (this.state.passDraft || '').trim().toLowerCase();
-    if (v === this.speakPass()) { try { localStorage.setItem('wclv_member', '1'); localStorage.setItem('wclv_justEntered', '1'); } catch (e) {} window.location.href = 'MembersLounge.dc.html'; }
-    else { this.setState({ denied: true }); }
-  };
-
-  // Upcoming experiences. Add a row per SweatPals event; it disappears automatically after `iso` passes.
-  EXPERIENCES = [
-    { iso: '2026-08-01T08:00:00-07:00', url: 'https://sweatpals.com/event/8126-peccole-ranch-trail/2026-08-01', img: 'https://ilove.sweatpals.com/api/files/11800739-2e5a-4690-ba19-e2b8ce34b66a?variant=m', title: '8.1.26 | Peccole Ranch Trail', date: 'Sat, Aug 1 · 8:00–10:30 AM', meta: 'Peccole Ranch Trail, Las Vegas · Free' },
-  ];
-
   renderVals() {
-    const now = Date.now();
-    const upcoming = this.EXPERIENCES
-      .filter((e) => { const t = Date.parse(e.iso); return !isNaN(t) && t + 6 * 3600000 > now; })
-      .sort((a, b) => Date.parse(a.iso) - Date.parse(b.iso))
-      .slice(0, 1)
-      .map((e) => ({ ...e, badge: 'Next walk' }));
     const hero = this.state.hero;
     const heroOptions = [
       { num: '1', title: 'Stack on white', bg: hero === 'stack' ? '#000' : '#fff', fg: hero === 'stack' ? '#fff' : '#000', select: () => this.setHero('stack') },
@@ -709,16 +557,11 @@ class Component extends DCLogic {
       showRoute: this.props.showRouteLine ?? true,
       handleJoin: this.handleJoin,
       membershipUrl: this.membershipUrl,
-      upcomingEvents: upcoming,
-      hasExperiences: upcoming.length > 0,
-      totalMiles: this.fmtMiles(this.state.totalMiles), milesTap: this.milesTap,
       isStack: hero === 'stack', isSplit: hero === 'split', isDark: hero === 'dark',
       scrollHintColor: hero === 'dark' ? '#fff' : '#000',
       heroOptions,
       navLinks: [
         { label: 'The Walk', href: '#walk' },
-        { label: 'Neon Nights', href: 'NeonNights.dc.html' },
-        { label: 'Merch', href: 'Merch.dc.html' },
         { label: 'Follow', href: '#social' },
         { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
@@ -728,10 +571,7 @@ class Component extends DCLogic {
       menuOpen: this.state.menuOpen,
       toggleMenu: this.toggleMenu,
       closeMenu: this.closeMenu,
-      knock: this.knock, showSpeak: this.state.showSpeak, closeSpeak: this.closeSpeak, stopSpeak: this.stopSpeak,
-      passDraft: this.state.passDraft, updatePass: this.updatePass, onPassKey: this.onPassKey, submitPass: this.submitPass,
-      denied: this.state.denied, passBorder: this.state.denied ? '#d1495b' : '#00BF63',
-      showNeon: this.props.showNeonNights ?? true,
+      showNeon: this.props.showNeonNights ?? false,
       showEvents: this.props.showEvents ?? false,
       showMerch: this.props.showMerch ?? false,
       socials: [

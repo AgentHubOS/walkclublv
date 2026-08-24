@@ -43,18 +43,19 @@
   </div>
 
   <section style="max-width: 1200px; margin: 0 auto; padding: clamp(50px,7vw,90px) clamp(20px,5vw,60px);">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 22px;">
-      <sc-for list="{{ merch }}" as="m" hint-placeholder-count="6">
-        <div style="border: 3px solid #000; border-radius: 22px; overflow: hidden; background: {{ m.bg }}; transition: transform .25s ease, box-shadow .25s ease, background .35s ease; cursor: pointer; box-shadow: 6px 6px 0 #000;" style-hover="transform: translateY(-8px) rotate(-1.2deg); box-shadow: 12px 14px 0 #000; background: {{ m.bgHover }};">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,340px)); gap: 48px; justify-content: center;">
+      <sc-for list="{{ merch }}" as="m" hint-placeholder-count="2">
+        <div style="border: 3px solid #000; border-radius: 22px; overflow: hidden; background: {{ m.bg }}; transition: transform .25s ease, box-shadow .25s ease, background .35s ease; cursor: pointer; box-shadow: 6px 6px 0 #000; display: flex; flex-direction: column;" style-hover="transform: translateY(-8px) rotate(-1.2deg); box-shadow: 12px 14px 0 #000; background: {{ m.bgHover }};">
           <div style="aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; padding: 28px;">
             <div style="font-family: 'Anton', sans-serif; font-size: clamp(34px,4.5vw,54px); color: {{ m.fg }}; text-align: center; line-height: .85; white-space: pre-line;">{{ m.glyph }}</div>
           </div>
-          <div style="background: #fff; border-top: 3px solid #000; padding: 16px 18px;">
+          <div style="background: #fff; border-top: 3px solid #000; padding: 16px 18px; display: flex; flex-direction: column; flex: 1; min-height: 148px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .04em; font-size: 19px; color: #000;">{{ m.name }}</span>
-              <span style="font-family: 'Anton', sans-serif; color: #00BF63; font-size: 22px;">{{ m.price }}</span>
+              <span style="font-family: 'Anton', sans-serif; color: #00BF63; font-size: 22px; white-space: nowrap; margin-left: 12px;">{{ m.price }}</span>
             </div>
-            <div style="font-family: 'DM Sans', sans-serif; font-size: 14px; color: #555; margin-top: 4px;">{{ m.desc }}</div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 14px; color: #555; margin-top: 4px; flex: 1;">{{ m.desc }}</div>
+            <a href="{{ m.buyLink }}" onClick="{{ openBuyPopup }}" style="display: block; margin-top: 12px; font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; line-height: 44px; height: 44px; color: #fff; background: #006aff; text-align: center; border-radius: 6px;">Buy now</a>
           </div>
         </div>
       </sc-for>
@@ -62,7 +63,7 @@
   </section>
 
   <footer style="background: #00BF63; color: #fff; text-align: center; padding: clamp(50px,8vw,90px) 20px;">
-    <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(30px,6vw,60px); margin: 0 0 20px;">Look good, walk gooder.</h2>
+    <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(30px,6vw,60px); margin: 0 0 36px;">Step up your GLOW UP!</h2>
     <a href="https://instagram.com/walkclublv" target="_blank" style="font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 18px; background: #000; color: #fff; padding: 14px 30px; border-radius: 999px; transition: background .3s ease, transform .2s ease;" style-hover="background: #FF914D; transform: scale(1.05);">DM us @walkclublv</a>
   </footer>
 </div>
@@ -70,17 +71,19 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
 class Component extends DCLogic {
   rootRef = React.createRef();
+  openBuyPopup(e) {
+    const url = e.currentTarget.getAttribute('href');
+    e.preventDefault();
+    window.open(url, 'wclv_buy', 'width=480,height=760,noopener,noreferrer');
+  }
   renderVals() {
     return {
       rootRef: this.rootRef,
+      openBuyPopup: this.openBuyPopup,
       ticker: Array.from({ length: 8 }),
       merch: [
-        { name: 'Club Tee', price: '$28', glyph: 'WALK\nCLUB', bg: '#FF914D', bgHover: '#00BF63', fg: '#fff', desc: 'Heavyweight cotton. Orange or green.' },
-        { name: 'Route Tote', price: '$18', glyph: '2 MI\nCLUB', bg: '#00BF63', bgHover: '#FF914D', fg: '#fff', desc: 'Canvas carry-all for post-walk breakfast.' },
-        { name: 'Hydro Bottle', price: '$22', glyph: 'HYDRATE', bg: '#000', bgHover: '#FF914D', fg: '#00BF63', desc: '24oz insulated. Stay watered on the walk.' },
-        { name: 'LV Cap', price: '$26', glyph: 'LV', bg: '#FF914D', bgHover: '#000', fg: '#000', desc: 'Structured 6-panel with brush-script LV.' },
-        { name: 'Sticker Pack', price: '$6', glyph: '★ WCLV', bg: '#00BF63', bgHover: '#000', fg: '#fff', desc: 'Six vinyl die-cuts. Slap em everywhere.' },
-        { name: 'Trail Socks', price: '$14', glyph: 'STEP\nUP', bg: '#000', bgHover: '#00BF63', fg: '#FF914D', desc: 'Cushioned crew socks in club colors.' },
+        { name: 'Cooling Towel', price: '$5', glyph: 'COOL\nDOWN', bg: '#FF914D', bgHover: '#00BF63', fg: '#fff', desc: 'Snap it wet and cool. Keeps the heat off on the walk.', buyLink: 'https://square.link/u/Osb3yzWI?src=embed' },
+        { name: 'Neon Nights Glow Pack', price: '$10', glyph: 'GLOW\nPACK', bg: '#00BF63', bgHover: '#FF914D', fg: '#fff', desc: 'Light up glasses, Walk Club LV sticker, mini bubbles, light up ring, 8 glow sticks. Show your receipt at the Neon Nights walk to receive your Glow Pack.', buyLink: 'https://square.link/u/gAUQzOAl?src=embed' },
       ],
     };
   }
