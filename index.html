@@ -32,7 +32,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Oswald:wght@400;500;600;700&family=Permanent+Marker&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script src="https://sweatpals.com/static/embed/community/calendar/events/script.js?communityUsername=WALKCLUBLV&primaryColorHex=00BF63&popupBackgroundColorHex=FFFFFF&headerFontColorHex=000000&fontFamily=Oswald"></script>
 <script async src="https://www.instagram.com/embed.js"></script>
 <script async src="https://www.tiktok.com/embed.js"></script>
 <style>
@@ -217,11 +216,33 @@
     <div style="max-width: 1100px; margin: 0 auto; position: relative;">
       <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; text-align: center; margin-bottom: 40px;">
         <div style="font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: .3em; font-weight: 600; font-size: 14px; color: #FF914D; margin-bottom: 10px;">Upcoming</div>
-        <h2 style="font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0;">Events &amp; RSVPs</h2>
+        <h2 onClick="{{ flyerPlaceholderTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; font-family: 'Archivo Black', sans-serif; font-size: clamp(34px,6vw,76px); line-height: .95; margin: 0;">Events &amp; RSVPs</h2>
         <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #bbb; max-width: 46ch; margin: 16px auto 0;">Grab your spot for the next walk. Signups &amp; RSVPs run through SweatPals below.</p>
+        <p style="font-family: 'Oswald', sans-serif; text-transform: uppercase; font-weight: 700; letter-spacing: .08em; font-size: 15px; color: #fff; margin: 14px auto 0;">Select your event below!</p>
       </div>
-      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #fff; border-radius: 24px; border: 4px solid #FF914D; padding: 12px; min-height: 420px; position: relative;">
-        <script src="https://sweatpals.com/static/embed/community/calendar/events/script.js?communityUsername=walkclublv&primaryColorHex=278141&popupBackgroundColorHex=FFFFFF&headerFontColorHex=000000&fontFamily=Montserrat"></script>
+      <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #000; border-radius: 24px; border: 4px solid #00BF63; padding: 8px; position: relative; display: flex; justify-content: center;">
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; width: 100%;">
+          <sc-if value="{{ hasFlyers }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ flyer1 }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ flyerImageTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: min(100%, 690px); aspect-ratio: 4/5; border: 3px solid #FF914D; border-radius: 12px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <img ref="{{ flyer1Ref }}" alt="Event flyer" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              </div>
+            </sc-if>
+            <sc-if value="{{ flyer2 }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ flyerImageTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: min(100%, 690px); aspect-ratio: 4/5; border: 3px solid #FF914D; border-radius: 12px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <img ref="{{ flyer2Ref }}" alt="Event flyer" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+              </div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ !hasFlyers }}" hint-placeholder-val="{{ true }}">
+            <div onClick="{{ flyerPlaceholderTap }}" style="cursor: pointer; -webkit-user-select: none; user-select: none; width: 100%; max-width: 560px; border-radius: 12px; background: #000; display: flex; align-items: center; justify-content: center; padding: 48px 24px;">
+              <div style="text-align: center;">
+                <div style="font-family: 'Anton', sans-serif; font-size: clamp(48px,8vw,72px); color: #00BF63; line-height: 1.05;">LOCATION DROPS<br />EVERY WEDNESDAY!</div>
+              </div>
+            </div>
+          </sc-if>
+          <input ref="{{ flyerFileRef }}" type="file" accept="image/*" onChange="{{ onFlyerFile }}" style="display: none;" />
+        </div>
       </div>
     </div>
   </section>
@@ -411,7 +432,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;heroTreatment&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stack&quot;,&quot;split&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;stack&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showRouteLine&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;animateBlobs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;marqueeSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:22,&quot;min&quot;:6,&quot;max&quot;:40,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showNeonNights&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showEvents&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;},&quot;showMerch&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Coming soon&quot;}}">
 class Component extends DCLogic {
-  state = { hero: this.props.heroTreatment || 'stack', isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false, totalMiles: 0, milesClicks: 0 };
+  state = { hero: this.props.heroTreatment || 'stack', flyerImgs: [], isMobile: (typeof window !== 'undefined' && window.innerWidth < 820), menuOpen: false, knocks: 0, showSpeak: false, passDraft: '', denied: false, totalMiles: 0, milesClicks: 0 };
 
   SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
   SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
@@ -447,7 +468,63 @@ class Component extends DCLogic {
   };
 
   rootRef = React.createRef();
+  // ===== Wednesday flyer (triple-tap to upload; auto-expires at Saturday 11:59pm) =====
+  SUPA_URL = 'https://giyajrnkqdgfaugakjny.supabase.co';
+  SUPA_KEY = 'sb_publishable_5wMfW_plYvOzVenMSo3jnQ_vEQlqAvr';
+  syncFlyerRefs() {
+    const items = this.activeFlyers();
+    const a = items[0] ? items[0].img : ''; const b = items[1] ? items[1].img : '';
+    if (this.flyer1Ref.current && this.flyer1Ref.current.src !== a) this.flyer1Ref.current.src = a;
+    if (this.flyer2Ref.current && this.flyer2Ref.current.src !== b) this.flyer2Ref.current.src = b;
+  }
+  componentDidUpdate() { this.syncFlyerRefs(); }
+  async initFlyer() {
+    try {
+      if (!window.supabase) { await new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+      this.flyerDb = window.supabase.createClient(this.SUPA_URL, this.SUPA_KEY);
+      const r = await this.flyerDb.from('settings').select('*').eq('key', 'flyer_imgs');
+      const row = (r.data || [])[0];
+      let items = [];
+      if (row && row.value) { try { items = JSON.parse(row.value); } catch (e) { items = []; } }
+      this.setState({ flyerImgs: items }, () => this.syncFlyerRefs());
+    } catch (e) {}
+  }
+  mostRecentSaturdayCutoff(now) {
+    const d = new Date(now); const day = d.getDay(); let diff = (day - 6 + 7) % 7;
+    const cutoff = new Date(d); cutoff.setDate(d.getDate() - diff); cutoff.setHours(23, 59, 59, 999);
+    if (cutoff.getTime() > now) cutoff.setDate(cutoff.getDate() - 7);
+    return cutoff.getTime();
+  }
+  activeFlyers() { const cutoff = this.mostRecentSaturdayCutoff(Date.now()); return (this.state.flyerImgs || []).filter((x) => x.t > cutoff).map((x) => ({ img: x.img })); }
+  flyerImageTap = () => {
+    const day = new Date().getDay(); // 0=Sun ... 6=Sat
+    if (day >= 3 && day <= 6) window.open(this.membershipUrl, '_blank');
+  };
+  flyerPlaceholderTap = () => {
+    this._flyerTaps = (this._flyerTaps || 0) + 1;
+    clearTimeout(this._flyerTapT);
+    this._flyerTapT = setTimeout(() => { this._flyerTaps = 0; }, 900);
+    if (this._flyerTaps >= 3) { this._flyerTaps = 0; if (this.flyerFileRef.current) this.flyerFileRef.current.click(); }
+  };
+  onFlyerFile = (e) => {
+    const file = e.target.files && e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result; const t = Date.now();
+      const cutoff = this.mostRecentSaturdayCutoff(t);
+      let items = (this.state.flyerImgs || []).filter((x) => x.t > cutoff);
+      items.push({ img: dataUrl, t });
+      if (items.length > 2) items = items.slice(items.length - 2);
+      this.setState({ flyerImgs: items }, () => this.syncFlyerRefs());
+      if (this.flyerDb) this.flyerDb.from('settings').upsert({ key: 'flyer_imgs', value: JSON.stringify(items) }).then(() => {}, () => {});
+    };
+    reader.readAsDataURL(file);
+    if (this.flyerFileRef.current) this.flyerFileRef.current.value = '';
+  };
   marqueeRef = React.createRef();
+  flyerFileRef = React.createRef();
+  flyer1Ref = React.createRef();
+  flyer2Ref = React.createRef();
   routeRef = React.createRef();
   routeDrawRef = React.createRef();
   miniRouteRef = React.createRef();
@@ -458,6 +535,7 @@ class Component extends DCLogic {
   joinMsgRef = React.createRef();
 
   componentDidMount() {
+    this.initFlyer();
     this._onScroll = () => this.handleScroll();
     window.addEventListener('scroll', this._onScroll, { passive: true });
     window.addEventListener('resize', this._onScroll, { passive: true });
@@ -700,6 +778,11 @@ class Component extends DCLogic {
       miniRouteRef: this.miniRouteRef, walkerRef: this.walkerRef, mileRef: this.mileRef,
       navRef: this.navRef, confettiRef: this.confettiRef, joinMsgRef: this.joinMsgRef,
       marqueeRef: this.marqueeRef,
+      flyerFileRef: this.flyerFileRef, flyerImageTap: this.flyerImageTap, flyerPlaceholderTap: this.flyerPlaceholderTap, onFlyerFile: this.onFlyerFile,
+      flyer1Ref: this.flyer1Ref, flyer2Ref: this.flyer2Ref,
+      flyer1: this.activeFlyers()[0] || null,
+      flyer2: this.activeFlyers()[1] || null,
+      hasFlyers: this.activeFlyers().length > 0,
       showRoute: this.props.showRouteLine ?? true,
       handleJoin: this.handleJoin,
       membershipUrl: this.membershipUrl,
