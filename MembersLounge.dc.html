@@ -1070,7 +1070,7 @@ class Component extends DCLogic {
       if (payload.eventType === 'DELETE') { const id = payload.old && payload.old.id; if (id) this.setState((s) => { const posts = s.posts.filter((p) => p.id !== id); this.savePosts(posts); return { posts }; }); return; }
       const row = payload.new; if (!row) return;
       const inc = this.mapPostIn(row);
-      this.setState((s) => { const posts = s.posts.some((p) => p.id === inc.id) ? s.posts.map((p) => (p.id === inc.id ? inc : p)) : [...s.posts, inc]; this.savePosts(posts); return { posts }; }, () => this.scrollFeed());
+      this.setState((s) => { const posts = s.posts.some((p) => p.id === inc.id) ? s.posts.map((p) => { if (p.id !== inc.id) return p; if (!inc.img && p.img) inc.img = p.img; if (!inc.video && p.video) inc.video = p.video; return inc; }) : [...s.posts, inc]; this.savePosts(posts); return { posts }; }, () => this.scrollFeed());
     } catch (e) { this.reloadTable('posts'); }
   }
   applyDMChange(payload) {
@@ -1252,7 +1252,7 @@ class Component extends DCLogic {
   openLounge = () => this.setState({ view: 'lounge' });
   openMessages = () => this.setState({ view: 'messages', dmView: 'list', activeDM: null });
 
-  switchRoom = (id) => { const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms, roomMenuOpen: false }, () => this.scrollFeed()); };
+  switchRoom = (id) => { if (id !== 'lobby') return; const seenRooms = { ...this.state.seenRooms, [id]: Date.now() }; this.saveSeenR(seenRooms); this.setState({ room: id, seenRooms, roomMenuOpen: false }, () => this.scrollFeed()); };
   toggleRoomMenu = () => this.setState((s) => ({ roomMenuOpen: !s.roomMenuOpen }));
   toggleNotifyAll = () => this.setState((s) => ({ notifyAll: !s.notifyAll }));
   isStandalone() { try { return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true; } catch (e) { return false; } }
@@ -1410,7 +1410,8 @@ class Component extends DCLogic {
       const active = r.id === this.state.room;
       const note = this.roomNote(r.id);
       const showDot = !active && (note.unread || note.mention);
-      return { id: r.id, name: r.name, icon: r.icon, lock: r.modOnly, onClick: () => this.switchRoom(r.id), bg: active ? 'var(--ink)' : 'var(--card)', color: active ? 'var(--bg)' : 'var(--ink)', hasDot: showDot, dotColor: note.mention ? '#FF914D' : '#00BF63' };
+      const locked = r.id !== 'lobby';
+      return { id: r.id, name: locked ? r.name + ' — Coming Soon' : r.name, icon: r.icon, lock: r.modOnly, comingSoon: locked, onClick: locked ? () => {} : () => this.switchRoom(r.id), bg: active ? 'var(--ink)' : 'var(--card)', color: locked ? 'var(--muted)' : (active ? 'var(--bg)' : 'var(--ink)'), hasDot: showDot, dotColor: note.mention ? '#FF914D' : '#00BF63' };
     });
 
     const seedsGone = this.seedsGone();
