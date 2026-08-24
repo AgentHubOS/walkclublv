@@ -211,7 +211,6 @@
     </div>
   </section>
 
-  <sc-if value="{{ showEvents }}" hint-placeholder-val="{{ false }}">
   <!-- ============ EVENTS (black) — SweatPals embed slot ============ -->
   <section id="events" style="position: relative; z-index: 4; background: #000; color: #fff; padding: clamp(70px,10vw,130px) clamp(20px,5vw,80px); overflow: hidden;">
     <div data-parallax="0.2" style="position: absolute; bottom: -80px; left: -60px; width: 360px; height: 360px; background: #00BF63; opacity: .18; border-radius: 50%;"></div>
@@ -222,16 +221,10 @@
         <p style="font-family: 'DM Sans', sans-serif; font-size: 17px; color: #bbb; max-width: 46ch; margin: 16px auto 0;">Grab your spot for the next walk. Signups &amp; RSVPs run through SweatPals below.</p>
       </div>
       <div data-reveal style="opacity: 0; transform: translateY(40px); transition: opacity .7s ease, transform .7s ease; background: #fff; border-radius: 24px; border: 4px solid #FF914D; padding: 12px; min-height: 420px; position: relative;">
-        <div class="sweatpals-embed" data-sweatpals-community="WALKCLUBLV" style="width: 100%; min-height: 400px; display: flex; align-items: center; justify-content: center; color: #000;">
-          <div style="text-align: center; font-family: 'Oswald', sans-serif;">
-            <div style="font-size: 15px; letter-spacing: .2em; text-transform: uppercase; color: #00BF63; font-weight: 700;">SweatPals calendar loading…</div>
-            <div style="font-family: 'DM Sans', sans-serif; color: #777; font-size: 14px; margin-top: 8px;">Live events widget for @walkclublv appears here.</div>
-          </div>
-        </div>
+        <script src="https://sweatpals.com/static/embed/community/calendar/events/script.js?communityUsername=walkclublv&primaryColorHex=278141&popupBackgroundColorHex=FFFFFF&headerFontColorHex=000000&fontFamily=Montserrat"></script>
       </div>
     </div>
   </section>
-  </sc-if>
 
   <sc-if value="{{ hasExperiences }}" hint-placeholder-val="{{ false }}">
   <!-- ============ EXPERIENCES (white) ============ -->
@@ -733,7 +726,7 @@ class Component extends DCLogic {
       passDraft: this.state.passDraft, updatePass: this.updatePass, onPassKey: this.onPassKey, submitPass: this.submitPass,
       denied: this.state.denied, passBorder: this.state.denied ? '#d1495b' : '#00BF63',
       showNeon: this.props.showNeonNights ?? true,
-      showEvents: this.props.showEvents ?? false,
+      showEvents: this.props.showEvents ?? true,
       showMerch: this.props.showMerch ?? false,
       socials: [
         { key: 'instagram', platform: 'Instagram', platformShort: 'POST', cta: 'Follow on Instagram', url: 'https://instagram.com/walkclublv', bar: '#FF914D', barFg: '#000', tile: '#00BF63', tileFg: '#fff' },
